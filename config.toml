@@ -38,7 +38,7 @@ disqusShortname = ""
   # Navigation Section
   [params.navigation]
     title = "Comercio América Latina"
-    subtitle = "By Rebeca Hoffmann"
+    subtitle = "By Rebecca Hoffmann"
     menu = "Menu"
     # Optional logo as brand stored in img/
     # logo = "logo.png"
