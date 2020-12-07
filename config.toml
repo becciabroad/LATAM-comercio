@@ -1,5 +1,5 @@
 # Site settings
-baseURL = "https://gifted-morse-72029d.netlify.app/"
+baseURL = "https://comercio-latam.netlify.app/"
 languageCode = "en-us"
 title = "Forty"
 theme = "forty"
