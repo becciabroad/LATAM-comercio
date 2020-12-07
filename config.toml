@@ -95,13 +95,13 @@ disqusShortname = ""
       title = "Introducción al proyecto"
       subtitle = "Armando la página web etc."
       image = "pic01.jpg"
-      url = "blogs/aliquam"
+      url = "content/post/2020-12-07-introducción"
 
     [[params.tiles.showcase]]
       title = "Datos Historicos del Comercio Exterior"
       subtitle = "El desarrollo histórico del comercio exterior en América Latina"
       image = "pic02.jpg"
-      url = "blogs/tempus"
+      url = "content/post/2020-12-07-datos-historicos"
 
     [[params.tiles.showcase]]
       title = "¿Qué país importa más?"
