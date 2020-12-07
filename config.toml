@@ -147,7 +147,7 @@ disqusShortname = ""
     But before coming up with solutions, we need to understand where the comercial strengths of Latin America lies.
     The aim of this project is to explore some of the comercial dynamics of Latin America."""
     buttonText = "Todos los articulos del proyecto"
-    url = "blogs"
+    url = "post"
 
 
   # Contact section
