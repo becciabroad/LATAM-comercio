@@ -14,4 +14,13 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-
+<p>El objetivo de este post es analizar qué países en América Latina exportan qué tipo de productos utilizando un grafico de sets paralelos del parquete ggforce que permite visualizar en una manera muy lógica los datos.</p>
+<p>Cómo en los otros posts, utilizaría el API de Open Trade Statistics. En primer lugar, aprendo las librarías necesarias para realizar el analisis:</p>
+<pre class="r"><code>library(tradestatistics) #parquete de los datos
+library(tidyverse) 
+library(ggforce) #para graficos de sets paralelos</code></pre>
+<p>En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:</p>
+<pre class="r"><code>exportacion_all &lt;- tradestatistics::ots_create_tidy_data(years = 2018, reporters = &quot;all&quot;, partners = &quot;all&quot;, products = &quot;all&quot;)</code></pre>
+<div id="including-plots" class="section level1">
+<h1>Including Plots</h1>
+</div>
