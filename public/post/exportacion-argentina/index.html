@@ -1,145 +1,85 @@
-<!DOCTYPE HTML>
-<html>
+---
+title: Exportación Argentina
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: exportacion-argentina
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
 
-    <head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="description" content="Comercio Exterior en América Latina">
-	<meta name="author" content="Rebecca Hoffmann">
-	<meta name="generator" content="Hugo 0.79.0" />
-	<title>Exportación Argentina &middot; Comercio en América Latina</title>
-	<!-- Stylesheets -->
-	
-	<link rel="stylesheet" href="https://comercio-latam.netlify.app/css/main.css"/>
-	
-	
-
-	
-
-	<!-- Custom Fonts -->
-	<link href="https://comercio-latam.netlify.app/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-	
-	<link rel="shortcut icon" type="image/x-icon" href="https://comercio-latam.netlify.app/favicon.ico">
-	<link rel="icon" type="image/x-icon" href="https://comercio-latam.netlify.app/favicon.ico">
-	
-
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="js/ie/html5shiv.js"></script>
-	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
-	<![endif]-->
-</head>
-
-    <body>
-
-    <!-- Wrapper -->
-        <div id="wrapper">
-
-            <!-- Header -->
-    <header id="header" class="alt">
-        <a href="https://comercio-latam.netlify.app/" class="logo"><strong>Comercio América Latina</strong> <span>By Rebecca Hoffmann</span></a>
-        <nav>
-            <a href="#menu">Menu</a>
-        </nav>
-    </header>
-
-<!-- Menu -->
-    <nav id="menu">
-        <ul class="links">
-            
-                <li><a href="https://comercio-latam.netlify.app/">Home</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs">Blogs</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs/ipsum">Generic Blog</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/elements.html">Elements</a></li>
-            
-
-        </ul>
-        <ul class="actions vertical">
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs" class="button special fit">Get Started</a></li>
-            
-            
-                <li><a href="https://comercio-latam.netlify.app/" class="button fit">Log In</a></li>
-            
-        </ul>
-    </nav>
-
-        <!-- Main -->
-            <div id="main" class="alt">
-
-                
-                    <section id="one">
-                        <div class="inner">
-                            <header class="major">
-                                <h1>Exportación Argentina</h1>
-                            </header>
-                            
-                            
 <link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-
-
-                        </div>
-                    </section>
-            <!-- Disqus Inject -->
-                
-            </div>
-            
-        <!-- Footer -->
-            
-                <!-- Footer -->
-    <footer id="footer">
-        <div class="inner">
-            <ul class="icons">
-                
-                    <li><a href="https://www.twitter.com/becciabroad" class="icon alt fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
-                
-                    <li><a href="https://www.facebook.com" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
-                
-                    <li><a href="https://www.instagram.com/becciabroad" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
-                
-                    <li><a href="https://www.github.com/becciabroad" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
-                
-                    <li><a href="https://www.linkedin.com" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
-                
-            </ul>
-            <ul class="copyright">
-                <li>&copy; Rebecca Hoffmann</li>
-                
-                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
-                
-            </ul>
-        </div>
-    </footer>
-
-            
-        </div>
-
-    <!-- Scripts -->
-        <!-- Scripts -->
-    <!-- jQuery -->
-    <script src="https://comercio-latam.netlify.app/js/jquery.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/jquery.scrolly.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/jquery.scrollex.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/skel.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/util.js"></script>
-
-    
-
-    <!-- Main JS -->
-    <script src="https://comercio-latam.netlify.app/js/main.js"></script>
-
-    
-
-    
-
-    </body>
-</html>
+<p>El objetivo de este post es analizar un poco más el comercio de Argentina en particular.</p>
+<p>En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:</p>
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
+library(tradestatistics)</code></pre>
+<div id="los-datos" class="section level2">
+<h2>Los datos:</h2>
+<p>Después voy cargando el base de datos que deseo utilizar:</p>
+<pre class="r"><code>comercio_arg &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;arg&quot;) </code></pre>
+</div>
+<div id="transformando-los-datos" class="section level2">
+<h2>Transformando los datos:</h2>
+<p>Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:</p>
+<pre class="r"><code>argentina_export_reducida &lt;- comercio_arg %&gt;%
+  group_by(year) %&gt;%
+  summarise(
+    export_value_usd = sum(export_value_usd, na.rm = T))</code></pre>
+</div>
+<div id="graficando" class="section level2">
+<h2>Graficando</h2>
+<p>Ahora a graficar:</p>
+<pre class="r"><code>ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
+  geom_line() +
+  labs(
+    x = &quot;Años&quot;,
+    y = &quot;Valor Exportado en USD&quot;,
+    title = &quot;Exportaciones de Argentina por año&quot;)</code></pre>
+<p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
+</div>
+<div id="exportación-de-productos" class="section level1">
+<h1>Exportación de productos</h1>
+<p>Ahora quiero demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
+<div id="cargando-los-datos" class="section level2">
+<h2>Cargando los datos</h2>
+<p>Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:</p>
+<pre class="r"><code># Las exportaciones argentinas en 2017 por producto
+comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
+</div>
+<div id="transformando-los-datos-1" class="section level2">
+<h2>Transformando los datos:</h2>
+<pre class="r"><code>export_argentina_2017 &lt;- comercio_latam %&gt;%
+  filter(anio == 2017, codigo_iso_origen == &quot;arg&quot;) %&gt;%
+  group_by(anio, nombre_comunidad_producto, color_comunidad_producto) %&gt;%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %&gt;%
+  ungroup() %&gt;%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, &quot;/&quot;, round(100*valor_exportado_dolares/sum(valor_exportado_dolares), 2), &quot;%&quot;)
+    )</code></pre>
+</div>
+<div id="graficando-1" class="section level2">
+<h2>Graficando</h2>
+<p>Para este ejercicio, además, voy a necesitar otra libraría, así antes de empezar a graficar los resultados aprendo la libraría de Treemapify:</p>
+<pre class="r"><code>library(treemapify)</code></pre>
+<p>Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:</p>
+<pre class="r"><code>ggplot(export_argentina_2017, aes(
+  area = valor_exportado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = &quot;black&quot;,
+                    place = &quot;centre&quot;,
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
+  labs(title = &quot;Categorías de productos exportado de Argentina a nivel Mundial (2017)&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="index_files/figure-html/argentina%20export%20productos%20grafico-1.png" width="672" /></p>
+</div>
+</div>

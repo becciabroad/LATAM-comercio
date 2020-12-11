@@ -47,7 +47,10 @@ ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
   labs(
     x = "Años",
     y = "Valor Exportado en USD",
-    title = "Exportaciones de Argentina por año")
+    title = "Exportaciones de Argentina por año",
+    caption = "FUENTE: Open Trade Statistics") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```
 
 # Exportación de productos

@@ -35,7 +35,10 @@ library(tradestatistics) #parquete de los datos library(tidyverse) library(ggfor
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/exportacion-argentina/</guid>
-      <description>  </description>
+      <description>El objetivo de este post es analizar un poco más el comercio de Argentina en particular.
+En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
+library(tidyverse) library(ggplot2) library(tradestatistics) Los datos: Después voy cargando el base de datos que deseo utilizar:
+comercio_arg &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;arg&amp;quot;)   Transformando los datos: Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:</description>
     </item>
     
     <item>

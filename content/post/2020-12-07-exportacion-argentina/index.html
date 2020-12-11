@@ -40,7 +40,10 @@ library(tradestatistics)</code></pre>
   labs(
     x = &quot;Años&quot;,
     y = &quot;Valor Exportado en USD&quot;,
-    title = &quot;Exportaciones de Argentina por año&quot;)</code></pre>
+    title = &quot;Exportaciones de Argentina por año&quot;,
+    caption = &quot;FUENTE: Open Trade Statistics&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
 </div>
 <div id="exportación-de-productos" class="section level1">
