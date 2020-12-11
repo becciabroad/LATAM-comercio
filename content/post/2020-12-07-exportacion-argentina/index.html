@@ -30,7 +30,8 @@ library(tradestatistics)</code></pre>
 <pre class="r"><code>argentina_export_reducida &lt;- comercio_arg %&gt;%
   group_by(year) %&gt;%
   summarise(
-    export_value_usd = sum(export_value_usd, na.rm = T))</code></pre>
+    export_value_usd = sum(export_value_usd, na.rm = T))
+view(argentina_export_reducida)</code></pre>
 </div>
 <div id="graficando" class="section level2">
 <h2>Graficando</h2>
@@ -48,15 +49,15 @@ library(tradestatistics)</code></pre>
 </div>
 <div id="exportación-de-productos" class="section level1">
 <h1>Exportación de productos</h1>
-<p>Ahora quiero demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
+<p>Ahora bien, querría demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
 <div id="cargando-los-datos" class="section level2">
 <h2>Cargando los datos</h2>
 <p>Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:</p>
-<pre class="r"><code># Las exportaciones argentinas en 2017 por producto
-comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
+<pre class="r"><code>comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
 </div>
 <div id="transformando-los-datos-1" class="section level2">
 <h2>Transformando los datos:</h2>
+<p>Eligo los datos de Argentina para el año 2017 y los agrupo por categoría de productos.</p>
 <pre class="r"><code>export_argentina_2017 &lt;- comercio_latam %&gt;%
   filter(anio == 2017, codigo_iso_origen == &quot;arg&quot;) %&gt;%
   group_by(anio, nombre_comunidad_producto, color_comunidad_producto) %&gt;%

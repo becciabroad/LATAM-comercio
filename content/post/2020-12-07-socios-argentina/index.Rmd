@@ -55,7 +55,7 @@ ggplot(data = exportacion_argentina,aes(x = anio, y = valor_exportado_dolares, f
     x = "Años",
     y = "Valor Exportado en USD",
     title = "Exportaciones de Argentina por año y region") +
-  theme_bw() +
+  theme_minimal() +
   theme(legend.position = "bottom")
 ```
 

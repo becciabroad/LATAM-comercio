@@ -38,6 +38,7 @@ argentina_export_reducida <- comercio_arg %>%
   group_by(year) %>%
   summarise(
     export_value_usd = sum(export_value_usd, na.rm = T))
+view(argentina_export_reducida)
 ```
 ## Graficando
 Ahora a graficar: 
@@ -54,17 +55,17 @@ ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
 ```
 
 # Exportación de productos
-Ahora quiero demostar que tipo de productos que se exportó desde Argentina en el año 2017.
+Ahora bien, querría demostar que tipo de productos que se exportó desde Argentina en el año 2017.
 
 ## Cargando los datos
 Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:
 
 ```{r argentina export datos, message=FALSE}
-# Las exportaciones argentinas en 2017 por producto
 comercio_latam <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") 
 ```
 
 ## Transformando los datos:
+Eligo los datos de Argentina para el año 2017 y los agrupo por categoría de productos. 
 ```{r argentina export productos, message=FALSE}
 export_argentina_2017 <- comercio_latam %>%
   filter(anio == 2017, codigo_iso_origen == "arg") %>%
