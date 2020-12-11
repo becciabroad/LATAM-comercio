@@ -18,7 +18,7 @@ El objetivo de este post es analizar un poco más el comercio de Argentina en pa
 
 En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
 
-```{r libraries, message=F}
+```{r libraries}
 library(tidyverse)
 library(ggplot2)
 library(tradestatistics)
@@ -26,14 +26,15 @@ library(tradestatistics)
 
 ## Los datos:
 Después voy cargando el base de datos que deseo utilizar:
-```{r base de datos, message=FALSE}
+```{r base de datos}
 comercio_latam_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all") 
+View(comercio_latam_api)
 ```
 
 ## Transformando los datos:
 Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:
 
-```{r argentina export, message=FALSE, warning=FALSE}
+```{r argentina export}
 argentina_export_reducida <- comercio_latam_api %>%
   filter(reporter_iso == "arg") %>%
   group_by(year) %>%

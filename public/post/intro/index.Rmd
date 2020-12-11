@@ -1,0 +1,62 @@
+---
+title: Introducción
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: intro
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+Este proyecto trata de analizar varios aspectos del comercio exterior de los países de América Latina para entender mejor en qué los países se especializa y qué en cambio importan desde afuera.
+
+Utilizaría el API de Open Trade Statistics. 
+
+Hago unas modificando en los datos antemano para más fácil poder utilizarlos en los siguientes posteos. 
+
+En primer lugar, aprendo las librarías necesarias:
+
+```{r librarias, message=FALSE}
+library(tradestatistics) #parquete de los datos
+library(tidyverse) #para modificar o "tidy los datos"
+```
+
+```{r latam, message=FALSE}
+
+Americas <- ots_countries %>%
+  arrange(continent)%>%
+  filter(continent == "Americas")%>%
+  select(country_iso, country_name_english)
+
+tibble(Americas)
+```
+
+
+```{r pais, message=FALSE}
+arg <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "arg", partners = "all",)
+
+bol <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "bol", partners = "all")
+
+bra <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "bra", partners = "all")
+
+chl <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "chl", partners = "all")
+
+col <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "col", partners = "all")
+
+ecu <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ecu", partners = "all")
+
+per <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "per", partners = "all")
+
+pry <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "pry", partners = "all")
+
+ven <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ven", partners = "all")
+
+ury <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ury", partners = "all")
+
+```
+
+En segundo lugar, genero una variable/objeto que incluye todos los datos de los países latinoamericanos. He elegido solamente realizar el analisis de los datos de 1980 hasta 2018, aúnque el parquete de Open Trade Statistics incluye datos desde 1962.

@@ -8,7 +8,7 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Datos Historicos del Comercio Exterior</title>
+      <title>Datos Historicos del Comercio Exterior de América Latina</title>
       <link>https://comercio-latam.netlify.app/post/datos-historicos/</link>
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
@@ -19,13 +19,54 @@ summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
     </item>
     
     <item>
-      <title>A Plain Markdown Post</title>
-      <link>https://comercio-latam.netlify.app/post/2016-12-30-hello-markdown/</link>
-      <pubDate>Fri, 30 Dec 2016 21:49:57 -0700</pubDate>
+      <title>Exportación</title>
+      <link>https://comercio-latam.netlify.app/post/exportacion/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://comercio-latam.netlify.app/post/2016-12-30-hello-markdown/</guid>
-      <description>This is a post written in plain Markdown (*.md) instead of R Markdown (*.Rmd). The major differences are:
- You cannot run any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```{r}); A plain Markdown post is rendered through Blackfriday, and an R Markdown document is compiled by rmarkdown and Pandoc.  There are many differences in syntax between Blackfriday&amp;rsquo;s Markdown and Pandoc&amp;rsquo;s Markdown.</description>
+      <guid>https://comercio-latam.netlify.app/post/exportacion/</guid>
+      <description>El objetivo de este post es analizar qué países en América Latina exportan qué tipo de productos utilizando un grafico de sets paralelos del parquete ggforce que permite visualizar en una manera muy lógica los datos.
+Cómo en los otros posts, utilizaría el API de Open Trade Statistics. En primer lugar, aprendo las librarías necesarias para realizar el analisis:
+library(tradestatistics) #parquete de los datos library(tidyverse) library(ggforce) #para graficos de sets paralelos En segundo lugar, eligo los datos que necesito para realizar el set de parelelo.</description>
+    </item>
+    
+    <item>
+      <title>Exportación Argentina</title>
+      <link>https://comercio-latam.netlify.app/post/exportacion-argentina/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/exportacion-argentina/</guid>
+      <description>  </description>
+    </item>
+    
+    <item>
+      <title>Importación</title>
+      <link>https://comercio-latam.netlify.app/post/importacion/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/importacion/</guid>
+      <description>  </description>
+    </item>
+    
+    <item>
+      <title>Introducción</title>
+      <link>https://comercio-latam.netlify.app/post/intro/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/intro/</guid>
+      <description>Este proyecto trata de analizar varios aspectos del comercio exterior de los países de América Latina para entender mejor en qué los países se especializa y qué en cambio importan desde afuera.
+Utilizaría el API de Open Trade Statistics.
+Hago unas modificando en los datos antemano para más fácil poder utilizarlos en los siguientes posteos.
+En primer lugar, aprendo las librarías necesarias:
+library(tradestatistics) #parquete de los datos library(tidyverse) #para modificar o &amp;quot;tidy los datos&amp;quot;  Americas &amp;lt;- ots_countries %&amp;gt;% arrange(continent)%&amp;gt;% filter(continent == &amp;quot;Americas&amp;quot;)%&amp;gt;% select(country_iso, country_name_english) tibble(Americas) ## # A tibble: 55 x 2 ## country_iso country_name_english ## &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; ## 1 aia Anguilla ## 2 atg Antigua and Barbuda ## 3 arg Argentina ## 4 arb Aruba ## 5 bhs Bahamas ## 6 brb Barbados ## 7 blz Belize ## 8 bmu Bermuda ## 9 bol Bolivia ## 10 bvt Bouvet Island ## # … with 45 more rows arg &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;arg&amp;quot;, partners = &amp;quot;all&amp;quot;,) bol &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;bol&amp;quot;, partners = &amp;quot;all&amp;quot;) bra &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;bra&amp;quot;, partners = &amp;quot;all&amp;quot;) chl &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;chl&amp;quot;, partners = &amp;quot;all&amp;quot;) col &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;col&amp;quot;, partners = &amp;quot;all&amp;quot;) ecu &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;ecu&amp;quot;, partners = &amp;quot;all&amp;quot;) per &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;per&amp;quot;, partners = &amp;quot;all&amp;quot;) pry &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;pry&amp;quot;, partners = &amp;quot;all&amp;quot;) ven &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;ven&amp;quot;, partners = &amp;quot;all&amp;quot;) ury &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;ury&amp;quot;, partners = &amp;quot;all&amp;quot;) En segundo lugar, genero una variable/objeto que incluye todos los datos de los países latinoamericanos.</description>
+    </item>
+    
+    <item>
+      <title>Socios Comerciales de Argentina</title>
+      <link>https://comercio-latam.netlify.app/post/socios-argentina/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/socios-argentina/</guid>
+      <description>  </description>
     </item>
     
     <item>
@@ -35,15 +76,6 @@ summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
       
       <guid>https://comercio-latam.netlify.app/about/</guid>
       <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
-    </item>
-    
-    <item>
-      <title>Lorem Ipsum</title>
-      <link>https://comercio-latam.netlify.app/post/2015-01-01-lorem-ipsum/</link>
-      <pubDate>Thu, 01 Jan 2015 13:09:13 -0600</pubDate>
-      
-      <guid>https://comercio-latam.netlify.app/post/2015-01-01-lorem-ipsum/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</description>
     </item>
     
   </channel>

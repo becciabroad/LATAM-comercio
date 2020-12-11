@@ -1,0 +1,30 @@
+---
+title: Exportación
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: exportacion
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+El objetivo de este post es analizar qué  países en América Latina exportan qué tipo de productos utilizando un grafico de sets paralelos del parquete ggforce que permite visualizar en una manera muy lógica los datos. 
+
+Cómo en los otros posts, utilizaría el API de Open Trade Statistics. En primer lugar, aprendo las librarías necesarias para realizar el analisis:
+
+```{r librarias, message=FALSE}
+library(tradestatistics) #parquete de los datos
+library(tidyverse) 
+library(ggforce) #para graficos de sets paralelos
+```
+
+En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:
+```{r exportacion, message=FALSE}
+exportacion_all <- tradestatistics::ots_create_tidy_data(years = 2018, reporters = "all", partners = "all", products = "all")
+```
+
+# Including Plots

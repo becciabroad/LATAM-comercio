@@ -1,5 +1,5 @@
 ---
-title: Datos Historicos del Comercio Exterior
+title: Datos Historicos del Comercio Exterior de América Latina
 author: Rebecca Hoffmann
 date: '2020-12-07'
 slug: datos-historicos

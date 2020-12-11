@@ -14,4 +14,32 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-
+<p>El objetivo de este post es analizar un poco más el comercio de Argentina en particular.</p>
+<p>En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:</p>
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
+library(tradestatistics)</code></pre>
+<div id="los-datos" class="section level2">
+<h2>Los datos:</h2>
+<p>Después voy cargando el base de datos que deseo utilizar:</p>
+<pre class="r"><code>comercio_latam_api &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;all&quot;) </code></pre>
+</div>
+<div id="transformando-los-datos" class="section level2">
+<h2>Transformando los datos:</h2>
+<p>Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:</p>
+<pre class="r"><code>argentina_export_reducida &lt;- comercio_latam_api %&gt;%
+  filter(reporter_iso == &quot;arg&quot;) %&gt;%
+  group_by(year) %&gt;%
+  summarise(
+    export_value_usd = sum(export_value_usd, na.rm = T))</code></pre>
+<p>Ahora a graficar:</p>
+<pre class="r"><code>ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
+  geom_line() +
+  labs(
+    x = &quot;Años&quot;,
+    y = &quot;Valor Exportado en USD&quot;,
+    title = &quot;Exportaciones de Argentina por año&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
+</div>

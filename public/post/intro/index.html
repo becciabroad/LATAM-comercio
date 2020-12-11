@@ -8,7 +8,7 @@
 	<meta name="description" content="Comercio Exterior en América Latina">
 	<meta name="author" content="Rebecca Hoffmann">
 	<meta name="generator" content="Hugo 0.79.0" />
-	<title>Datos Historicos del Comercio Exterior de América Latina &middot; Comercio en América Latina</title>
+	<title>Introducción &middot; Comercio en América Latina</title>
 	<!-- Stylesheets -->
 	
 	<link rel="stylesheet" href="https://comercio-latam.netlify.app/css/main.css"/>
@@ -77,7 +77,7 @@
                     <section id="one">
                         <div class="inner">
                             <header class="major">
-                                <h1>Datos Historicos del Comercio Exterior de América Latina</h1>
+                                <h1>Introducción</h1>
                             </header>
                             
                             
@@ -85,25 +85,53 @@
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-<pre class="r"><code>fit &lt;- lm(dist ~ speed, data = cars)
-fit</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = dist ~ speed, data = cars)
-## 
-## Coefficients:
-## (Intercept)        speed  
-##     -17.579        3.932</code></pre>
+<p>Este proyecto trata de analizar varios aspectos del comercio exterior de los países de América Latina para entender mejor en qué los países se especializa y qué en cambio importan desde afuera.</p>
+<p>Utilizaría el API de Open Trade Statistics.</p>
+<p>Hago unas modificando en los datos antemano para más fácil poder utilizarlos en los siguientes posteos.</p>
+<p>En primer lugar, aprendo las librarías necesarias:</p>
+<pre class="r"><code>library(tradestatistics) #parquete de los datos
+library(tidyverse) #para modificar o &quot;tidy los datos&quot;</code></pre>
+<pre class="r"><code>
+Americas &lt;- ots_countries %&gt;%
+  arrange(continent)%&gt;%
+  filter(continent == &quot;Americas&quot;)%&gt;%
+  select(country_iso, country_name_english)
+
+tibble(Americas)
+## # A tibble: 55 x 2
+##    country_iso country_name_english
+##    &lt;chr&gt;       &lt;chr&gt;               
+##  1 aia         Anguilla            
+##  2 atg         Antigua and Barbuda 
+##  3 arg         Argentina           
+##  4 arb         Aruba               
+##  5 bhs         Bahamas             
+##  6 brb         Barbados            
+##  7 blz         Belize              
+##  8 bmu         Bermuda             
+##  9 bol         Bolivia             
+## 10 bvt         Bouvet Island       
+## # … with 45 more rows</code></pre>
+<pre class="r"><code>arg &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;arg&quot;, partners = &quot;all&quot;,)
+
+bol &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;bol&quot;, partners = &quot;all&quot;)
+
+bra &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;bra&quot;, partners = &quot;all&quot;)
+
+chl &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;chl&quot;, partners = &quot;all&quot;)
+
+col &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;col&quot;, partners = &quot;all&quot;)
+
+ecu &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;ecu&quot;, partners = &quot;all&quot;)
+
+per &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;per&quot;, partners = &quot;all&quot;)
+
+pry &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;pry&quot;, partners = &quot;all&quot;)
+
+ven &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;ven&quot;, partners = &quot;all&quot;)
+
+ury &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;ury&quot;, partners = &quot;all&quot;)</code></pre>
+<p>En segundo lugar, genero una variable/objeto que incluye todos los datos de los países latinoamericanos. He elegido solamente realizar el analisis de los datos de 1980 hasta 2018, aúnque el parquete de Open Trade Statistics incluye datos desde 1962.</p>
 
                         </div>
                     </section>
