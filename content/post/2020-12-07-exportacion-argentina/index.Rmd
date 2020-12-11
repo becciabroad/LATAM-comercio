@@ -27,20 +27,19 @@ library(tradestatistics)
 ## Los datos:
 Después voy cargando el base de datos que deseo utilizar:
 ```{r base de datos, message=FALSE}
-comercio_latam_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all") 
+comercio_arg <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "arg") 
 ```
 
 ## Transformando los datos:
 Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:
 
 ```{r argentina export, message=FALSE, warning=FALSE}
-argentina_export_reducida <- comercio_latam_api %>%
-  filter(reporter_iso == "arg") %>%
+argentina_export_reducida <- comercio_arg %>%
   group_by(year) %>%
   summarise(
     export_value_usd = sum(export_value_usd, na.rm = T))
 ```
-
+## Graficando
 Ahora a graficar: 
 ```{r argentina export grafico}
 ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
@@ -48,7 +47,51 @@ ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
   labs(
     x = "Años",
     y = "Valor Exportado en USD",
-    title = "Exportaciones de Argentina por año") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+    title = "Exportaciones de Argentina por año")
+```
+
+# Exportación de productos
+Ahora quiero demostar que tipo de productos que se exportó desde Argentina en el año 2017.
+
+## Cargando los datos
+Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:
+
+```{r argentina export datos, message=FALSE}
+# Las exportaciones argentinas en 2017 por producto
+comercio_latam <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") 
+```
+
+## Transformando los datos:
+```{r argentina export productos, message=FALSE}
+export_argentina_2017 <- comercio_latam %>%
+  filter(anio == 2017, codigo_iso_origen == "arg") %>%
+  group_by(anio, nombre_comunidad_producto, color_comunidad_producto) %>%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, "/", round(100*valor_exportado_dolares/sum(valor_exportado_dolares), 2), "%")
+    )
+```
+
+## Graficando
+Para este ejercicio, además,  voy a necesitar otra libraría, así antes de empezar a graficar los resultados aprendo la libraría de Treemapify:
+
+```{r argentina export productos library, message=FALSE}
+library(treemapify)
+```
+
+Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:
+```{r argentina export productos grafico, message=FALSE}
+ggplot(export_argentina_2017, aes(
+  area = valor_exportado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = "black",
+                    place = "centre",
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
+  labs(title = "Categorías de productos exportado de Argentina a nivel Mundial (2017)") +
+  theme(legend.position = "none")
 ```
