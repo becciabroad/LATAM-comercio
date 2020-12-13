@@ -23,27 +23,24 @@ library(ggplot2)
 ```
 ## Los datos
 Descargo el base de datos:
-
+I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
 ```{r comercio API 1, message=FALSE}
-comercio_mundo_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all", partners = "all")
+comercio_mundo_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all", partners = "all") %>%
+  rename(country_iso = 'reporter_iso')
 ```
 
-From another data base in tradestatistics, I can choose only countries belonging to the "Americas"
+From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:
 
 ```{r comercio API 2, message=FALSE}
 countries_LATAM <- tradestatistics::ots_countries %>%
   filter(continent == "Americas") 
 ```
 
-I rename the column "reporter_iso" to be able to merge it with the second data frame from the API
-```{r comercio rename, message=FALSE}
-comercio_mundo_modificado <- rename(comercio_mundo_api, country_iso = 'reporter_iso')
-```
-
 Merging the two data frames to have the information about the Americas:
 ```{r comercio LATAM merge, message=FALSE}
-comercio_latam_reducido <- merge(x = comercio_mundo_modificado, y = countries_LATAM,
+comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
       by = "country_iso") %>%
+  select(country_iso, year, country_fullname_english, export_value_usd) %>%
   drop_na() #limpio los N/A, this excludes a lot of observations/countries - I need to check this again
 
 data.frame(comercio_latam_reducido)
