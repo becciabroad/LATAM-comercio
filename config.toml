@@ -94,37 +94,37 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Introducción al proyecto"
       subtitle = "Armando la página web etc."
-      image = "pic01.jpg"
+      image = "pic1.jpg"
       url = "post/intro/"
 
     [[params.tiles.showcase]]
       title = "Datos Historicos del Comercio Exterior"
       subtitle = "El desarrollo histórico del comercio exterior en América Latina"
-      image = "pic02.jpg"
+      image = "pic2.jpg"
       url = "post/datos-historicos/"
 
     [[params.tiles.showcase]]
       title = "¿Qué país importa más?"
       subtitle = "Analisis de qué país importa más en América Latina"
-      image = "pic03.jpg"
+      image = "pic3.jpg"
       url = "post/importacion/"
 
     [[params.tiles.showcase]]
       title = "¿Qué productos se exporta?"
       subtitle = "Analisis del tipo de productos que se exportan en América Latina"
-      image = "pic04.jpg"
+      image = "pic4.jpg"
       url = "post/exportacion/"
 
     [[params.tiles.showcase]]
       title = "Exportación en Argentina"
       subtitle = "Analisis de las exportaciones en Argentina"
-      image = "pic05.jpg"
+      image = "pic5.jpg"
       url = "post/exportacion-argentina/"
 
     [[params.tiles.showcase]]
       title = "¿A quién se exporta Argentina?"
       subtitle = "Analisis de los socios comerciales principales de Argentina"
-      image = "pic06.jpg"
+      image = "pic6.jpg"
       url = "post/socios-argentina"
     # You can make more showcases by copy and pasting the code above
 
