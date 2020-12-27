@@ -45,8 +45,9 @@ I want to select the variables I want for the visualization of the total export.
          country_iso, 
          country_fullname_english, 
          export_value_usd) %&gt;%
-  filter(country_iso != &quot;usa&quot;,
-         country_iso != &quot;can&quot;,
+  filter(country_iso != &quot;usa&quot;, # Excluding the U.S.
+         country_iso != &quot;can&quot;, # Excluding Canada
+         country_iso != &quot;grl&quot;, # Excluding Grenland
          country_iso != &quot;vir&quot;, # Excluding one observation of US Virgin Islands
          country_iso != &quot;umi&quot;) # Excluding &quot;United States Minor Outlying Islands&quot;</code></pre>
 <p>Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:</p>

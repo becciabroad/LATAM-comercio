@@ -44,7 +44,6 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
       by = "country_iso") %>%
   select(country_iso, year, country_fullname_english, export_value_usd) %>%
   drop_na() #limpio los N/A, this excludes a lot of observations/countries - I need to check this again
-
 ```
 
 ## Transformando los datos
@@ -56,10 +55,12 @@ comercio_latam_modificado <- comercio_latam_reducido %>%
          country_iso, 
          country_fullname_english, 
          export_value_usd) %>%
-  filter(country_iso != "usa",
-         country_iso != "can",
+  filter(country_iso != "usa", # Excluding the U.S.
+         country_iso != "can", # Excluding Canada
+         country_iso != "grl", # Excluding Grenland
          country_iso != "vir", # Excluding one observation of US Virgin Islands
          country_iso != "umi") # Excluding "United States Minor Outlying Islands"
+
 ```
 
 Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:
