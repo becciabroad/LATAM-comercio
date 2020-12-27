@@ -45,7 +45,6 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
   select(country_iso, year, country_fullname_english, export_value_usd) %>%
   drop_na() #limpio los N/A, this excludes a lot of observations/countries - I need to check this again
 
-data.frame(comercio_latam_reducido)
 ```
 
 ## Transformando los datos
