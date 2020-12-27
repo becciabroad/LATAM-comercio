@@ -10,12 +10,70 @@ output:
   blogdown::html_page
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
 
-You can embed an R code chunk like this:
+En este post, querría analizar la evolución del comercio en la región de América Latin utilizando el base de dato de Open Trade Statistics:
 
-```{r cars}
-summary(cars)
-fit <- lm(dist ~ speed, data = cars)
-fit
+### Las libraría utilizadas:
+
+```{r libraries, message=F}
+library(tidyverse)
+library(tradestatistics)
+library(ggplot2)
+```
+## Los datos
+Descargo el base de datos:
+I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
+```{r comercio API 1, message=FALSE}
+comercio_mundo_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all", partners = "all") %>%
+  rename(country_iso = 'reporter_iso')
+```
+
+From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:
+
+```{r comercio API 2, message=FALSE}
+countries_LATAM <- tradestatistics::ots_countries %>%
+  filter(continent == "Americas") 
+```
+
+Merging the two data frames to have the information about the Americas:
+```{r comercio LATAM merge, message=FALSE}
+comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
+      by = "country_iso") %>%
+  select(country_iso, year, country_fullname_english, export_value_usd) %>%
+  drop_na() #limpio los N/A, this excludes a lot of observations/countries - I need to check this again
+
+data.frame(comercio_latam_reducido)
+```
+
+## Transformando los datos
+Now I have a data frame including information only for the region of the Americas.
+I want to select the variables I want for the visualization of the total export. However, I only want to include information about Latin American countries. So, I also exclude the US and Canada from the analysis:
+```{r comercio Americas, message=FALSE}
+comercio_latam_modificado <- comercio_latam_reducido %>%
+  select(year, 
+         country_iso, 
+         country_fullname_english, 
+         export_value_usd) %>%
+  filter(country_iso != "usa",
+         country_iso != "can",
+         country_iso != "vir", # Excluding one observation of US Virgin Islands
+         country_iso != "umi") # Excluding "United States Minor Outlying Islands"
+```
+
+Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:
+
+## Graficando
+```{r comercio LATAM exclude, message=FALSE}
+ggplot(comercio_latam_modificado) +
+  geom_line(aes(year,
+                export_value_usd,
+                group = country_fullname_english,
+                color = country_fullname_english)) +
+  labs(title = "Evolución de exportación en América Latina",
+       y = "export en USD",
+       x = "Año")+
+  theme(legend.position = "bottom")
 ```

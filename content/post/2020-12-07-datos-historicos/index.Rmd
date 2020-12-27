@@ -9,9 +9,11 @@ draft: false
 output:
   blogdown::html_page
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
+
 En este post, querría analizar la evolución del comercio en la región de América Latin utilizando el base de dato de Open Trade Statistics:
 
 ### Las libraría utilizadas:
@@ -49,7 +51,7 @@ data.frame(comercio_latam_reducido)
 ## Transformando los datos
 Now I have a data frame including information only for the region of the Americas.
 I want to select the variables I want for the visualization of the total export. However, I only want to include information about Latin American countries. So, I also exclude the US and Canada from the analysis:
-```{r comercio LATAM exclude, message=FALSE}
+```{r comercio Americas, message=FALSE}
 comercio_latam_modificado <- comercio_latam_reducido %>%
   select(year, 
          country_iso, 

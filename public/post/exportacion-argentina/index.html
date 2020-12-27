@@ -30,7 +30,49 @@ library(tradestatistics)</code></pre>
 <pre class="r"><code>argentina_export_reducida &lt;- comercio_arg %&gt;%
   group_by(year) %&gt;%
   summarise(
-    export_value_usd = sum(export_value_usd, na.rm = T))</code></pre>
+    export_value_usd = sum(export_value_usd, na.rm = T))
+
+data.frame(argentina_export_reducida)
+##    year export_value_usd
+## 1  1980       9995472614
+## 2  1981      10881904159
+## 3  1982       9627289806
+## 4  1983      10142191318
+## 5  1984       9991029974
+## 6  1985      10113085261
+## 7  1986       8644911151
+## 8  1987       8309716812
+## 9  1988      11900774926
+## 10 1989      13176601533
+## 11 1990      15689197694
+## 12 1991      15807138791
+## 13 1992      12564911891
+## 14 1993      15458530988
+## 15 1994      19063254091
+## 16 1995      24558768100
+## 17 1996      25541905040
+## 18 1997      28743051386
+## 19 1998      29099346076
+## 20 1999      25348110962
+## 21 2000      28726930658
+## 22 2001      29913016739
+## 23 2002      29451934205
+## 24 2003      33741276473
+## 25 2004      40020298718
+## 26 2005      46262620584
+## 27 2006      52874945269
+## 28 2007      63052574657
+## 29 2008      83863657011
+## 30 2009      63481866450
+## 31 2010      76210445978
+## 32 2011      91358702514
+## 33 2012      89383919573
+## 34 2013      84917359013
+## 35 2014      75933705869
+## 36 2015      64858102686
+## 37 2016      64414017618
+## 38 2017      66103021437
+## 39 2018      76034304593</code></pre>
 </div>
 <div id="graficando" class="section level2">
 <h2>Graficando</h2>
@@ -40,20 +82,23 @@ library(tradestatistics)</code></pre>
   labs(
     x = &quot;Años&quot;,
     y = &quot;Valor Exportado en USD&quot;,
-    title = &quot;Exportaciones de Argentina por año&quot;)</code></pre>
+    title = &quot;Exportaciones de Argentina por año&quot;,
+    caption = &quot;FUENTE: Open Trade Statistics&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
 </div>
 <div id="exportación-de-productos" class="section level1">
 <h1>Exportación de productos</h1>
-<p>Ahora quiero demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
+<p>Ahora bien, querría demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
 <div id="cargando-los-datos" class="section level2">
 <h2>Cargando los datos</h2>
 <p>Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:</p>
-<pre class="r"><code># Las exportaciones argentinas en 2017 por producto
-comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
+<pre class="r"><code>comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
 </div>
 <div id="transformando-los-datos-1" class="section level2">
 <h2>Transformando los datos:</h2>
+<p>Eligo los datos de Argentina para el año 2017 y los agrupo por categoría de productos.</p>
 <pre class="r"><code>export_argentina_2017 &lt;- comercio_latam %&gt;%
   filter(anio == 2017, codigo_iso_origen == &quot;arg&quot;) %&gt;%
   group_by(anio, nombre_comunidad_producto, color_comunidad_producto) %&gt;%

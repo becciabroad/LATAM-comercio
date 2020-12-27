@@ -38,7 +38,8 @@ argentina_export_reducida <- comercio_arg %>%
   group_by(year) %>%
   summarise(
     export_value_usd = sum(export_value_usd, na.rm = T))
-view(argentina_export_reducida)
+
+data.frame(argentina_export_reducida)
 ```
 ## Graficando
 Ahora a graficar: 
