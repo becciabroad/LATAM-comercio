@@ -27,7 +27,10 @@ library(ggplot2)
 Descargo el base de datos:
 I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
 ```{r comercio API 1, message=FALSE}
-comercio_mundo_api <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "all", partners = "all") %>%
+comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
+  years = 1980:2018, 
+  reporters = "all", 
+  partners = "all") %>%
   rename(country_iso = 'reporter_iso')
 ```
 
@@ -38,42 +41,108 @@ countries_LATAM <- tradestatistics::ots_countries %>%
   filter(continent == "Americas") 
 ```
 
-Merging the two data frames to have the information about the Americas:
+Merging the two data frames, I now get a data frame including information only for the region of the Americas.
+
+However, I only want to include information about Latin American countries. So, I also exclude the US, Canada, Greenland, and some minor US island from the analysis:
+
 ```{r comercio LATAM merge, message=FALSE}
 comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
       by = "country_iso") %>%
-  select(country_iso, year, country_fullname_english, export_value_usd) %>%
-  drop_na() #limpio los N/A, this excludes a lot of observations/countries - I need to check this again
-```
-
-## Transformando los datos
-Now I have a data frame including information only for the region of the Americas.
-I want to select the variables I want for the visualization of the total export. However, I only want to include information about Latin American countries. So, I also exclude the US and Canada from the analysis:
-```{r comercio Americas, message=FALSE}
-comercio_latam_modificado <- comercio_latam_reducido %>%
-  select(year, 
-         country_iso, 
+  select(year,
+         country_iso,
          country_fullname_english, 
          export_value_usd) %>%
   filter(country_iso != "usa", # Excluding the U.S.
          country_iso != "can", # Excluding Canada
-         country_iso != "grl", # Excluding Grenland
+         country_iso != "grl", # Excluding Greenland
          country_iso != "vir", # Excluding one observation of US Virgin Islands
-         country_iso != "umi") # Excluding "United States Minor Outlying Islands"
+         country_iso != "umi", # Excluding "United States Minor Outlying Islands"
+         country_iso != "vgb", # Excluding British Virgin Islands
+         country_iso != "sgs") # Exclude South Georgia and the South Sandwich Islands (British territory)
+
+
+comercio_latam_reducido
 
 ```
 
+## Transformando los datos
 Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:
 
+```{r comercio Americas, message=FALSE}
+
+comercio_latam_modificado <- comercio_latam_reducido %>%
+  mutate(country_fullname_english = as.factor(country_fullname_english))
+
+comercio_latam_caribbean <- comercio_latam_modificado %>%
+  select(year,
+         country_fullname_english,
+         export_value_usd) %>%
+  mutate(country_fullname_english = fct_collapse(country_fullname_english,
+                                  "Caribbean" = c("Anguilla", 
+                                                  "Neth. Antilles", 
+                                                  "Antigua and Barbuda", 
+                                                  "Bahamas",
+                                                  "Barbados",
+                                                  "Belize",
+                                                  "Bermuda",
+                                                  "Bouvet Island",
+                                                  "Cocos Isds",
+                                                  "Cayman Isds",
+                                                  "Guadeloupe",
+                                                  "Cuba",
+                                                  "Grenada",
+                                                  "French Guiana",
+                                                  "Guyana",
+                                                  "Haiti",
+                                                  "Jamaica",
+                                                  "Saint Kitts and Nevis (includes Anguilla until 1981)",
+                                                  "Saint Lucia",
+                                                  "Montserrat",
+                                                  "Martinique",
+                                                  "Saint Pierre and Miquelon",
+                                                  "Suriname",
+                                                  "Turks and Caicos Isds",
+                                                  "Trinidad and Tobago",
+                                                  "Saint Vincent and the Grenadines"),
+                                  "Central America" = c("Costa Rica",
+                                                        "Dominica",
+                                                        "Dominican Rep.",
+                                                        "El Salvador",
+                                                        "Guatemala",
+                                                        "Honduras",
+                                                        "Nicaragua",
+                                                        "Panama (excludes Panama Canal Zone until 1978)"),
+                                  "Argentina" = c("Argentina", "Falkland Isds (Malvinas)")))
+
+```
+
 ## Graficando
-```{r comercio LATAM exclude, message=FALSE}
-ggplot(comercio_latam_modificado) +
+```{r comercio LATAM graph, message=FALSE}
+ggplot(comercio_latam_caribbean) +
   geom_line(aes(year,
                 export_value_usd,
                 group = country_fullname_english,
                 color = country_fullname_english)) +
   labs(title = "Evolución de exportación en América Latina",
        y = "export en USD",
-       x = "Año")+
-  theme(legend.position = "bottom")
+       x = "Año") +
+  theme(legend.position = "left")
+```
+
+
+```{r comercio LATAM bar, message=FALSE}
+comercio_latam_caribbean %>%
+  mutate(country = summarise(country_fullname_english)) %>% 
+  fct_infreq() %>% 
+  fct_rev() %>%
+  ggplot(aes(country)) +
+  geom_bar()
+
+
+ggplot(aes(comercio_latam_caribbean)) +
+  geom_bar() +
+  labs(title = "Evolución de exportación en América Latina",
+       y = "export en USD",
+       x = "Año") +
+  theme(legend.position = "left")
 ```
