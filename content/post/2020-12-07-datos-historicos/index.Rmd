@@ -126,23 +126,7 @@ ggplot(comercio_latam_caribbean) +
   labs(title = "Evolución de exportación en América Latina",
        y = "export en USD",
        x = "Año") +
-  theme(legend.position = "left")
+  theme(legend.position = "bottom")
 ```
 
-
-```{r comercio LATAM bar, message=FALSE}
-comercio_latam_caribbean %>%
-  mutate(country = summarise(country_fullname_english)) %>% 
-  fct_infreq() %>% 
-  fct_rev() %>%
-  ggplot(aes(country)) +
-  geom_bar()
-
-
-ggplot(aes(comercio_latam_caribbean)) +
-  geom_bar() +
-  labs(title = "Evolución de exportación en América Latina",
-       y = "export en USD",
-       x = "Año") +
-  theme(legend.position = "left")
-```
+trying to make a bar chat as well:
