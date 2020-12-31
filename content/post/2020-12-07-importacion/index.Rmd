@@ -125,5 +125,19 @@ ggplot(productos_latam_import_2018, aes(
 
 Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.
 
+Pero qué países importan más de esos dos productos?
+
 ```{r comercio LATAM productos por país, message=FALSE}
+import_countries_2018 <- comercio_latam %>%
+  select(country_iso,
+         reporter_fullname_english,
+         import_value_usd,
+         top_import_product_code) %>%
+  mutate (car = ifelse(top_import_product_code == "8703", "Car", "Other product")) %>%
+  mutate(petroleum = ifelse(top_import_product_code == "2710", "Refined Petroleum", "Other product")) %>%
+  group_by(reporter_fullname_english, car, petroleum) %>%
+  summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
+  drop_na()
+
 ```
+
