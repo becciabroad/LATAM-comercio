@@ -60,9 +60,6 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
          country_iso != "vgb", # Excluding British Virgin Islands
          country_iso != "sgs") # Exclude South Georgia and the South Sandwich Islands (British territory)
 
-
-comercio_latam_reducido
-
 ```
 
 ## Transformando los datos
