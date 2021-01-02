@@ -74,8 +74,42 @@ mapCountryData(mapped_data, nameColumnToPlot = &quot;import_value_usd&quot;, map
 <pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_import_product_code = &quot;product_code&quot;)
 
-productos_latam_import_2018 &lt;- merge(x = comercio_latam, y = productos_latam, 
+productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam, 
                                 by = &#39;top_import_product_code&#39;) %&gt;%
+    filter(reporter_fullname_english != &quot;Anguilla&quot;,
+         reporter_fullname_english != &quot;Neth. Antilles&quot;,
+         reporter_fullname_english != &quot;Antigua and Barbuda&quot;,
+         reporter_fullname_english != &quot;Bahamas&quot;,
+         reporter_fullname_english != &quot;Barbados&quot;,
+         reporter_fullname_english != &quot;Belize&quot;,
+         reporter_fullname_english != &quot;Bermuda&quot;,
+         reporter_fullname_english != &quot;Bouvet Island&quot;,
+         reporter_fullname_english != &quot;Cocos Isds&quot;,
+         reporter_fullname_english != &quot;Cayman Isds&quot;,
+         reporter_fullname_english != &quot;Guadeloupe&quot;,
+         reporter_fullname_english != &quot;Cuba&quot;,
+         reporter_fullname_english != &quot;Grenada&quot;,
+         reporter_fullname_english != &quot;French Guiana&quot;,
+         reporter_fullname_english != &quot;Guyana&quot;,
+         reporter_fullname_english != &quot;Haiti&quot;,
+         reporter_fullname_english != &quot;Jamaica&quot;,
+         reporter_fullname_english != &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
+         reporter_fullname_english != &quot;Saint Lucia&quot;,
+         reporter_fullname_english != &quot;Montserrat&quot;,
+         reporter_fullname_english != &quot;Martinique&quot;,
+         reporter_fullname_english != &quot;Saint Pierre and Miquelon&quot;,
+         reporter_fullname_english != &quot;Suriname&quot;,
+         reporter_fullname_english != &quot;Turks and Caicos Isds&quot;,
+         reporter_fullname_english != &quot;Trinidad and Tobago&quot;,
+         reporter_fullname_english != &quot;Saint Vincent and the Grenadines&quot;,
+         reporter_fullname_english != &quot;USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)&quot;,
+         reporter_fullname_english != &quot;Canada&quot;,
+         reporter_fullname_english != &quot;Greenland&quot;,
+         reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
+         reporter_fullname_english != &quot;United States Minor Outlying Islands&quot;,
+         reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;)
+
+productos_latam_import_2018 &lt;- productos_latam_import %&gt;%
   select(top_import_product_code,
          product_shortname_english,
          import_value_usd) %&gt;%
@@ -107,15 +141,30 @@ ggplot(productos_latam_import_2018, aes(
 <p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20categori%CC%81a-1.png" width="672" /></p>
 <p>Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.</p>
 <p>Pero qué países importan más de esos dos productos?</p>
-<pre class="r"><code>import_countries_2018 &lt;- comercio_latam %&gt;%
-  select(country_iso,
-         reporter_fullname_english,
+<pre class="r"><code>
+
+import_countries_2018 &lt;- productos_latam_import %&gt;%
+  select(reporter_fullname_english,
          import_value_usd,
-         top_import_product_code) %&gt;%
-  mutate (car = ifelse(top_import_product_code == &quot;8703&quot;, &quot;Car&quot;, &quot;Other product&quot;)) %&gt;%
-  mutate(petroleum = ifelse(top_import_product_code == &quot;2710&quot;, &quot;Refined Petroleum&quot;, &quot;Other product&quot;)) %&gt;%
-  group_by(reporter_fullname_english, car, petroleum) %&gt;%
+         top_import_product_code,
+         product_shortname_english) %&gt;%
+  group_by(reporter_fullname_english, product_shortname_english, top_import_product_code) %&gt;%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %&gt;%
-  drop_na()</code></pre>
+  drop_na()
+
+ggplot(import_countries_2018, aes(
+  x = reporter_fullname_english,
+  y = import_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = &quot;Valor Importado en USD&quot;,
+    fill = NULL,
+    title = &quot;Importaciones de Ameríca Latina de autos en 2018&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;,
+        )</code></pre>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20pai%CC%81s-1.png" width="672" /></p>
 </div>
 </div>

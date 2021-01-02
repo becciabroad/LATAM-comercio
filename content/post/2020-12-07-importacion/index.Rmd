@@ -89,8 +89,42 @@ Desde otro base de datos de Open Trade Statistics, puedo descargar los nombres d
 productos_latam <- tradestatistics::ots_products_shortnames %>%
   rename(top_import_product_code = "product_code")
 
-productos_latam_import_2018 <- merge(x = comercio_latam, y = productos_latam, 
+productos_latam_import <- merge(x = comercio_latam, y = productos_latam, 
                                 by = 'top_import_product_code') %>%
+    filter(reporter_fullname_english != "Anguilla",
+         reporter_fullname_english != "Neth. Antilles",
+         reporter_fullname_english != "Antigua and Barbuda",
+         reporter_fullname_english != "Bahamas",
+         reporter_fullname_english != "Barbados",
+         reporter_fullname_english != "Belize",
+         reporter_fullname_english != "Bermuda",
+         reporter_fullname_english != "Bouvet Island",
+         reporter_fullname_english != "Cocos Isds",
+         reporter_fullname_english != "Cayman Isds",
+         reporter_fullname_english != "Guadeloupe",
+         reporter_fullname_english != "Cuba",
+         reporter_fullname_english != "Grenada",
+         reporter_fullname_english != "French Guiana",
+         reporter_fullname_english != "Guyana",
+         reporter_fullname_english != "Haiti",
+         reporter_fullname_english != "Jamaica",
+         reporter_fullname_english != "Saint Kitts and Nevis (includes Anguilla until 1981)",
+         reporter_fullname_english != "Saint Lucia",
+         reporter_fullname_english != "Montserrat",
+         reporter_fullname_english != "Martinique",
+         reporter_fullname_english != "Saint Pierre and Miquelon",
+         reporter_fullname_english != "Suriname",
+         reporter_fullname_english != "Turks and Caicos Isds",
+         reporter_fullname_english != "Trinidad and Tobago",
+         reporter_fullname_english != "Saint Vincent and the Grenadines",
+         reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
+         reporter_fullname_english != "Canada",
+         reporter_fullname_english != "Greenland",
+         reporter_fullname_english != "Br. Virgin Isds",
+         reporter_fullname_english != "United States Minor Outlying Islands",
+         reporter_fullname_english != "South Georgia and the South Sandwich Islands")
+
+productos_latam_import_2018 <- productos_latam_import %>%
   select(top_import_product_code,
          product_shortname_english,
          import_value_usd) %>%
@@ -128,16 +162,30 @@ Está claro que el producto que más se importa en América Latina en 2018 eran 
 Pero qué países importan más de esos dos productos?
 
 ```{r comercio LATAM productos por país, message=FALSE}
-import_countries_2018 <- comercio_latam %>%
-  select(country_iso,
-         reporter_fullname_english,
+
+
+import_countries_2018 <- productos_latam_import %>%
+  select(reporter_fullname_english,
          import_value_usd,
-         top_import_product_code) %>%
-  mutate (car = ifelse(top_import_product_code == "8703", "Car", "Other product")) %>%
-  mutate(petroleum = ifelse(top_import_product_code == "2710", "Refined Petroleum", "Other product")) %>%
-  group_by(reporter_fullname_english, car, petroleum) %>%
+         top_import_product_code,
+         product_shortname_english) %>%
+  group_by(reporter_fullname_english, product_shortname_english, top_import_product_code) %>%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
   drop_na()
+
+ggplot(import_countries_2018, aes(
+  x = reporter_fullname_english,
+  y = import_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = "Valor Importado en USD",
+    fill = NULL,
+    title = "Importaciones de Ameríca Latina de autos en 2018") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        )
 
 ```
 
