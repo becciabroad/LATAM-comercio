@@ -117,7 +117,7 @@ productos_latam_import <- merge(x = comercio_latam, y = productos_latam,
          reporter_fullname_english != "Turks and Caicos Isds",
          reporter_fullname_english != "Trinidad and Tobago",
          reporter_fullname_english != "Saint Vincent and the Grenadines",
-         reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
+      reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
          reporter_fullname_english != "Canada",
          reporter_fullname_english != "Greenland",
          reporter_fullname_english != "Br. Virgin Isds",
@@ -163,14 +163,20 @@ Pero qué países importan más de esos dos productos?
 
 ```{r comercio LATAM productos por país, message=FALSE}
 
+import_countries_modificied <- productos_latam_import %>%
+  mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
 
-import_countries_2018 <- productos_latam_import %>%
+import_countries_2018 <- import_countries_modificied %>%
   select(reporter_fullname_english,
          import_value_usd,
          top_import_product_code,
          product_shortname_english) %>%
+  mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
+                                                  "Panama" = "Panama (excludes Panama Canal Zone until 1978)",
+                                                  "Argentina" = c("Argentina", "Falkland Isds (Malvinas)"))) %>% 
   group_by(reporter_fullname_english, product_shortname_english, top_import_product_code) %>%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
+  arrange(desc(import_value_usd)) %>%
   drop_na()
 
 ggplot(import_countries_2018, aes(
@@ -182,10 +188,11 @@ ggplot(import_countries_2018, aes(
     x = NULL,
     y = "Valor Importado en USD",
     fill = NULL,
-    title = "Importaciones de Ameríca Latina de autos en 2018") +
+    title = "Importaciones de Ameríca Latina por producto en 2018",
+    caption = "Fuerte: Open Trade Statistics") +
   theme_minimal() +
-  theme(legend.position = "bottom",
-        )
+  theme(legend.position = "bottom") +
+  coord_flip()
 
 ```
 
