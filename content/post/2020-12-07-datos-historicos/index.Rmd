@@ -126,4 +126,4 @@ ggplot(comercio_latam_caribbean) +
   theme(legend.position = "bottom")
 ```
 
-trying to make a bar chat as well:
+Entonces,... 

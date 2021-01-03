@@ -193,3 +193,4 @@ ggplot(import_countries_2018, aes(
   coord_flip()
 ```
 
+Entonces... 
