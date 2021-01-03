@@ -117,7 +117,7 @@ productos_latam_import <- merge(x = comercio_latam, y = productos_latam,
          reporter_fullname_english != "Turks and Caicos Isds",
          reporter_fullname_english != "Trinidad and Tobago",
          reporter_fullname_english != "Saint Vincent and the Grenadines",
-         reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
+      reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
          reporter_fullname_english != "Canada",
          reporter_fullname_english != "Greenland",
          reporter_fullname_english != "Br. Virgin Isds",
@@ -153,7 +153,6 @@ ggplot(productos_latam_import_2018, aes(
                     grow = F,
                     reflow = T) +
   labs(title = "Categorías de productos importado en América Latina en 2018")
-  
 
 ```
 
@@ -162,9 +161,6 @@ Está claro que el producto que más se importa en América Latina en 2018 eran 
 Pero qué países importan más de esos dos productos?
 
 ```{r comercio LATAM productos por país, message=FALSE}
-
-import_countries_2018
-
 import_countries_modificied <- productos_latam_import %>%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
 
@@ -195,6 +191,5 @@ ggplot(import_countries_2018, aes(
   theme_minimal() +
   theme(legend.position = "bottom") +
   coord_flip()
-
 ```
 
