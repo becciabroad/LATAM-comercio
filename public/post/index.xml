@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Comercio en América Latina</title>
-    <link>https://comercio-latam.netlify.app/</link>
-    <description>Recent content on Comercio en América Latina</description>
+    <title>Posts on Comercio en América Latina</title>
+    <link>https://comercio-latam.netlify.app/post/</link>
+    <description>Recent content in Posts on Comercio en América Latina</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exportación Argentina</title>
       <link>https://comercio-latam.netlify.app/post/exportacion-argentina/</link>
@@ -17,15 +17,6 @@
 En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
 library(tidyverse) library(ggplot2) library(tradestatistics) Los datos: Después voy cargando el base de datos que deseo utilizar:
 comercio_arg &amp;lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &amp;quot;arg&amp;quot;)   Transformando los datos: Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://comercio-latam.netlify.app/about/</link>
-      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
-      
-      <guid>https://comercio-latam.netlify.app/about/</guid>
-      <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
     </item>
     
   </channel>

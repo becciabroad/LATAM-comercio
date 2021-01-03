@@ -1,0 +1,130 @@
+---
+title: Exportación Argentina
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: exportacion-argentina
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<p>El objetivo de este post es analizar un poco más el comercio de Argentina en particular.</p>
+<p>En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:</p>
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
+library(tradestatistics)</code></pre>
+<div id="los-datos" class="section level2">
+<h2>Los datos:</h2>
+<p>Después voy cargando el base de datos que deseo utilizar:</p>
+<pre class="r"><code>comercio_arg &lt;- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = &quot;arg&quot;) </code></pre>
+</div>
+<div id="transformando-los-datos" class="section level2">
+<h2>Transformando los datos:</h2>
+<p>Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:</p>
+<pre class="r"><code>argentina_export_reducida &lt;- comercio_arg %&gt;%
+  group_by(year) %&gt;%
+  summarise(
+    export_value_usd = sum(export_value_usd, na.rm = T))
+
+data.frame(argentina_export_reducida)
+##    year export_value_usd
+## 1  1980       9995472614
+## 2  1981      10881904159
+## 3  1982       9627289806
+## 4  1983      10142191318
+## 5  1984       9991029974
+## 6  1985      10113085261
+## 7  1986       8644911151
+## 8  1987       8309716812
+## 9  1988      11900774926
+## 10 1989      13176601533
+## 11 1990      15689197694
+## 12 1991      15807138791
+## 13 1992      12564911891
+## 14 1993      15458530988
+## 15 1994      19063254091
+## 16 1995      24558768100
+## 17 1996      25541905040
+## 18 1997      28743051386
+## 19 1998      29099346076
+## 20 1999      25348110962
+## 21 2000      28726930658
+## 22 2001      29913016739
+## 23 2002      29451934205
+## 24 2003      33741276473
+## 25 2004      40020298718
+## 26 2005      46262620584
+## 27 2006      52874945269
+## 28 2007      63052574657
+## 29 2008      83863657011
+## 30 2009      63481866450
+## 31 2010      76210445978
+## 32 2011      91358702514
+## 33 2012      89383919573
+## 34 2013      84917359013
+## 35 2014      75933705869
+## 36 2015      64858102686
+## 37 2016      64414017618
+## 38 2017      66103021437
+## 39 2018      76034304593</code></pre>
+</div>
+<div id="graficando" class="section level2">
+<h2>Graficando</h2>
+<p>Ahora a graficar:</p>
+<pre class="r"><code>ggplot(data = argentina_export_reducida, aes(x = year, y = export_value_usd)) +
+  geom_line() +
+  labs(
+    x = &quot;Años&quot;,
+    y = &quot;Valor Exportado en USD&quot;,
+    title = &quot;Exportaciones de Argentina por año&quot;,
+    caption = &quot;FUENTE: Open Trade Statistics&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
+</div>
+<div id="exportación-de-productos" class="section level1">
+<h1>Exportación de productos</h1>
+<p>Ahora bien, querría demostar que tipo de productos que se exportó desde Argentina en el año 2017.</p>
+<div id="cargando-los-datos" class="section level2">
+<h2>Cargando los datos</h2>
+<p>Para hacer el analisis más agil y fácil de entender (y porqué me costó bastante encontrar la vuelta al API de tradestatistics - newbee problems) eligí hacer este analisis utilizando el base de datos publicado para Datos de Miércoles en mayo 2019:</p>
+<pre class="r"><code>comercio_latam &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) </code></pre>
+</div>
+<div id="transformando-los-datos-1" class="section level2">
+<h2>Transformando los datos:</h2>
+<p>Eligo los datos de Argentina para el año 2017 y los agrupo por categoría de productos.</p>
+<pre class="r"><code>export_argentina_2017 &lt;- comercio_latam %&gt;%
+  filter(anio == 2017, codigo_iso_origen == &quot;arg&quot;) %&gt;%
+  group_by(anio, nombre_comunidad_producto, color_comunidad_producto) %&gt;%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %&gt;%
+  ungroup() %&gt;%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, &quot;/&quot;, round(100*valor_exportado_dolares/sum(valor_exportado_dolares), 2), &quot;%&quot;)
+    )</code></pre>
+</div>
+<div id="graficando-1" class="section level2">
+<h2>Graficando</h2>
+<p>Para este ejercicio, además, voy a necesitar otra libraría, así antes de empezar a graficar los resultados aprendo la libraría de Treemapify:</p>
+<pre class="r"><code>library(treemapify)</code></pre>
+<p>Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:</p>
+<pre class="r"><code>ggplot(export_argentina_2017, aes(
+  area = valor_exportado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = &quot;black&quot;,
+                    place = &quot;centre&quot;,
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
+  labs(title = &quot;Categorías de productos exportado de Argentina a nivel Mundial (2017)&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="index_files/figure-html/argentina%20export%20productos%20grafico-1.png" width="672" /></p>
+</div>
+</div>

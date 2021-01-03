@@ -37,25 +37,6 @@ tibble(Americas)
 
 
 ```{r pais, message=FALSE}
-arg <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "arg", partners = "all",)
-
-bol <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "bol", partners = "all")
-
-bra <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "bra", partners = "all")
-
-chl <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "chl", partners = "all")
-
-col <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "col", partners = "all")
-
-ecu <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ecu", partners = "all")
-
-per <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "per", partners = "all")
-
-pry <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "pry", partners = "all")
-
-ven <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ven", partners = "all")
-
-ury <- tradestatistics::ots_create_tidy_data(years = 1980:2018, reporters = "ury", partners = "all")
 
 ```
 
