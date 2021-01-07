@@ -119,13 +119,13 @@ disqusShortname = ""
       title = "Exportación en Argentina"
       subtitle = "Analisis de las exportaciones en Argentina"
       image = "pic5.jpg"
-      url = "post/exportacion-argentina/"
+      url = "post/comercio-argentina/"
 
     [[params.tiles.showcase]]
-      title = "¿A quién se exporta Argentina?"
-      subtitle = "Analisis de los socios comerciales principales de Argentina"
+      title = "Conclusión"
+      subtitle = "Conclusión de los analisis realizados"
       image = "pic6.jpg"
-      url = "post/socios-argentina"
+      url = "post/conclusion"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]

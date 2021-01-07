@@ -1,8 +1,8 @@
 ---
-title: Socios Comerciales de Argentina
+title: Conclusión
 author: Rebecca Hoffmann
 date: '2020-12-07'
-slug: socios-argentina
+slug: conclusion
 categories: []
 tags: []
 draft: false
@@ -14,54 +14,5 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-En este post, querría analizar la relación comercial de Argentina con el resto del mundo. ¿Hacia quién exporta? ¿Quienes son sus socios más importantes?
+En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina.
 
-### Las libraría utilizadas:
-```{r libraries, message=F}
-library(tidyverse)
-library(ggplot2)
-library(readr)
-```
-
-# ¿Argentina se exporta más hacia América Latina o el resto del mundo?
-Querría analizar si en Argentina se exporta más hacia América Latina o hacia el resto del mundo.
-
-## Los datos
-Eligí utilizar el base de datos de Datos de Miércoles de mayo 2019 (link), ya que como mencionado en el post anterior tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics para algunos de los analisis que deseaba realizar. Entonces, en primer lugar cargo el base de datos:
-
-```{r argentina export, message=FALSE}
-comercio_latam <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") 
-```
-
-## Transformando los datos
-Eligio, como en el post anterior, filter Argentina como el país de origen de las exportaciones, y se generar una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:
-
-```{r argentina export datos, message=FALSE}
-exportacion_argentina <- comercio_latam %>%
-  filter(codigo_iso_origen == "arg") %>%
-  mutate(region = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo")) %>%
-  group_by(anio, region) %>%
-  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T))
-
-```
-
-## Graficando
-Ahora bien, se grafica la cantidad de USD exportado hacía América Latina y hacía el resto del mundo:
-
-```{r argentina export grafico, message=FALSE}
-ggplot(data = exportacion_argentina,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
-  geom_col(position = "dodge2") +
-  labs(
-    x = "Años",
-    y = "Valor Exportado en USD",
-    title = "Exportaciones de Argentina por año y region") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-```
-
-Está claro que Argentina exporta la mayor cantidad al resto del mundo y como analizado en el post anterior sobre las categoría de productos que se exporta (link), sabemos que la mayoría de lo que se exporta son productos de (1) Vegetales, Animales y Alimentos, y (2) Metales, Minerales y Productos Químicos.
-
-Pero a quién se exporta más Argentina? En la segunda parte de este post, analizo quienes son los principales socios comericiales de Argentina:
-
-# Socios comerciales de Argentina
-Entonces... 

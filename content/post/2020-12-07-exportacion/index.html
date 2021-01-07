@@ -22,23 +22,57 @@ library(ggplot2)
 library(ggforce) #para graficos de sets paralelos</code></pre>
 <p>En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:</p>
 <pre class="r"><code>export_producto_2017 &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) %&gt;%
-  filter(anio == &quot;2017&quot;) %&gt;%
+  filter(anio == &quot;2017&quot;,
+         nombre_comunidad_producto != &quot;Sin Especificar&quot;) %&gt;%
   select(nombre_comunidad_producto,
+         valor_exportado_dolares,
          pais_origen_pertenece_a_hispanoamerica, 
-         pais_destino_pertenece_a_hispanoamerica) %&gt;%
-  rename(&#39;Producto&#39; = &#39;nombre_comunidad_producto&#39;) %&gt;%
+         pais_destino_pertenece_a_hispanoamerica,
+         color_comunidad_producto) %&gt;%
   mutate(
     Origen = ifelse(pais_origen_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;),
-    Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;)) %&gt;%
-  group_by(Producto,
-           Origen, 
-           Destino) %&gt;%
+    Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;),
+    Producto = as.factor(nombre_comunidad_producto))</code></pre>
+<pre class="r"><code>ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
+  geom_bar(
+    color = &quot;white&quot;,
+    fill = &quot;blue&quot;) +
+  labs(title = &quot;Productos exportado de Argentina (2017)&quot;,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  coord_flip()</code></pre>
+<p><img src="index_files/figure-html/bar%20lot-1.png" width="672" /></p>
+<pre class="r"><code>cats_products &lt;- as.character(fct_unique(export_producto_2017$Producto))
+
+export_producto_2017_reducido &lt;- export_producto_2017 %&gt;%
+  mutate(
+    Producto = fct_collapse(Producto, 
+&quot;Productos de Origen Animal y Vegetal&quot; = c(&quot;Productos Animales&quot;,
+                                           &quot;Productos Vegetales&quot;,
+                                           &quot;Pieles de Animales&quot;,
+                                           &quot;Productos de Composición Vegetal y Animal&quot;),
+&quot;Productos Manifacturados&quot; = c(&quot;Arte y Antiguedades&quot;,
+                               &quot;Artículos de Papel&quot;,
+                               &quot;Miscelánea&quot;,
+                               &quot;Calzado y Gorras&quot;,
+                               &quot;Productos de Madera&quot;,
+                               &quot;Textiles&quot;,
+                               &quot;Plásticos y Gomas&quot;),
+&quot;Recursos Naturales&quot; = c(&quot;Productos Minerales&quot;,
+                         &quot;Metales Preciosos&quot;,
+                         &quot;Metales&quot;,
+                         &quot;Piedras y Cristales&quot;,
+                         &quot;Productos Químicos&quot;),
+&quot;Maquinas y Instrumentos&quot; = c(&quot;Maquinaria&quot;, 
+                             &quot;Instrumentos&quot;,
+                             &quot;Transporte&quot;)))</code></pre>
+<pre class="r"><code>export_producto_graficar &lt;- export_producto_2017_reducido %&gt;%
+  drop_na() %&gt;%
+  group_by(Destino,
+           Origen,
+           Producto) %&gt;%
   mutate(value = n()) %&gt;%
   ungroup() %&gt;%
-  select(Producto, Origen, Destino, value)
- 
-  
-export_producto_graficar &lt;- export_producto_2017 %&gt;%
+  select(Producto, Origen, Destino, value) %&gt;%
   gather_set_data(2:3) %&gt;%
   ggplot(aes(x, id = id, split = y, value = value)) +
   geom_parallel_sets(aes(fill = Producto), alpha = 0.5, axis.width = 0.1) +
@@ -59,7 +93,4 @@ export_producto_graficar &lt;- export_producto_2017 %&gt;%
 ##  - attr(*, &quot;validate&quot;)= logi TRUE
 
 export_producto_graficar</code></pre>
-<p><img src="index_files/figure-html/exportacion-1.png" width="672" /></p>
-<div id="including-plots" class="section level1">
-<h1>Including Plots</h1>
-</div>
+<p><img src="index_files/figure-html/graficar-1.png" width="672" /></p>

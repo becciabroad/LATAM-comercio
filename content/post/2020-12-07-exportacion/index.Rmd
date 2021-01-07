@@ -26,23 +26,64 @@ library(ggforce) #para graficos de sets paralelos
 En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:
 ```{r exportacion, message=FALSE}
 export_producto_2017 <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") %>%
-  filter(anio == "2017") %>%
+  filter(anio == "2017",
+         nombre_comunidad_producto != "Sin Especificar") %>%
   select(nombre_comunidad_producto,
+         valor_exportado_dolares,
          pais_origen_pertenece_a_hispanoamerica, 
-         pais_destino_pertenece_a_hispanoamerica) %>%
-  rename('Producto' = 'nombre_comunidad_producto') %>%
+         pais_destino_pertenece_a_hispanoamerica,
+         color_comunidad_producto) %>%
   mutate(
     Origen = ifelse(pais_origen_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
-    Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo")) %>%
-  group_by(Producto,
-           Origen, 
-           Destino) %>%
+    Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
+    Producto = as.factor(nombre_comunidad_producto))
+```
+
+```{r bar lot, message=FALSE}
+ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
+  geom_bar(
+    color = "white",
+    fill = "blue") +
+  labs(title = "Productos exportado de Argentina (2017)",
+       caption = "Fuente: Open Trade Statistics") +
+  coord_flip()
+```
+```{r modificar, message=FALSE}
+cats_products <- as.character(fct_unique(export_producto_2017$Producto))
+
+export_producto_2017_reducido <- export_producto_2017 %>%
+  mutate(
+    Producto = fct_collapse(Producto, 
+"Productos de Origen Animal y Vegetal" = c("Productos Animales",
+                                           "Productos Vegetales",
+                                           "Pieles de Animales",
+                                           "Productos de Composición Vegetal y Animal"),
+"Productos Manifacturados" = c("Arte y Antiguedades",
+                               "Artículos de Papel",
+                               "Miscelánea",
+                               "Calzado y Gorras",
+                               "Productos de Madera",
+                               "Textiles",
+                               "Plásticos y Gomas"),
+"Recursos Naturales" = c("Productos Minerales",
+                         "Metales Preciosos",
+                         "Metales",
+                         "Piedras y Cristales",
+                         "Productos Químicos"),
+"Maquinas y Instrumentos" = c("Maquinaria", 
+                             "Instrumentos",
+                             "Transporte")))
+```
+
+```{r graficar, message=FALSE}  
+export_producto_graficar <- export_producto_2017_reducido %>%
+  drop_na() %>%
+  group_by(Destino,
+           Origen,
+           Producto) %>%
   mutate(value = n()) %>%
   ungroup() %>%
-  select(Producto, Origen, Destino, value)
- 
-  
-export_producto_graficar <- export_producto_2017 %>%
+  select(Producto, Origen, Destino, value) %>%
   gather_set_data(2:3) %>%
   ggplot(aes(x, id = id, split = y, value = value)) +
   geom_parallel_sets(aes(fill = Producto), alpha = 0.5, axis.width = 0.1) +
@@ -57,5 +98,3 @@ export_producto_graficar <- export_producto_2017 %>%
 export_producto_graficar
 
 ```
-
-# Including Plots
