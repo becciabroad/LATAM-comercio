@@ -21,6 +21,7 @@ library(tradestatistics) #parquete de los datos
 library(tidyverse)
 library(ggplot2)
 library(ggforce) #para graficos de sets paralelos
+library(ggthemes)
 ```
 
 En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:
@@ -28,11 +29,13 @@ En segundo lugar, eligo los datos que necesito para realizar el set de parelelo.
 export_producto_2017 <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") %>%
   filter(anio == "2017",
          nombre_comunidad_producto != "Sin Especificar") %>%
-  select(nombre_comunidad_producto,
+  group_by(nombre_comunidad_producto,
          valor_exportado_dolares,
          pais_origen_pertenece_a_hispanoamerica, 
          pais_destino_pertenece_a_hispanoamerica,
          color_comunidad_producto) %>%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %>%
+  ungroup() %>%
   mutate(
     Origen = ifelse(pais_origen_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
     Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
@@ -41,12 +44,11 @@ export_producto_2017 <- readr::read_csv("https://raw.githubusercontent.com/cienc
 
 ```{r bar lot, message=FALSE}
 ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
-  geom_bar(
-    color = "white",
-    fill = "blue") +
-  labs(title = "Productos exportado de Argentina (2017)",
+  geom_bar() +
+  labs(title = "Productos exportado America Latina (2017)",
        caption = "Fuente: Open Trade Statistics") +
-  coord_flip()
+  coord_flip() +
+  theme_economist()
 ```
 ```{r modificar, message=FALSE}
 cats_products <- as.character(fct_unique(export_producto_2017$Producto))
@@ -58,7 +60,7 @@ export_producto_2017_reducido <- export_producto_2017 %>%
                                            "Productos Vegetales",
                                            "Pieles de Animales",
                                            "Productos de Composición Vegetal y Animal"),
-"Productos Manifacturados" = c("Arte y Antiguedades",
+            "Productos Manifacturados" = c("Arte y Antiguedades",
                                "Artículos de Papel",
                                "Miscelánea",
                                "Calzado y Gorras",
@@ -94,7 +96,7 @@ export_producto_graficar <- export_producto_2017_reducido %>%
   theme(axis.text.y = element_blank()) +
   labs(title = "Productos exportado según origen y destino (2017)",
        caption = "Fuente: Open Trade Statistics")
-
+  
 export_producto_graficar
 
 ```

@@ -14,12 +14,13 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>En este post, querría analizar la evolución del comercio en la región de América Latin utilizando el base de dato de Open Trade Statistics:</p>
+<p>En este post, querría analizar la evolución historico del comercio para toda la región de América Latin utilizando el base de dato de Open Trade Statistics. Por un lado, me interesa investigar como ha sido el desarrollo tanto de las exportaciones como las importaciones para toda la región en conjunto.. Por el otro lado, me interesa saber qué paísestienen los mayores niveles de comercio en la región.</p>
 <div id="las-libraría-utilizadas" class="section level3">
 <h3>Las libraría utilizadas:</h3>
 <pre class="r"><code>library(tidyverse)
 library(tradestatistics)
-library(ggplot2)</code></pre>
+library(ggplot2)
+library(ggthemes)</code></pre>
 </div>
 <div id="los-datos" class="section level2">
 <h2>Los datos</h2>
@@ -50,7 +51,36 @@ I rename the column “reporter_iso” to be able to merge it with the second da
          country_iso != &quot;vgb&quot;, # Excluding British Virgin Islands
          country_iso != &quot;sgs&quot;) # Exclude South Georgia and the South Sandwich Islands (British territory)</code></pre>
 </div>
+<div id="importación-y-exportación-en-américa-latina" class="section level1">
+<h1>Importación y exportación en América Latina</h1>
 <div id="transformando-los-datos" class="section level2">
+<h2>Transformando los datos</h2>
+<pre class="r"><code>trade_total &lt;- comercio_latam_reducido %&gt;%
+  group_by(year) %&gt;%
+  summarise(export_value_usd = sum(export_value_usd, na.rm = T),
+            import_value_usd = sum(import_value_usd, na.rm = T))</code></pre>
+<pre class="r"><code>ggplot(trade_total) +
+  geom_line(aes(year,
+                export_value_usd,
+                color = &quot;red&quot;)) +
+  geom_line(aes(year,
+                import_value_usd,
+                color = &quot;blue&quot;)) +
+    labs(title = &quot;Import y export de América Latina&quot;,
+       y = &quot;USD&quot;,
+       x = NULL,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  theme_economist() +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="index_files/figure-html/comercio%20LATAM%20export-import%20graph-1.png" width="672" /></p>
+<div id="sum-up" class="section level3">
+<h3>Sum-up</h3>
+</div>
+</div>
+</div>
+<div id="comercio-historico-en-américa-latina" class="section level1">
+<h1>Comercio historico en América Latina</h1>
+<div id="transformando-los-datos-1" class="section level2">
 <h2>Transformando los datos</h2>
 <p>Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:</p>
 <pre class="r"><code>
@@ -63,10 +93,11 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
          export_value_usd,
          import_value_usd) %&gt;%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %&gt;%
+  arrange(desc(trade)) %&gt;%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
                                   &quot;Caribbean&quot; = c(&quot;Anguilla&quot;, 
                                                   &quot;Neth. Antilles&quot;, 
-                                                  &quot;Antigua and Barbuda&quot;, 
+                                                  &quot;Antigua and Barbuda&quot;,
                                                   &quot;Bahamas&quot;,
                                                   &quot;Barbados&quot;,
                                                   &quot;Belize&quot;,
@@ -90,15 +121,15 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
                                                   &quot;Turks and Caicos Isds&quot;,
                                                   &quot;Trinidad and Tobago&quot;,
                                                   &quot;Saint Vincent and the Grenadines&quot;),
-                                  &quot;Central America&quot; = c(&quot;Costa Rica&quot;,
-                                                        &quot;Dominica&quot;,
-                                                        &quot;Dominican Rep.&quot;,
-                                                        &quot;El Salvador&quot;,
-                                                        &quot;Guatemala&quot;,
-                                                        &quot;Honduras&quot;,
-                                                        &quot;Nicaragua&quot;,
-                                                        &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
-                                  &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
+                            &quot;Central America&quot; = c(&quot;Costa Rica&quot;,
+                                                  &quot;Dominica&quot;,
+                                                  &quot;Dominican Rep.&quot;,
+                                                  &quot;El Salvador&quot;,
+                                                  &quot;Guatemala&quot;,
+                                                  &quot;Honduras&quot;,
+                                                  &quot;Nicaragua&quot;,
+                                                  &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
+                            &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
 </div>
 <div id="graficando" class="section level2">
 <h2>Graficando</h2>
@@ -108,28 +139,27 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
                 group = country_fullname_english,
                 color = country_fullname_english)) +
   labs(title = &quot;Evolución comercial en América Latina&quot;,
-       y = &quot;Total comercio (import + export) en USD&quot;,
-       x = &quot;Año&quot;) +
+       y = &quot;Total comercio en USD&quot;,
+       x = NULL) +
+  theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20graph-1.png" width="672" /></p>
-<p>Entonces,…</p>
-<pre class="r"><code>trade_total &lt;- comercio_latam_caribbean %&gt;%
-  group_by(year) %&gt;%
-  summarise(export_value_usd = sum(export_value_usd, na.rm = T),
-            import_value_usd = sum(import_value_usd, na.rm = T))
+<p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado).</p>
+<pre class="r"><code>comercio_latam_caribbean1 &lt;- comercio_latam_caribbean %&gt;%
+  filter(country_fullname_english != &quot;Mexico&quot;,
+         country_fullname_english != &quot;Brazil&quot;,
+         country_fullname_english != &quot;Argentina&quot;)
 
-
-ggplot(trade_total) +
+ggplot(comercio_latam_caribbean1) +  
   geom_line(aes(year,
-                export_value_usd,
-                color = &quot;red&quot;)) +
-  geom_line(aes(year,
-                import_value_usd,
-                color = &quot;blue&quot;)) +
-    labs(title = &quot;Importaciones y exportaciones totales para todo América Latina&quot;,
-       y = &quot;USD&quot;,
-       x = &quot;Año&quot;,
-       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+                trade,
+                group = country_fullname_english,
+                color = country_fullname_english)) +
+  labs(title = &quot;Evolución comercial en América Latina&quot;,
+       y = &quot;Total comercio en USD&quot;,
+       x = NULL) +
+  theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20export-import-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20graph2-1.png" width="672" /></p>
+</div>
 </div>

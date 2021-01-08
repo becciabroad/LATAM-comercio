@@ -23,6 +23,7 @@ library(tidyverse)
 library(ggplot2)
 library(tradestatistics)
 library(treemapify)
+library(ggthemes)
 ```
 
 ## Los datos:
@@ -46,13 +47,13 @@ Eligo los datos necesarios para realizar el analisis del desarrollo historico de
 Ahora a graficar: 
 ```{r argentina export grafico}
 ggplot(data = argentina_export, aes(x = year, y = export_value_usd)) +
-  geom_line(color = "red") +
+  geom_line() +
   labs(
     x = "Años",
     y = "Valor Exportado en USD",
     title = "Exportaciones de Argentina por año",
     caption = "Fuente: Open Trade Statistics") +
-  theme_minimal() +
+  theme_economist() +
   theme(legend.position = "bottom")
 ```
 
@@ -80,14 +81,14 @@ comercio_arg <- comercio_mundo %>%
 ## Graficando
 Ahora bien, se grafica la cantidad de USD exportado hacía América Latina y hacía el resto del mundo por año:
 
-```{r argentina export grafico, message=FALSE}
+```{r arg export grafico, message=FALSE}
 ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
   geom_col(position = "dodge2") +
   labs(
     x = "Años",
     y = "Valor Exportado en USD",
-    title = "Exportaciones de Argentina por año y region") +
-  theme_minimal() +
+    title = "Exportaciones de Argentina por region") +
+  theme_economist() +
   theme(legend.position = "bottom")
 ```
 
@@ -100,7 +101,7 @@ Querría averiguar qué productos se ha exportado más desde Argentina en los ú
 
 ## Cargando los datos
 Cargo la información sobre los nombres de los productos, y cambia el nombre de la columna para que se pueda juntar con la
-```{r argentina export datos, message=FALSE}
+```{r arg export datos, message=FALSE}
 
 export_argentina_2017 <- comercio_mundo %>%
   filter(anio == 2017, 
@@ -116,7 +117,7 @@ export_argentina_2017 <- comercio_mundo %>%
 ```
 
 Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:
-```{r argentina export productos grafico, message=FALSE}
+```{r arg productos grafico, message=FALSE}
 ggplot(export_argentina_2017, aes(
   area = valor_exportado_dolares, 
   fill = nombre_comunidad_producto,
@@ -127,7 +128,9 @@ ggplot(export_argentina_2017, aes(
                     grow = F,
                     reflow = T) +
   scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
-  labs(title = "Categorías de productos exportado de Argentina a nivel Mundial (2017)") +
+  labs(title = "Categorías de productos exportado Argentina",
+       caption = "Fuente: Open Trade Statistics") +
+  theme_economist() +
   theme(legend.position = "none")
 ```
 Se nota que la mayoría de los productos que exporta Argentina son productos vegetales, alimentos, productos animales o vegetales. Es decir, recursos naturales extraidos de la tierre o productos agriorula (!!!). No soprene mucho, ya que unos de los principales argumentos de los autores de "middel income trap" es que América Latina, en general, son paises que necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la farmicación de alimentos - areas donde se necesita más habilidades y entonces puede vender los productos más caros en el mercado global. 

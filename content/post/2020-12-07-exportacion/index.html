@@ -19,27 +19,29 @@ output:
 <pre class="r"><code>library(tradestatistics) #parquete de los datos
 library(tidyverse)
 library(ggplot2)
-library(ggforce) #para graficos de sets paralelos</code></pre>
+library(ggforce) #para graficos de sets paralelos
+library(ggthemes)</code></pre>
 <p>En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:</p>
 <pre class="r"><code>export_producto_2017 &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) %&gt;%
   filter(anio == &quot;2017&quot;,
          nombre_comunidad_producto != &quot;Sin Especificar&quot;) %&gt;%
-  select(nombre_comunidad_producto,
+  group_by(nombre_comunidad_producto,
          valor_exportado_dolares,
          pais_origen_pertenece_a_hispanoamerica, 
          pais_destino_pertenece_a_hispanoamerica,
          color_comunidad_producto) %&gt;%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %&gt;%
+  ungroup() %&gt;%
   mutate(
     Origen = ifelse(pais_origen_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;),
     Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;),
     Producto = as.factor(nombre_comunidad_producto))</code></pre>
 <pre class="r"><code>ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
-  geom_bar(
-    color = &quot;white&quot;,
-    fill = &quot;blue&quot;) +
-  labs(title = &quot;Productos exportado de Argentina (2017)&quot;,
+  geom_bar() +
+  labs(title = &quot;Productos exportado America Latina (2017)&quot;,
        caption = &quot;Fuente: Open Trade Statistics&quot;) +
-  coord_flip()</code></pre>
+  coord_flip() +
+  theme_economist()</code></pre>
 <p><img src="index_files/figure-html/bar%20lot-1.png" width="672" /></p>
 <pre class="r"><code>cats_products &lt;- as.character(fct_unique(export_producto_2017$Producto))
 
@@ -50,7 +52,7 @@ export_producto_2017_reducido &lt;- export_producto_2017 %&gt;%
                                            &quot;Productos Vegetales&quot;,
                                            &quot;Pieles de Animales&quot;,
                                            &quot;Productos de Composición Vegetal y Animal&quot;),
-&quot;Productos Manifacturados&quot; = c(&quot;Arte y Antiguedades&quot;,
+            &quot;Productos Manifacturados&quot; = c(&quot;Arte y Antiguedades&quot;,
                                &quot;Artículos de Papel&quot;,
                                &quot;Miscelánea&quot;,
                                &quot;Calzado y Gorras&quot;,
@@ -91,6 +93,6 @@ export_producto_2017_reducido &lt;- export_producto_2017 %&gt;%
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;theme&quot; &quot;gg&quot;
 ##  - attr(*, &quot;complete&quot;)= logi FALSE
 ##  - attr(*, &quot;validate&quot;)= logi TRUE
-
+  
 export_producto_graficar</code></pre>
 <p><img src="index_files/figure-html/graficar-1.png" width="672" /></p>
