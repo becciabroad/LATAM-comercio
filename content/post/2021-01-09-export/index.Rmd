@@ -1,0 +1,63 @@
+---
+title: Export
+author: Rebecca Hoffmann
+date: '2021-01-09'
+slug: export
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+### Las libraría utilizadas:
+
+```{r libraries, warning=FALSE, message=F}
+library(tidyverse)
+library(tradestatistics)
+library(ggplot2)
+library(rworldmap)
+library(treemapify)
+library(ggthemes)
+library(scales)
+```
+
+## Los datos
+Descargo el base de datos:
+I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
+```{r comercio API 1, message=FALSE}
+comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
+  years = 2018, 
+  reporters = "all", 
+  partners = "all", 
+  products = "all") %>%
+  rename(country_iso = 'reporter_iso')
+```
+
+From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:
+
+```{r comercio API 2, message=FALSE}
+countries_LATAM <- tradestatistics::ots_countries %>%
+  filter(continent == "Americas") 
+```
+
+Merging the two data frames, I now get a data frame including information only for the region of the Americas.
+
+```{r comercio LATAM merge, message=FALSE}
+comercio_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
+      by = "country_iso")
+```
+
+## Transformando los datos
+I select the row that I want to use to create the map with, however, I leave the data frame with all the info for trade in Latin America, so I can return and use it for another graph.
+
+```{r comercio LATAM select, message=FALSE}
+comercio_latam_import <- comercio_latam %>%
+  select(country_iso,
+         reporter_fullname_english,
+         import_value_usd) %>%
+  drop_na()
+```

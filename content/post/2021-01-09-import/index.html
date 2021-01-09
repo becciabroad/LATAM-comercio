@@ -1,8 +1,8 @@
 ---
-title: Importación
+title: Import
 author: Rebecca Hoffmann
-date: '2020-12-07'
-slug: importacion
+date: '2021-01-09'
+slug: import
 categories: []
 tags: []
 draft: false
@@ -63,9 +63,7 @@ mapped_data &lt;- joinCountryData2Map(comercio_latam_import,
 ## 13 codes from your data failed to match with a country code in the map
 ## 207 codes from the map weren&#39;t represented in your data
 
-mapCountryData(mapped_data, 
-               nameColumnToPlot = &quot;import_value_usd&quot;, 
-               mapRegion = &quot;latin america&quot;)</code></pre>
+mapCountryData(mapped_data, nameColumnToPlot = &quot;import_value_usd&quot;, mapRegion = &quot;latin america&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20mapped%20data-1.png" width="672" /></p>
 <p>Eso es un montón de rojo! La mayoría de los países de la región bastante importa bastante productos. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguy, los cuales parecen ser los que menos importan.</p>
 <p>Será interesante, analizar qué productos se que más se importaba en los paises de América Latin en 2018:</p>
@@ -111,11 +109,9 @@ productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam,
          reporter_fullname_english != &quot;Greenland&quot;,
          reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
          reporter_fullname_english != &quot;United States Minor Outlying Islands&quot;,
-         reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;)</code></pre>
-</div>
-<div id="productos-más-importado-por-categoría" class="section level2">
-<h2>Productos más importado por categoría:</h2>
-<pre class="r"><code>productos_latam_import_2018 &lt;- productos_latam_import %&gt;%
+         reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;)
+
+productos_latam_import_2018 &lt;- productos_latam_import %&gt;%
   select(top_import_product_code,
          product_shortname_english,
          import_value_usd) %&gt;%
@@ -129,6 +125,9 @@ productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam,
 </div>
 <div id="graficando-1" class="section level2">
 <h2>Graficando</h2>
+</div>
+<div id="productos-más-importado-por-categoría" class="section level2">
+<h2>Productos más importado por categoría:</h2>
 <pre class="r"><code>ggplot(productos_latam_import_2018, aes(
   area = import_value_usd,
   fill = product_shortname_english,
@@ -141,12 +140,9 @@ productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam,
   labs(title = &quot;Productos importado en América Latina (2018)&quot;) +
   theme_economist() +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="index_files/figure-html/LATAM%20productos%20categori%CC%81a%20graficar-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20categori%CC%81a-1.png" width="672" /></p>
 <p>Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.</p>
 <p>Pero qué países importan más de esos dos productos?</p>
-</div>
-<div id="categoría-de-productos-más-importado-por-país" class="section level2">
-<h2>Categoría de productos más importado por país:</h2>
 <pre class="r"><code>import_countries_modificied &lt;- productos_latam_import %&gt;%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
 
@@ -161,10 +157,9 @@ import_countries_2018 &lt;- import_countries_modificied %&gt;%
   group_by(reporter_fullname_english, product_shortname_english, top_import_product_code) %&gt;%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %&gt;%
   arrange(desc(import_value_usd)) %&gt;%
-  drop_na()</code></pre>
-<div id="graficando-2" class="section level3">
-<h3>Graficando</h3>
-<pre class="r"><code>ggplot(import_countries_2018, aes(
+  drop_na()
+
+ggplot(import_countries_2018, aes(
   x = reporter_fullname_english,
   y = import_value_usd,
   fill = product_shortname_english)) +
@@ -173,14 +168,12 @@ import_countries_2018 &lt;- import_countries_modificied %&gt;%
     x = NULL,
     y = NULL,
     fill = NULL,
-    title = &quot;Importaciones por producto en 2018&quot;,
+    title = &quot;Importaciones de Ameríca Latina por producto en 2018&quot;,
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
-  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;) +
   coord_flip()</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graphicar-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20pai%CC%81s-1.png" width="672" /></p>
 <p>Entonces…</p>
-</div>
 </div>
 </div>

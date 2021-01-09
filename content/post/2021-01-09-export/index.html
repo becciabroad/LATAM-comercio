@@ -1,0 +1,52 @@
+---
+title: Export
+author: Rebecca Hoffmann
+date: '2021-01-09'
+slug: export
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<div id="las-libraría-utilizadas" class="section level3">
+<h3>Las libraría utilizadas:</h3>
+<pre class="r"><code>library(tidyverse)
+library(tradestatistics)
+library(ggplot2)
+library(rworldmap)
+library(treemapify)
+library(ggthemes)
+library(scales)</code></pre>
+</div>
+<div id="los-datos" class="section level2">
+<h2>Los datos</h2>
+<p>Descargo el base de datos:
+I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:</p>
+<pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
+  years = 2018, 
+  reporters = &quot;all&quot;, 
+  partners = &quot;all&quot;, 
+  products = &quot;all&quot;) %&gt;%
+  rename(country_iso = &#39;reporter_iso&#39;)</code></pre>
+<p>From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:</p>
+<pre class="r"><code>countries_LATAM &lt;- tradestatistics::ots_countries %&gt;%
+  filter(continent == &quot;Americas&quot;) </code></pre>
+<p>Merging the two data frames, I now get a data frame including information only for the region of the Americas.</p>
+<pre class="r"><code>comercio_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
+      by = &quot;country_iso&quot;)</code></pre>
+</div>
+<div id="transformando-los-datos" class="section level2">
+<h2>Transformando los datos</h2>
+<p>I select the row that I want to use to create the map with, however, I leave the data frame with all the info for trade in Latin America, so I can return and use it for another graph.</p>
+<pre class="r"><code>comercio_latam_import &lt;- comercio_latam %&gt;%
+  select(country_iso,
+         reporter_fullname_english,
+         import_value_usd) %&gt;%
+  drop_na()</code></pre>
+</div>

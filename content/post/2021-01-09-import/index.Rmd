@@ -1,18 +1,18 @@
 ---
-title: Importación
+title: Import
 author: Rebecca Hoffmann
-date: '2020-12-07'
-slug: importacion
+date: '2021-01-09'
+slug: import
 categories: []
 tags: []
 draft: false
 output:
   blogdown::html_page
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
-
 En este post, querría analizar qué países en América Latina importa más productos graphicandolo con un mapa de color utilizando el paquete de Rworldmaps. Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar acá:
 
 install.packages("rworldmap")
@@ -75,9 +75,7 @@ mapped_data <- joinCountryData2Map(comercio_latam_import,
                                    joinCode = "NAME", 
                                    nameJoinColumn = "reporter_fullname_english")
 
-mapCountryData(mapped_data, 
-               nameColumnToPlot = "import_value_usd", 
-               mapRegion = "latin america")
+mapCountryData(mapped_data, nameColumnToPlot = "import_value_usd", mapRegion = "latin america")
 ```
 
 Eso es un montón de rojo! La mayoría de los países de la región bastante importa bastante productos. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguy, los cuales parecen ser los que menos importan. 
@@ -127,10 +125,7 @@ productos_latam_import <- merge(x = comercio_latam, y = productos_latam,
          reporter_fullname_english != "Br. Virgin Isds",
          reporter_fullname_english != "United States Minor Outlying Islands",
          reporter_fullname_english != "South Georgia and the South Sandwich Islands")
-```
 
-## Productos más importado por categoría:
-```{r LATAM productos, message=FALSE}
 productos_latam_import_2018 <- productos_latam_import %>%
   select(top_import_product_code,
          product_shortname_english,
@@ -145,7 +140,9 @@ productos_latam_import_2018 <- productos_latam_import %>%
 ```
 
 ## Graficando
-```{r LATAM productos categoría graficar, message=FALSE}
+
+## Productos más importado por categoría:
+```{r comercio LATAM productos por categoría, message=FALSE}
 ggplot(productos_latam_import_2018, aes(
   area = import_value_usd,
   fill = product_shortname_english,
@@ -164,8 +161,7 @@ Está claro que el producto que más se importa en América Latina en 2018 eran 
 
 Pero qué países importan más de esos dos productos?
 
-## Categoría de productos más importado por país:
-```{r LATAM productos país, message=FALSE}
+```{r comercio LATAM productos por país, message=FALSE}
 import_countries_modificied <- productos_latam_import %>%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
 
@@ -181,10 +177,7 @@ import_countries_2018 <- import_countries_modificied %>%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
   arrange(desc(import_value_usd)) %>%
   drop_na()
-```
 
-### Graficando
-```{r comercio LATAM productos graphicar, message=FALSE}
 ggplot(import_countries_2018, aes(
   x = reporter_fullname_english,
   y = import_value_usd,
@@ -194,9 +187,8 @@ ggplot(import_countries_2018, aes(
     x = NULL,
     y = NULL,
     fill = NULL,
-    title = "Importaciones por producto en 2018",
+    title = "Importaciones de Ameríca Latina por producto en 2018",
     caption = "Fuerte: Open Trade Statistics") +
-  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = "bottom") +
   coord_flip()
