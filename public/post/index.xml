@@ -6,7 +6,28 @@
     <description>Recent content in Posts on Comercio en América Latina</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Export</title>
+      <link>https://comercio-latam.netlify.app/post/export/</link>
+      <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/export/</guid>
+      <description>Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(ggplot2) library(ggthemes) library(scales) library(patchwork)  Los datos Descargo el base de datos: I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:
+comercio_mundo_api &amp;lt;- tradestatistics::ots_create_tidy_data( years = 2018, reporters = &amp;quot;all&amp;quot;, partners = &amp;quot;all&amp;quot;, products = &amp;quot;all&amp;quot;) %&amp;gt;% rename(country_iso = &amp;#39;reporter_iso&amp;#39;) From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:</description>
+    </item>
+    
+    <item>
+      <title>Import</title>
+      <link>https://comercio-latam.netlify.app/post/import/</link>
+      <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/import/</guid>
+      <description>En este post, querría analizar qué países en América Latina importa más productos graphicandolo con un mapa de color utilizando el paquete de Rworldmaps. Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar acá:
+install.packages(“rworldmap”)
+Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(ggplot2) library(rworldmap) library(treemapify) library(ggthemes) library(scales)  Los datos Descargo el base de datos: I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:</description>
+    </item>
+    
     <item>
       <title>Comercio Argentina</title>
       <link>https://comercio-latam.netlify.app/post/comercio-argentina/</link>
