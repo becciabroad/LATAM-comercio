@@ -78,35 +78,11 @@ mapCountryData(mapped_data,
 <pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_import_product_code = &quot;product_code&quot;)
 
-productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam, 
+productos_latam_import &lt;- merge(x = comercio_latam, 
+                                y = productos_latam, 
                                 by = &#39;top_import_product_code&#39;) %&gt;%
-    filter(reporter_fullname_english != &quot;Anguilla&quot;,
-         reporter_fullname_english != &quot;Neth. Antilles&quot;,
-         reporter_fullname_english != &quot;Antigua and Barbuda&quot;,
-         reporter_fullname_english != &quot;Bahamas&quot;,
-         reporter_fullname_english != &quot;Barbados&quot;,
-         reporter_fullname_english != &quot;Belize&quot;,
-         reporter_fullname_english != &quot;Bermuda&quot;,
-         reporter_fullname_english != &quot;Bouvet Island&quot;,
-         reporter_fullname_english != &quot;Cocos Isds&quot;,
-         reporter_fullname_english != &quot;Cayman Isds&quot;,
-         reporter_fullname_english != &quot;Guadeloupe&quot;,
-         reporter_fullname_english != &quot;Cuba&quot;,
-         reporter_fullname_english != &quot;Grenada&quot;,
-         reporter_fullname_english != &quot;French Guiana&quot;,
-         reporter_fullname_english != &quot;Guyana&quot;,
-         reporter_fullname_english != &quot;Haiti&quot;,
-         reporter_fullname_english != &quot;Jamaica&quot;,
-         reporter_fullname_english != &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
-         reporter_fullname_english != &quot;Saint Lucia&quot;,
-         reporter_fullname_english != &quot;Montserrat&quot;,
-         reporter_fullname_english != &quot;Martinique&quot;,
-         reporter_fullname_english != &quot;Saint Pierre and Miquelon&quot;,
-         reporter_fullname_english != &quot;Suriname&quot;,
-         reporter_fullname_english != &quot;Turks and Caicos Isds&quot;,
-         reporter_fullname_english != &quot;Trinidad and Tobago&quot;,
-         reporter_fullname_english != &quot;Saint Vincent and the Grenadines&quot;,
-      reporter_fullname_english != &quot;USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)&quot;,
+    filter(
+         reporter_fullname_english != &quot;USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)&quot;,
          reporter_fullname_english != &quot;Canada&quot;,
          reporter_fullname_english != &quot;Greenland&quot;,
          reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
@@ -147,18 +123,48 @@ productos_latam_import &lt;- merge(x = comercio_latam, y = productos_latam,
 </div>
 <div id="categoría-de-productos-más-importado-por-país" class="section level2">
 <h2>Categoría de productos más importado por país:</h2>
+<p>Para no tener un gráfico muy largo, en primer lugar, organizo los países del Caribe en la misma categoría como hice en el primer post:</p>
 <pre class="r"><code>import_countries_modificied &lt;- productos_latam_import %&gt;%
-  mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
-
-import_countries_2018 &lt;- import_countries_modificied %&gt;%
+  mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) </code></pre>
+<pre class="r"><code>import_countries_2018 &lt;- import_countries_modificied %&gt;%
   select(reporter_fullname_english,
          import_value_usd,
-         top_import_product_code,
          product_shortname_english) %&gt;%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
-                                                  &quot;Panama&quot; = &quot;Panama (excludes Panama Canal Zone until 1978)&quot;,
-                                                  &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;))) %&gt;% 
-  group_by(reporter_fullname_english, product_shortname_english, top_import_product_code) %&gt;%
+            &quot;Caribbean&quot; = c(&quot;Anguilla&quot;, 
+                            &quot;Antigua and Barbuda&quot;,
+                            &quot;Bahamas&quot;,
+                            &quot;Barbados&quot;,
+                            &quot;Belize&quot;,
+                            &quot;Bermuda&quot;,
+                            &quot;Bouvet Island&quot;,
+                            &quot;Cocos Isds&quot;,
+                            &quot;Cayman Isds&quot;,
+                            &quot;Cuba&quot;,
+                            &quot;Grenada&quot;,
+                            &quot;Guyana&quot;,
+                            &quot;Haiti&quot;,
+                            &quot;Jamaica&quot;,
+                            &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
+                            &quot;Saint Lucia&quot;,
+                            &quot;Montserrat&quot;,
+                            &quot;Saint Pierre and Miquelon&quot;,
+                            &quot;Suriname&quot;,
+                            &quot;Turks and Caicos Isds&quot;,
+                            &quot;Trinidad and Tobago&quot;,
+                            &quot;Saint Vincent and the Grenadines&quot;),
+      &quot;Central America&quot; = c(&quot;Costa Rica&quot;,
+                            &quot;Dominica&quot;,
+                            &quot;Dominican Rep.&quot;,
+                            &quot;El Salvador&quot;,
+                            &quot;Guatemala&quot;,
+                            &quot;Honduras&quot;,
+                            &quot;Nicaragua&quot;,
+                            &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
+             &quot;Argentina&quot; = c(&quot;Argentina&quot;, 
+                             &quot;Falkland Isds (Malvinas)&quot;))) %&gt;% 
+  group_by(reporter_fullname_english, 
+           product_shortname_english) %&gt;%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %&gt;%
   arrange(desc(import_value_usd)) %&gt;%
   drop_na()</code></pre>
@@ -173,13 +179,13 @@ import_countries_2018 &lt;- import_countries_modificied %&gt;%
     x = NULL,
     y = NULL,
     fill = NULL,
-    title = &quot;Importaciones por producto en 2018&quot;,
+    title = &quot;Importaciones por producto (2018)&quot;,
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;) +
   coord_flip()</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graphicar-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" /></p>
 <p>Entonces…</p>
 </div>
 </div>

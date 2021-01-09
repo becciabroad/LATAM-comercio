@@ -54,10 +54,73 @@ comercio_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
 ## Transformando los datos
 I select the row that I want to use to create the map with, however, I leave the data frame with all the info for trade in Latin America, so I can return and use it for another graph.
 
+```{r comercio LATAM productos, message=FALSE}
+productos_latam <- tradestatistics::ots_products_shortnames %>%
+  rename(top_import_product_code = "product_code")
+```
+
+```{r LATAM productos select, message=FALSE}
+latam_export <- merge(x = comercio_latam, 
+                                y = productos_latam, 
+                                by = 'top_import_product_code') %>%
+    filter(reporter_fullname_english != "Anguilla",
+         reporter_fullname_english != "Neth. Antilles",
+         reporter_fullname_english != "Antigua and Barbuda",
+         reporter_fullname_english != "Bahamas",
+         reporter_fullname_english != "Barbados",
+         reporter_fullname_english != "Belize",
+         reporter_fullname_english != "Bermuda",
+         reporter_fullname_english != "Bouvet Island",
+         reporter_fullname_english != "Cocos Isds",
+         reporter_fullname_english != "Cayman Isds",
+         reporter_fullname_english != "Guadeloupe",
+         reporter_fullname_english != "Cuba",
+         reporter_fullname_english != "Grenada",
+         reporter_fullname_english != "French Guiana",
+         reporter_fullname_english != "Guyana",
+         reporter_fullname_english != "Haiti",
+         reporter_fullname_english != "Jamaica",
+         reporter_fullname_english != "Saint Kitts and Nevis (includes Anguilla until 1981)",
+         reporter_fullname_english != "Saint Lucia",
+         reporter_fullname_english != "Montserrat",
+         reporter_fullname_english != "Martinique",
+         reporter_fullname_english != "Saint Pierre and Miquelon",
+         reporter_fullname_english != "Suriname",
+         reporter_fullname_english != "Turks and Caicos Isds",
+         reporter_fullname_english != "Trinidad and Tobago",
+         reporter_fullname_english != "Saint Vincent and the Grenadines",
+      reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
+         reporter_fullname_english != "Canada",
+         reporter_fullname_english != "Greenland",
+         reporter_fullname_english != "Br. Virgin Isds",
+         reporter_fullname_english != "United States Minor Outlying Islands",
+         reporter_fullname_english != "South Georgia and the South Sandwich Islands")
+```
+
 ```{r comercio LATAM select, message=FALSE}
-comercio_latam_import <- comercio_latam %>%
-  select(country_iso,
-         reporter_fullname_english,
-         import_value_usd) %>%
+latam_export_modificado <- latam_export %>%
+  select(reporter_fullname_english,
+         export_value_usd,
+         product_shortname_english) %>%
+  group_by(reporter_fullname_english,
+           product_shortname_english) %>%
+  summarise(export_value_usd = sum(export_value_usd, na.rm = T)) %>%
+  ungroup() %>%
   drop_na()
+```
+
+```{r comercio LATAM graph, message=FALSE}
+ggplot(latam_export_modificado) +
+  geom_col(aes(
+    x = export_value_usd,
+    y = reporter_fullname_english,
+    fill = product_shortname_english)) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Productos exportado en América Latina (2018)",
+    caption = "Fuerte: Open Trade Statistics") +
+  scale_x_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = "bottom")
 ```
