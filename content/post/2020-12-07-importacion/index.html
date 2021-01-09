@@ -22,7 +22,9 @@ output:
 library(tradestatistics)
 library(ggplot2)
 library(rworldmap)
-library(treemapify)</code></pre>
+library(treemapify)
+library(ggthemes)
+library(scales)</code></pre>
 </div>
 <div id="los-datos" class="section level2">
 <h2>Los datos</h2>
@@ -119,8 +121,7 @@ productos_latam_import_2018 &lt;- productos_latam_import %&gt;%
   mutate(
     etiquetas = paste0(product_shortname_english, &quot;/&quot;, round(100*import_value_usd/sum(import_value_usd), 2), &quot;%&quot;)
     ) %&gt;%
-  drop_na()
-  </code></pre>
+  drop_na()</code></pre>
 </div>
 <div id="graficando-1" class="section level2">
 <h2>Graficando</h2>
@@ -137,7 +138,9 @@ ggplot(productos_latam_import_2018, aes(
                     place = &quot;centre&quot;,
                     grow = F,
                     reflow = T) +
-  labs(title = &quot;Categorías de productos importado en América Latina en 2018&quot;)</code></pre>
+  labs(title = &quot;Productos importado en América Latina (2018)&quot;) +
+  theme_economist() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20categori%CC%81a-1.png" width="672" /></p>
 <p>Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.</p>
 <p>Pero qué países importan más de esos dos productos?</p>
@@ -164,11 +167,11 @@ ggplot(import_countries_2018, aes(
     geom_col() +
   labs(
     x = NULL,
-    y = &quot;Valor Importado en USD&quot;,
+    y = NULL,
     fill = NULL,
     title = &quot;Importaciones de Ameríca Latina por producto en 2018&quot;,
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
-  theme_minimal() +
+  theme_economist() +
   theme(legend.position = &quot;bottom&quot;) +
   coord_flip()</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20productos%20por%20pai%CC%81s-1.png" width="672" /></p>

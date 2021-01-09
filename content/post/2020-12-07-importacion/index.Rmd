@@ -137,7 +137,6 @@ productos_latam_import_2018 <- productos_latam_import %>%
     etiquetas = paste0(product_shortname_english, "/", round(100*import_value_usd/sum(import_value_usd), 2), "%")
     ) %>%
   drop_na()
-  
 ```
 
 ## Graficando
@@ -157,7 +156,6 @@ ggplot(productos_latam_import_2018, aes(
   labs(title = "Productos importado en América Latina (2018)") +
   theme_economist() +
   theme(legend.position = "none")
-
 ```
 
 Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.
