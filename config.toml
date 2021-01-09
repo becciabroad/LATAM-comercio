@@ -113,7 +113,7 @@ disqusShortname = ""
       title = "¿Qué productos se exporta?"
       subtitle = "Analisis del tipo de productos que se exportan en América Latina"
       image = "pic4.jpg"
-      url = "post/exportacion/"
+      url = "post/export/"
 
     [[params.tiles.showcase]]
       title = "Exportación en Argentina"

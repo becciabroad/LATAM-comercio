@@ -19,10 +19,9 @@ output:
 <pre class="r"><code>library(tidyverse)
 library(tradestatistics)
 library(ggplot2)
-library(rworldmap)
-library(treemapify)
 library(ggthemes)
-library(scales)</code></pre>
+library(scales)
+library(patchwork)</code></pre>
 </div>
 <div id="los-datos" class="section level2">
 <h2>Los datos</h2>
@@ -39,14 +38,149 @@ I rename the column “reporter_iso” to be able to merge it with the second da
   filter(continent == &quot;Americas&quot;) </code></pre>
 <p>Merging the two data frames, I now get a data frame including information only for the region of the Americas.</p>
 <pre class="r"><code>comercio_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
-      by = &quot;country_iso&quot;)</code></pre>
+      by = &quot;country_iso&quot;) %&gt;%
+  select(country_iso,
+         reporter_fullname_english,
+         export_value_usd,
+         top_export_product_code)</code></pre>
 </div>
 <div id="transformando-los-datos" class="section level2">
 <h2>Transformando los datos</h2>
 <p>I select the row that I want to use to create the map with, however, I leave the data frame with all the info for trade in Latin America, so I can return and use it for another graph.</p>
-<pre class="r"><code>comercio_latam_import &lt;- comercio_latam %&gt;%
-  select(country_iso,
-         reporter_fullname_english,
-         import_value_usd) %&gt;%
+<pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
+  rename(top_export_product_code = &quot;product_code&quot;)
+
+productos_latam_export &lt;- merge(x = comercio_latam, 
+                                y = productos_latam, 
+                                by = &#39;top_export_product_code&#39;) %&gt;%
+    filter(
+         reporter_fullname_english != &quot;USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)&quot;,
+         reporter_fullname_english != &quot;Canada&quot;,
+         reporter_fullname_english != &quot;Greenland&quot;,
+         reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
+         reporter_fullname_english != &quot;United States Minor Outlying Islands&quot;,
+         reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;)</code></pre>
+<pre class="r"><code>export_countries_modificado &lt;- productos_latam_export %&gt;%
+  mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) %&gt;%
+mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
+            &quot;Caribbean&quot; = c(&quot;Anguilla&quot;,
+                            &quot;Neth. Antilles&quot;,
+                            &quot;Antigua and Barbuda&quot;,
+                            &quot;Bahamas&quot;,
+                            &quot;Barbados&quot;,
+                            &quot;Belize&quot;,
+                            &quot;Bermuda&quot;,
+                            &quot;Bouvet Island&quot;,
+                            &quot;Cocos Isds&quot;,
+                            &quot;Cayman Isds&quot;,
+                            &quot;Cuba&quot;,
+                            &quot;Grenada&quot;,
+                            &quot;Guyana&quot;,
+                            &quot;Haiti&quot;,
+                            &quot;Jamaica&quot;,
+                            &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
+                            &quot;Saint Lucia&quot;,
+                            &quot;Montserrat&quot;,
+                            &quot;Saint Pierre and Miquelon&quot;,
+                            &quot;Suriname&quot;,
+                            &quot;Turks and Caicos Isds&quot;,
+                            &quot;Trinidad and Tobago&quot;,
+                            &quot;Saint Vincent and the Grenadines&quot;),
+      &quot;Central America&quot; = c(&quot;Costa Rica&quot;,
+                            &quot;Dominica&quot;,
+                            &quot;Dominican Rep.&quot;,
+                            &quot;El Salvador&quot;,
+                            &quot;Guatemala&quot;,
+                            &quot;Honduras&quot;,
+                            &quot;Nicaragua&quot;,
+                            &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
+             &quot;Argentina&quot; = c(&quot;Argentina&quot;, 
+                             &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
+<pre class="r"><code>export_countries_2018 &lt;- export_countries_modificado %&gt;%
+  group_by(reporter_fullname_english, 
+           product_shortname_english,
+           export_value_usd) %&gt;%
+  summarise(export_value_usd = sum(export_value_usd, na.rm = T)) %&gt;%
+  arrange(desc(export_value_usd)) %&gt;%
   drop_na()</code></pre>
+<div id="graficando" class="section level3">
+<h3>Graficando</h3>
+<pre class="r"><code>latam_graph &lt;- ggplot(export_countries_2018, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = &quot;Exportaciones por producto (2018)&quot;,
+    caption = &quot;Fuerte: Open Trade Statistics&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = &quot;bottom&quot;) +
+  coord_flip()
+
+latam_graph</code></pre>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" /></p>
+<pre class="r"><code>latam_reduced &lt;- export_countries_modificado %&gt;%
+  filter(reporter_fullname_english != &quot;Caribbean&quot;,
+         reporter_fullname_english != &quot;Central America&quot;)
+  
+latam_graph1 &lt;- ggplot(latam_reduced, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = &quot;Exportaciones por producto (2018)&quot;,
+    caption = &quot;Fuerte: Open Trade Statistics&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = &quot;bottom&quot;) +
+  coord_flip()
+
+latam_graph1</code></pre>
+<p><img src="index_files/figure-html/comercio%20LATAM%20w/o%20Caribbean-1.png" width="672" /></p>
+<pre class="r"><code>comercio_caribbean &lt;- productos_latam_export %&gt;%
+  filter(reporter_fullname_english != &quot;Argentina&quot;,
+         reporter_fullname_english != &quot;Bolivia&quot;,
+         reporter_fullname_english != &quot;Brasil&quot;,
+         reporter_fullname_english != &quot;Chile&quot;,
+         reporter_fullname_english != &quot;Colombia&quot;,
+         reporter_fullname_english != &quot;Ecuador&quot;,
+         reporter_fullname_english != &quot;Mexico&quot;,
+         reporter_fullname_english != &quot;Paraguay&quot;,
+         reporter_fullname_english != &quot;Peru&quot;,
+         reporter_fullname_english != &quot;Uruguay&quot;,
+         reporter_fullname_english != &quot;Venezuela&quot;) %&gt;%
+  group_by(reporter_fullname_english, 
+           product_shortname_english,
+           export_value_usd) %&gt;%
+  summarise(export_value_usd = sum(export_value_usd, na.rm = T))
+
+caribbean_graph &lt;- ggplot(comercio_caribbean, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = &quot;Exportaciones por producto el Caribe (2018)&quot;,
+    caption = &quot;Fuerte: Open Trade Statistics&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = &quot;bottom&quot;) +
+  coord_flip()
+
+caribbean_graph</code></pre>
+<p><img src="index_files/figure-html/comercio%20Caribbean-1.png" width="672" /></p>
+<pre class="r"><code>(latam_graph | latam_graph1 | caribbean_graph)</code></pre>
+<p><img src="index_files/figure-html/comercio%20patchwork-1.png" width="672" /></p>
+</div>
 </div>

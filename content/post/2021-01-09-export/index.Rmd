@@ -19,10 +19,9 @@ knitr::opts_chunk$set(collapse = TRUE)
 library(tidyverse)
 library(tradestatistics)
 library(ggplot2)
-library(rworldmap)
-library(treemapify)
 library(ggthemes)
 library(scales)
+library(patchwork)
 ```
 
 ## Los datos
@@ -48,7 +47,11 @@ Merging the two data frames, I now get a data frame including information only f
 
 ```{r comercio LATAM merge, message=FALSE}
 comercio_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
-      by = "country_iso")
+      by = "country_iso") %>%
+  select(country_iso,
+         reporter_fullname_english,
+         export_value_usd,
+         top_export_product_code)
 ```
 
 ## Transformando los datos
@@ -56,40 +59,13 @@ I select the row that I want to use to create the map with, however, I leave the
 
 ```{r comercio LATAM productos, message=FALSE}
 productos_latam <- tradestatistics::ots_products_shortnames %>%
-  rename(top_import_product_code = "product_code")
-```
+  rename(top_export_product_code = "product_code")
 
-```{r LATAM productos select, message=FALSE}
-latam_export <- merge(x = comercio_latam, 
+productos_latam_export <- merge(x = comercio_latam, 
                                 y = productos_latam, 
-                                by = 'top_import_product_code') %>%
-    filter(reporter_fullname_english != "Anguilla",
-         reporter_fullname_english != "Neth. Antilles",
-         reporter_fullname_english != "Antigua and Barbuda",
-         reporter_fullname_english != "Bahamas",
-         reporter_fullname_english != "Barbados",
-         reporter_fullname_english != "Belize",
-         reporter_fullname_english != "Bermuda",
-         reporter_fullname_english != "Bouvet Island",
-         reporter_fullname_english != "Cocos Isds",
-         reporter_fullname_english != "Cayman Isds",
-         reporter_fullname_english != "Guadeloupe",
-         reporter_fullname_english != "Cuba",
-         reporter_fullname_english != "Grenada",
-         reporter_fullname_english != "French Guiana",
-         reporter_fullname_english != "Guyana",
-         reporter_fullname_english != "Haiti",
-         reporter_fullname_english != "Jamaica",
-         reporter_fullname_english != "Saint Kitts and Nevis (includes Anguilla until 1981)",
-         reporter_fullname_english != "Saint Lucia",
-         reporter_fullname_english != "Montserrat",
-         reporter_fullname_english != "Martinique",
-         reporter_fullname_english != "Saint Pierre and Miquelon",
-         reporter_fullname_english != "Suriname",
-         reporter_fullname_english != "Turks and Caicos Isds",
-         reporter_fullname_english != "Trinidad and Tobago",
-         reporter_fullname_english != "Saint Vincent and the Grenadines",
-      reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
+                                by = 'top_export_product_code') %>%
+    filter(
+         reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
          reporter_fullname_english != "Canada",
          reporter_fullname_english != "Greenland",
          reporter_fullname_english != "Br. Virgin Isds",
@@ -97,30 +73,136 @@ latam_export <- merge(x = comercio_latam,
          reporter_fullname_english != "South Georgia and the South Sandwich Islands")
 ```
 
-```{r comercio LATAM select, message=FALSE}
-latam_export_modificado <- latam_export %>%
-  select(reporter_fullname_english,
-         export_value_usd,
-         product_shortname_english) %>%
-  group_by(reporter_fullname_english,
-           product_shortname_english) %>%
+```{r LATAM factor, message=FALSE}
+export_countries_modificado <- productos_latam_export %>%
+  mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) %>%
+mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
+            "Caribbean" = c("Anguilla",
+                            "Neth. Antilles",
+                            "Antigua and Barbuda",
+                            "Bahamas",
+                            "Barbados",
+                            "Belize",
+                            "Bermuda",
+                            "Bouvet Island",
+                            "Cocos Isds",
+                            "Cayman Isds",
+                            "Cuba",
+                            "Grenada",
+                            "Guyana",
+                            "Haiti",
+                            "Jamaica",
+                            "Saint Kitts and Nevis (includes Anguilla until 1981)",
+                            "Saint Lucia",
+                            "Montserrat",
+                            "Saint Pierre and Miquelon",
+                            "Suriname",
+                            "Turks and Caicos Isds",
+                            "Trinidad and Tobago",
+                            "Saint Vincent and the Grenadines"),
+      "Central America" = c("Costa Rica",
+                            "Dominica",
+                            "Dominican Rep.",
+                            "El Salvador",
+                            "Guatemala",
+                            "Honduras",
+                            "Nicaragua",
+                            "Panama (excludes Panama Canal Zone until 1978)"),
+             "Argentina" = c("Argentina", 
+                             "Falkland Isds (Malvinas)")))
+```
+
+```{r LATAM productos modificar, message=FALSE}
+export_countries_2018 <- export_countries_modificado %>%
+  group_by(reporter_fullname_english, 
+           product_shortname_english,
+           export_value_usd) %>%
   summarise(export_value_usd = sum(export_value_usd, na.rm = T)) %>%
-  ungroup() %>%
+  arrange(desc(export_value_usd)) %>%
   drop_na()
 ```
 
-```{r comercio LATAM graph, message=FALSE}
-ggplot(latam_export_modificado) +
-  geom_col(aes(
-    x = export_value_usd,
-    y = reporter_fullname_english,
-    fill = product_shortname_english)) +
+### Graficando
+```{r comercio LATAM productos graficar, message=FALSE}
+latam_graph <- ggplot(export_countries_2018, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
   labs(
     x = NULL,
     y = NULL,
-    title = "Productos exportado en América Latina (2018)",
+    fill = NULL,
+    title = "Exportaciones por producto (2018)",
     caption = "Fuerte: Open Trade Statistics") +
-  scale_x_continuous(labels = scales::dollar_format()) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  coord_flip()
+
+latam_graph
+```
+
+```{r comercio LATAM w/o Caribbean, message=FALSE}
+latam_reduced <- export_countries_modificado %>%
+  filter(reporter_fullname_english != "Caribbean",
+         reporter_fullname_english != "Central America")
+  
+latam_graph1 <- ggplot(latam_reduced, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Exportaciones por producto (2018)",
+    caption = "Fuerte: Open Trade Statistics") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = "bottom") +
+  coord_flip()
+
+latam_graph1
+```
+```{r comercio Caribbean, message=FALSE}
+comercio_caribbean <- productos_latam_export %>%
+  filter(reporter_fullname_english != "Argentina",
+         reporter_fullname_english != "Bolivia",
+         reporter_fullname_english != "Brasil",
+         reporter_fullname_english != "Chile",
+         reporter_fullname_english != "Colombia",
+         reporter_fullname_english != "Ecuador",
+         reporter_fullname_english != "Mexico",
+         reporter_fullname_english != "Paraguay",
+         reporter_fullname_english != "Peru",
+         reporter_fullname_english != "Uruguay",
+         reporter_fullname_english != "Venezuela") %>%
+  group_by(reporter_fullname_english, 
+           product_shortname_english,
+           export_value_usd) %>%
+  summarise(export_value_usd = sum(export_value_usd, na.rm = T))
+
+caribbean_graph <- ggplot(comercio_caribbean, aes(
+  x = reporter_fullname_english,
+  y = export_value_usd,
+  fill = product_shortname_english)) +
+    geom_col() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Exportaciones por producto el Caribe (2018)",
+    caption = "Fuerte: Open Trade Statistics") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = "bottom") +
+  coord_flip()
+
+caribbean_graph
+```
+
+```{r comercio patchwork, message=FALSE}
+(latam_graph | latam_graph1 | caribbean_graph)
 ```
