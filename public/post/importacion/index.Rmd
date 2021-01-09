@@ -143,6 +143,7 @@ productos_latam_import_2018 <- productos_latam_import %>%
 
 ## Productos más importado por categoría:
 ```{r comercio LATAM productos por categoría, message=FALSE}
+
 ggplot(productos_latam_import_2018, aes(
   area = import_value_usd,
   fill = product_shortname_english,

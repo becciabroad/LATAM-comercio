@@ -18,32 +18,89 @@ Cómo en los otros posts, utilizaría el API de Open Trade Statistics. En primer
 
 ```{r librarias, message=FALSE}
 library(tradestatistics) #parquete de los datos
-library(tidyverse) 
+library(tidyverse)
+library(ggplot2)
 library(ggforce) #para graficos de sets paralelos
+library(ggthemes)
+library(scales)
 ```
 
 En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:
 ```{r exportacion, message=FALSE}
-exportacion_all <- tradestatistics::ots_create_tidy_data(
-  years = 2018, 
-  reporters = "all",
-  partners = "all", 
-  products = "all") %>%
-  rename(country_iso = 'reporter_iso')
+export_producto_2017 <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") %>%
+  filter(anio == "2017",
+         nombre_comunidad_producto != "Sin Especificar") %>%
+  group_by(nombre_comunidad_producto,
+         valor_exportado_dolares,
+         pais_origen_pertenece_a_hispanoamerica, 
+         pais_destino_pertenece_a_hispanoamerica,
+         color_comunidad_producto) %>%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(
+    Origen = ifelse(pais_origen_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
+    Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo"),
+    Producto = as.factor(nombre_comunidad_producto))
 ```
 
-Desde otro base de datos de Open Trade Statistics descargo la información sobre las regiones de los países
+```{r bar lot, message=FALSE}
+ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
+  geom_bar(fill = "dark blue") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Productos exportado America Latina (2017)",
+    caption = "Fuente: Open Trade Statistics") +
+  coord_flip() +
+  theme_economist()
+```
+```{r modificar, message=FALSE}
+cats_products <- as.character(fct_unique(export_producto_2017$Producto))
 
-```{r country, message=FALSE}
-countries <- tradestatistics::ots_countries %>%
-  mutate(region = ifelse(continent == "Americas", "América Latina", "Resto del mundo")) %>%
-  filter(country_iso != "usa", # Excluding the U.S.
-         country_iso != "can", # Excluding Canada
-         country_iso != "grl", # Excluding Greenland
-         country_iso != "vir", # Excluding one observation of US Virgin Islands
-         country_iso != "umi", # Excluding "United States Minor Outlying Islands"
-         country_iso != "vgb", # Excluding British Virgin Islands
-         country_iso != "sgs") # Exclude South Georgia and the South Sandwich Islands (British territory)
+export_producto_2017_reducido <- export_producto_2017 %>%
+  mutate(
+    Producto = fct_collapse(Producto, 
+"Productos de Origen Animal y Vegetal" = c("Productos Animales",
+                                           "Productos Vegetales",
+                                           "Pieles de Animales",
+                                           "Productos de Composición Vegetal y Animal"),
+            "Productos Manifacturados" = c("Arte y Antiguedades",
+                               "Artículos de Papel",
+                               "Miscelánea",
+                               "Calzado y Gorras",
+                               "Productos de Madera",
+                               "Textiles",
+                               "Plásticos y Gomas"),
+"Recursos Naturales" = c("Productos Minerales",
+                         "Metales Preciosos",
+                         "Metales",
+                         "Piedras y Cristales",
+                         "Productos Químicos"),
+"Maquinas y Instrumentos" = c("Maquinaria", 
+                             "Instrumentos",
+                             "Transporte")))
 ```
 
-# Including Plots
+```{r graficar, message=FALSE}  
+export_producto_graficar <- export_producto_2017_reducido %>%
+  drop_na() %>%
+  group_by(Destino,
+           Origen,
+           Producto) %>%
+  mutate(value = n()) %>%
+  ungroup() %>%
+  select(Producto, Origen, Destino, value) %>%
+  gather_set_data(2:3) %>%
+  ggplot(aes(x, id = id, split = y, value = value)) +
+  geom_parallel_sets(aes(fill = Producto), alpha = 0.5, axis.width = 0.1) +
+  geom_parallel_sets_axes(axis.width = 0.1) +
+  geom_parallel_sets_labels(color = "white", angle = 90, size = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+  theme(axis.text.y = element_blank()) +
+  labs(title = "Productos exportado según origen y destino (2017)",
+       caption = "Fuente: Open Trade Statistics")
+  
+export_producto_graficar
+
+```

@@ -1,0 +1,139 @@
+---
+title: Comercio Argentina
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: comercio-argentina
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+El objetivo de este post es analizar un poco más el comercio de Argentina en particular. 
+
+En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
+
+```{r libraries, message=F}
+library(tidyverse)
+library(ggplot2)
+library(tradestatistics)
+library(treemapify)
+library(ggthemes)
+library(scales)
+```
+
+## Los datos:
+Después voy cargando el base de datos que deseo utilizar:
+```{r base de datos, message=FALSE}
+argentina_export <- tradestatistics::ots_create_tidy_data(
+  years = 1980:2018, 
+  reporters = "arg",
+  partners = "all",
+  products = "all") %>%
+  group_by(year) %>%
+  summarise(
+    export_value_usd = sum(export_value_usd, na.rm = T))
+```
+
+## Transformando los datos:
+Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:
+
+
+## Graficando
+Ahora a graficar: 
+```{r argentina export grafico}
+ggplot(data = argentina_export, aes(x = year, y = export_value_usd)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Exportaciones de Argentina por año",
+    caption = "Fuente: Open Trade Statistics") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = "bottom")
+```
+
+# ¿Argentina se exporta más hacia América Latina o el resto del mundo?
+Querría analizar si en Argentina se exporta más hacia América Latina o hacia el resto del mundo.
+
+## Los datos
+Eligí utilizar el base de datos de Datos de Miércoles de mayo 2019 (link), ya tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. 
+
+Entonces, para este analisis utilizar el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos. Primero, filtro por Argentina como el país de origen de las exportaciones (utilizando el codigo ISO de origen para hacer eso). Segundo, genero una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:
+
+```{r argentina export, message=FALSE}
+comercio_mundo <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") 
+
+comercio_arg <- comercio_mundo %>% 
+  filter(codigo_iso_origen == "arg") %>%
+  mutate(
+    region = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, "América Latina", "Resto del mundo")) %>%
+  group_by(anio, 
+           region) %>%
+  summarise(
+    valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T))
+```
+
+## Graficando
+Ahora bien, se grafica la cantidad de USD exportado hacía América Latina y hacía el resto del mundo por año:
+
+```{r arg export grafico, message=FALSE}
+ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
+  geom_col(position = "dodge2") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Exportaciones de Argentina por region") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(legend.position = "bottom")
+```
+
+Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo.
+
+No obstante, también sería interesante averiguar qué las categoría de productos que se exporta más desde Argentina:
+
+# Exportación por producto
+Querría averiguar qué productos se ha exportado más desde Argentina en los últimos años. Para eso necesito juntar el base de datos de arriba con el otro de Open Trade Statistics como he hecho en los posts anteriores: 
+
+## Cargando los datos
+Cargo la información sobre los nombres de los productos, y cambia el nombre de la columna para que se pueda juntar con la
+```{r arg export datos, message=FALSE}
+
+export_argentina_2017 <- comercio_mundo %>%
+  filter(anio == 2017, 
+         codigo_iso_origen == "arg") %>%
+  group_by(anio, 
+           nombre_comunidad_producto,
+           color_comunidad_producto) %>%
+  summarise(valor_exportado_dolares = sum(valor_exportado_dolares, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, "/", round(100*valor_exportado_dolares/sum(valor_exportado_dolares), 2), "%")
+    )
+```
+
+Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:
+```{r arg productos grafico, message=FALSE}
+ggplot(export_argentina_2017, aes(
+  area = valor_exportado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = "black",
+                    place = "centre",
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
+  labs(title = "Categorías de productos exportado Argentina",
+       caption = "Fuente: Open Trade Statistics") +
+  theme_economist() +
+  theme(legend.position = "none")
+```
+Se nota que la mayoría de los productos que exporta Argentina son productos vegetales, alimentos, productos animales o vegetales. Es decir, recursos naturales extraidos de la tierre o productos agriorula (!!!). No soprene mucho, ya que unos de los principales argumentos de los autores de "middel income trap" es que América Latina, en general, son paises que necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la farmicación de alimentos - areas donde se necesita más habilidades y entonces puede vender los productos más caros en el mercado global. 

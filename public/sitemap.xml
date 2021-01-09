@@ -3,7 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://comercio-latam.netlify.app/post/comercio-argentina/</loc>
+    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://comercio-latam.netlify.app/</loc>
+    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://comercio-latam.netlify.app/post/conclusion/</loc>
+    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://comercio-latam.netlify.app/post/datos-historicos/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -13,7 +28,7 @@
   </url>
   
   <url>
-    <loc>https://comercio-latam.netlify.app/post/exportacion-argentina/</loc>
+    <loc>https://comercio-latam.netlify.app/post/importacion/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   

@@ -1,0 +1,18 @@
+---
+title: Conclusión
+author: Rebecca Hoffmann
+date: '2020-12-07'
+slug: conclusion
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina.
+
