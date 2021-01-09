@@ -22,6 +22,7 @@ library(tidyverse)
 library(ggplot2)
 library(ggforce) #para graficos de sets paralelos
 library(ggthemes)
+library(scales)
 ```
 
 En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:
@@ -44,9 +45,12 @@ export_producto_2017 <- readr::read_csv("https://raw.githubusercontent.com/cienc
 
 ```{r bar lot, message=FALSE}
 ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
-  geom_bar() +
-  labs(title = "Productos exportado America Latina (2017)",
-       caption = "Fuente: Open Trade Statistics") +
+  geom_bar(fill = "dark blue") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Productos exportado America Latina (2017)",
+    caption = "Fuente: Open Trade Statistics") +
   coord_flip() +
   theme_economist()
 ```

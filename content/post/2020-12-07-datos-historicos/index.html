@@ -20,7 +20,8 @@ output:
 <pre class="r"><code>library(tidyverse)
 library(tradestatistics)
 library(ggplot2)
-library(ggthemes)</code></pre>
+library(ggthemes)
+library(scales)</code></pre>
 </div>
 <div id="los-datos" class="section level2">
 <h2>Los datos</h2>
@@ -66,8 +67,9 @@ I rename the column “reporter_iso” to be able to merge it with the second da
   geom_line(aes(year,
                 import_value_usd,
                 color = &quot;blue&quot;)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
     labs(title = &quot;Import y export de América Latina&quot;,
-       y = &quot;USD&quot;,
+       y = NULL,
        x = NULL,
        caption = &quot;Fuente: Open Trade Statistics&quot;) +
   theme_economist() +
@@ -138,8 +140,9 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
                 trade,
                 group = country_fullname_english,
                 color = country_fullname_english)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   labs(title = &quot;Evolución comercial en América Latina&quot;,
-       y = &quot;Total comercio en USD&quot;,
+       y = NULL,
        x = NULL) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>

@@ -24,6 +24,7 @@ library(ggplot2)
 library(tradestatistics)
 library(treemapify)
 library(ggthemes)
+library(scales)
 ```
 
 ## Los datos:
@@ -49,10 +50,11 @@ Ahora a graficar:
 ggplot(data = argentina_export, aes(x = year, y = export_value_usd)) +
   geom_line() +
   labs(
-    x = "Años",
-    y = "Valor Exportado en USD",
+    x = NULL,
+    y = NULL,
     title = "Exportaciones de Argentina por año",
     caption = "Fuente: Open Trade Statistics") +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = "bottom")
 ```
@@ -85,9 +87,10 @@ Ahora bien, se grafica la cantidad de USD exportado hacía América Latina y hac
 ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
   geom_col(position = "dodge2") +
   labs(
-    x = "Años",
-    y = "Valor Exportado en USD",
+    x = NULL,
+    y = NULL,
     title = "Exportaciones de Argentina por region") +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = "bottom")
 ```

@@ -20,7 +20,8 @@ output:
 library(tidyverse)
 library(ggplot2)
 library(ggforce) #para graficos de sets paralelos
-library(ggthemes)</code></pre>
+library(ggthemes)
+library(scales)</code></pre>
 <p>En segundo lugar, eligo los datos que necesito para realizar el set de parelelo. Solamente se analiza para el año 2018:</p>
 <pre class="r"><code>export_producto_2017 &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) %&gt;%
   filter(anio == &quot;2017&quot;,
@@ -37,9 +38,12 @@ library(ggthemes)</code></pre>
     Destino = ifelse(pais_destino_pertenece_a_hispanoamerica == 1, &quot;América Latina&quot;, &quot;Resto del mundo&quot;),
     Producto = as.factor(nombre_comunidad_producto))</code></pre>
 <pre class="r"><code>ggplot(export_producto_2017, aes(x = fct_infreq(Producto))) +
-  geom_bar() +
-  labs(title = &quot;Productos exportado America Latina (2017)&quot;,
-       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  geom_bar(fill = &quot;dark blue&quot;) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = &quot;Productos exportado America Latina (2017)&quot;,
+    caption = &quot;Fuente: Open Trade Statistics&quot;) +
   coord_flip() +
   theme_economist()</code></pre>
 <p><img src="index_files/figure-html/bar%20lot-1.png" width="672" /></p>

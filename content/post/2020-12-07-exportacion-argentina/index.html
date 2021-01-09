@@ -20,7 +20,8 @@ output:
 library(ggplot2)
 library(tradestatistics)
 library(treemapify)
-library(ggthemes)</code></pre>
+library(ggthemes)
+library(scales)</code></pre>
 <div id="los-datos" class="section level2">
 <h2>Los datos:</h2>
 <p>Después voy cargando el base de datos que deseo utilizar:</p>
@@ -43,10 +44,11 @@ library(ggthemes)</code></pre>
 <pre class="r"><code>ggplot(data = argentina_export, aes(x = year, y = export_value_usd)) +
   geom_line() +
   labs(
-    x = &quot;Años&quot;,
-    y = &quot;Valor Exportado en USD&quot;,
+    x = NULL,
+    y = NULL,
     title = &quot;Exportaciones de Argentina por año&quot;,
     caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/argentina%20export%20grafico-1.png" width="672" /></p>
@@ -75,9 +77,10 @@ comercio_arg &lt;- comercio_mundo %&gt;%
 <pre class="r"><code>ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
   geom_col(position = &quot;dodge2&quot;) +
   labs(
-    x = &quot;Años&quot;,
-    y = &quot;Valor Exportado en USD&quot;,
+    x = NULL,
+    y = NULL,
     title = &quot;Exportaciones de Argentina por region&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/arg%20export%20grafico-1.png" width="672" /></p>

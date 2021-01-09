@@ -25,6 +25,8 @@ library(tradestatistics)
 library(ggplot2)
 library(rworldmap)
 library(treemapify)
+library(ggthemes)
+library(scales)
 ```
 
 ## Los datos
@@ -152,7 +154,9 @@ ggplot(productos_latam_import_2018, aes(
                     place = "centre",
                     grow = F,
                     reflow = T) +
-  labs(title = "Categorías de productos importado en América Latina en 2018")
+  labs(title = "Productos importado en América Latina (2018)") +
+  theme_economist() +
+  theme(legend.position = "none")
 
 ```
 
@@ -184,11 +188,11 @@ ggplot(import_countries_2018, aes(
     geom_col() +
   labs(
     x = NULL,
-    y = "Valor Importado en USD",
+    y = NULL,
     fill = NULL,
     title = "Importaciones de Ameríca Latina por producto en 2018",
     caption = "Fuerte: Open Trade Statistics") +
-  theme_minimal() +
+  theme_economist() +
   theme(legend.position = "bottom") +
   coord_flip()
 ```

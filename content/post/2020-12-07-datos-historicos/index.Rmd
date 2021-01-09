@@ -23,6 +23,7 @@ library(tidyverse)
 library(tradestatistics)
 library(ggplot2)
 library(ggthemes)
+library(scales)
 ```
 
 ## Los datos
@@ -83,12 +84,14 @@ ggplot(trade_total) +
   geom_line(aes(year,
                 import_value_usd,
                 color = "blue")) +
+  scale_y_continuous(labels = scales::dollar_format()) +
     labs(title = "Import y export de América Latina",
-       y = "USD",
+       y = NULL,
        x = NULL,
        caption = "Fuente: Open Trade Statistics") +
   theme_economist() +
   theme(legend.position = "bottom")
+
 ```
 
 ### Sum-up
@@ -156,8 +159,9 @@ ggplot(comercio_latam_caribbean) +
                 trade,
                 group = country_fullname_english,
                 color = country_fullname_english)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   labs(title = "Evolución comercial en América Latina",
-       y = "Total comercio en USD",
+       y = NULL,
        x = NULL) +
   theme_economist() +
   theme(legend.position = "bottom")
