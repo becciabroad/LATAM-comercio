@@ -3,12 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://comercio-latam.netlify.app/post/comercio-argentina/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
+    <loc>https://comercio-latam.netlify.app/</loc>
+    <lastmod>2021-01-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://comercio-latam.netlify.app/</loc>
+    <loc>https://comercio-latam.netlify.app/post/export/</loc>
+    <lastmod>2021-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://comercio-latam.netlify.app/post/import/</loc>
+    <lastmod>2021-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://comercio-latam.netlify.app/post/</loc>
+    <lastmod>2021-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://comercio-latam.netlify.app/post/comercio-argentina/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -29,11 +44,6 @@
   
   <url>
     <loc>https://comercio-latam.netlify.app/post/importacion/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://comercio-latam.netlify.app/post/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   

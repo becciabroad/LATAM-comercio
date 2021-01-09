@@ -202,7 +202,3 @@ caribbean_graph <- ggplot(comercio_caribbean, aes(
 
 caribbean_graph
 ```
-
-```{r comercio patchwork, message=FALSE}
-(latam_graph | latam_graph1 | caribbean_graph)
-```
