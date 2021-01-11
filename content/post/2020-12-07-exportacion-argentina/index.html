@@ -82,7 +82,9 @@ comercio_arg &lt;- comercio_mundo %&gt;%
     title = &quot;Exportaciones de Argentina por region&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
+  theme(legend.position = &quot;bottom&quot;,
+        legend.title = element_blank(),
+        legend.text = element_text(size = 10))</code></pre>
 <p><img src="index_files/figure-html/arg%20export%20grafico-1.png" width="672" /></p>
 <p>Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo.</p>
 <p>No obstante, también sería interesante averiguar qué las categoría de productos que se exporta más desde Argentina:</p>
@@ -121,7 +123,8 @@ export_argentina_2017 &lt;- comercio_mundo %&gt;%
        caption = &quot;Fuente: Open Trade Statistics&quot;) +
   theme_economist() +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="index_files/figure-html/arg%20productos%20grafico-1.png" width="672" />
+<p><img src="index_files/figure-html/arg%20productos%20grafico-1.png" width="672" /></p>
+<p>##Sum-up
 Se nota que la mayoría de los productos que exporta Argentina son productos vegetales, alimentos, productos animales o vegetales. Es decir, recursos naturales extraidos de la tierre o productos agriorula (!!!). No soprene mucho, ya que unos de los principales argumentos de los autores de “middel income trap” es que América Latina, en general, son paises que necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la farmicación de alimentos - areas donde se necesita más habilidades y entonces puede vender los productos más caros en el mercado global.</p>
 </div>
 </div>

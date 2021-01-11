@@ -62,8 +62,7 @@ I select the row that I want to use to create the map with, however, I leave the
 comercio_latam_import <- comercio_latam %>%
   select(country_iso,
          reporter_fullname_english,
-         import_value_usd) %>%
-  drop_na()
+         import_value_usd)
 ```
 
 ## Graficando

@@ -21,7 +21,8 @@ output:
 library(tradestatistics)
 library(ggplot2)
 library(ggthemes)
-library(scales)</code></pre>
+library(scales)
+library(patchwork)</code></pre>
 </div>
 <div id="los-datos" class="section level2">
 <h2>Los datos</h2>
@@ -43,7 +44,11 @@ I rename the column “reporter_iso” to be able to merge it with the second da
          country_iso,
          country_fullname_english, 
          export_value_usd,
-         import_value_usd) %&gt;%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %&gt;%
   filter(country_iso != &quot;usa&quot;, # Excluding the U.S.
          country_iso != &quot;can&quot;, # Excluding Canada
          country_iso != &quot;grl&quot;, # Excluding Greenland
@@ -90,10 +95,14 @@ comercio_latam_modificado &lt;- comercio_latam_reducido %&gt;%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
 comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
-  group_by(year,
+  select(year,
          country_fullname_english,
          export_value_usd,
-         import_value_usd) %&gt;%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %&gt;%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %&gt;%
   arrange(desc(trade)) %&gt;%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
@@ -143,26 +152,46 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(title = &quot;Evolución comercial en América Latina&quot;,
        y = NULL,
-       x = NULL) +
+       x = NULL,
+       caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20graph-1.png" width="672" /></p>
 <p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado).</p>
-<pre class="r"><code>comercio_latam_caribbean1 &lt;- comercio_latam_caribbean %&gt;%
-  filter(country_fullname_english != &quot;Mexico&quot;,
-         country_fullname_english != &quot;Brazil&quot;,
-         country_fullname_english != &quot;Argentina&quot;)
+<pre class="r"><code>producto_latam_import &lt;- tradestatistics::ots_products_shortnames %&gt;%
+  rename(top_import_product_code = &quot;product_code&quot;) 
 
-ggplot(comercio_latam_caribbean1) +  
-  geom_line(aes(year,
-                trade,
-                group = country_fullname_english,
-                color = country_fullname_english)) +
-  labs(title = &quot;Evolución comercial en América Latina&quot;,
-       y = &quot;Total comercio en USD&quot;,
+producto_latam_export &lt;- tradestatistics::ots_products_shortnames %&gt;%
+  rename(top_export_product_code = &quot;product_code&quot;)
+
+import_latam_caribbean &lt;- merge(x = comercio_latam_caribbean, 
+                                y = producto_latam_import, 
+                                by = &#39;top_import_product_code&#39;) %&gt;%
+  select(year,
+         country_fullname_english,
+         top_import_trade_value_usd,
+         product_shortname_english)
+
+export_latam_caribbean &lt;- merge(x = comercio_latam_caribbean, 
+                                y = producto_latam_export, 
+                                by = &#39;top_export_product_code&#39;) %&gt;%
+  select(year,
+         top_export_trade_value_usd,
+         product_shortname_english)</code></pre>
+<pre class="r"><code>ggplot(import_latam_caribbean, aes(x = year, y = top_import_trade_value_usd)) +  
+  geom_point(aes(col = product_shortname_english)) +
+  labs(title = &quot;Importación historico en América Latina&quot;,
+       y = NULL,
        x = NULL) +
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20graph2-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20product%20import-1.png" width="672" /></p>
 </div>
 </div>

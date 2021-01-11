@@ -24,6 +24,7 @@ library(tradestatistics)
 library(ggplot2)
 library(ggthemes)
 library(scales)
+library(patchwork)
 ```
 
 ## Los datos
@@ -55,7 +56,11 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
          country_iso,
          country_fullname_english, 
          export_value_usd,
-         import_value_usd) %>%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %>%
   filter(country_iso != "usa", # Excluding the U.S.
          country_iso != "can", # Excluding Canada
          country_iso != "grl", # Excluding Greenland
@@ -107,10 +112,14 @@ comercio_latam_modificado <- comercio_latam_reducido %>%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
 comercio_latam_caribbean <- comercio_latam_modificado %>%
-  group_by(year,
+  select(year,
          country_fullname_english,
          export_value_usd,
-         import_value_usd) %>%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %>%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %>%
   arrange(desc(trade)) %>%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
@@ -162,27 +171,71 @@ ggplot(comercio_latam_caribbean) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(title = "Evolución comercial en América Latina",
        y = NULL,
-       x = NULL) +
+       x = NULL,
+       caption = "Fuerte: Open Trade Statistics") +
   theme_economist() +
-  theme(legend.position = "bottom")
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = "bottom")
 ```
 
 Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado). 
 
-```{r comercio LATAM graph2, message=FALSE}
-comercio_latam_caribbean1 <- comercio_latam_caribbean %>%
-  filter(country_fullname_english != "Mexico",
-         country_fullname_english != "Brazil",
-         country_fullname_english != "Argentina")
+```{r comercio LATAM product import, message=FALSE}
+producto_latam_import <- tradestatistics::ots_products_shortnames %>%
+  rename(top_import_product_code = "product_code")
 
-ggplot(comercio_latam_caribbean1) +  
-  geom_line(aes(year,
-                trade,
-                group = country_fullname_english,
-                color = country_fullname_english)) +
-  labs(title = "Evolución comercial en América Latina",
-       y = "Total comercio en USD",
-       x = NULL) +
-  theme_economist() +
-  theme(legend.position = "bottom")
+import_latam_caribbean <- merge(x = comercio_latam_caribbean, 
+                                y = producto_latam_import, 
+                                by = 'top_import_product_code') %>%
+  mutate(producto = as.factor(top_import_product_code))
 ```
+
+```{r comercio LATAM import factor mod, message=FALSE}
+cats_products <- as.character(fct_unique(import_latam_caribbean$producto))
+
+producto_latam_import_reducido <- import_latam_caribbean %>%
+  mutate(
+    producto = fct_collapse(producto,
+  "Productos agropecuarios" = c("0201","0207","0210","0303","0402", "0406", "0603", "0710", "0803", "1001", "2523", "2701", "1006", "1201", "1207", "1507", "1701", "1801", "2401", "2009", "2106", "2201", "2203", "2207", "2208", "2402", "2403"),
+  "Petroleo crudo" = c("2709"),
+  "Petroleo refinado"= c("2710", "2711", "2713"),
+  "Chemicos y Farmacéuticos" = c("2714", "2806", "2814", "2815", "2817", "2915", "2917", "2933", "3105", "3808", "3824", "9027", "3006", "3004", "3003", "9306"),
+  "Productos Industriales y Maquinas" = c("3407", "3701", "3904","3918", "3926", "4001", "4011", "4016", "4403", "4418", "4804", "3403", "7204", "7204", "7301", "7304", "7305", "7308", "7407", "7604", "8407", "8408", "8409", "8411", "8419", "8421", "8426", "8429", "8431", "8433", "8439", "8455", "8465", "8473", "8474", "8477", "8484", "8501", "8502", "8503", "8504", "8527", "8534", "8536", "8540", "8542", "8544", "9001", "7208", "9018", "9406", "9015"),
+ "Textiles" = c("4819", "4907", "5208", "5210", "5509", "5602", "5802", "6001", "6004", "6109", "6203", "6217"),
+ "Consumer goods" = c("7102","7113", "9003","9017", "9101", "9403", "9506", "9701", "8713", "8517", "8471", "8519"),
+ "Transporte" = c("8609", "8702", "8704", "8705", "8801", "8802", "8803", "8901", "8902", "8903", "8904", "8905"),
+ "Autos" = c("8703", "8708", "8716")))
+```
+
+```{r comercio LATAM import graph, message=FALSE}
+producto_import_graph <- producto_latam_import_reducido %>%
+  select(year,
+         import_value_usd,
+         top_import_trade_value_usd,
+         producto) %>%
+  group_by(year)
+
+ggplot(producto_import_graph, aes(x = year, y = top_import_trade_value_usd)) +  
+  geom_point(aes(col = producto)) +
+  labs(title = "Importaciones de América Latina por producto",
+       y = NULL,
+       x = NULL,
+       caption = "Fuerte: Open Trade Statistics") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_economist() +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    legend.position = "right")
+```
+
+## Sum-up

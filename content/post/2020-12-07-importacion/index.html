@@ -49,8 +49,7 @@ I rename the column “reporter_iso” to be able to merge it with the second da
 <pre class="r"><code>comercio_latam_import &lt;- comercio_latam %&gt;%
   select(country_iso,
          reporter_fullname_english,
-         import_value_usd) %&gt;%
-  drop_na()</code></pre>
+         import_value_usd)</code></pre>
 </div>
 <div id="graficando" class="section level2">
 <h2>Graficando</h2>
@@ -116,7 +115,8 @@ productos_latam_import &lt;- merge(x = comercio_latam,
                     reflow = T) +
   labs(title = &quot;Productos importado en América Latina (2018)&quot;) +
   theme_economist() +
-  theme(legend.position = &quot;none&quot;)
+  theme(plot.title = element_text(size = 14),
+    legend.position = &quot;none&quot;)
 
 producto_2018</code></pre>
 <p><img src="index_files/figure-html/LATAM%20productos%20categori%CC%81a%20graficar-1.png" width="672" /></p>
@@ -185,7 +185,13 @@ producto_2018</code></pre>
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;) +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9),
+    legend.text = element_text(size = 8),
+    legend.position = &quot;bottom&quot;) +
+  guides(color=guide_legend(&quot;Categoría de producto&quot;)) +
   coord_flip()</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" /></p>
 <p>Entonces…</p>
