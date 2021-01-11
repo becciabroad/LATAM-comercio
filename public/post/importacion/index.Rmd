@@ -62,8 +62,7 @@ I select the row that I want to use to create the map with, however, I leave the
 comercio_latam_import <- comercio_latam %>%
   select(country_iso,
          reporter_fullname_english,
-         import_value_usd) %>%
-  drop_na()
+         import_value_usd)
 ```
 
 ## Graficando
@@ -133,7 +132,8 @@ producto_2018 <- ggplot(productos_latam_import_2018, aes(
                     reflow = T) +
   labs(title = "Productos importado en América Latina (2018)") +
   theme_economist() +
-  theme(legend.position = "none")
+  theme(plot.title = element_text(size = 14),
+    legend.position = "none")
 
 producto_2018
 ```
@@ -210,7 +210,13 @@ ggplot(import_countries_2018, aes(
     caption = "Fuerte: Open Trade Statistics") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom") +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9),
+    legend.text = element_text(size = 8),
+    legend.position = "bottom") +
+  guides(color=guide_legend("Categoría de producto")) +
   coord_flip()
 ```
 

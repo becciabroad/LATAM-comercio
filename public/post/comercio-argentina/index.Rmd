@@ -92,7 +92,9 @@ ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = reg
     title = "Exportaciones de Argentina por region") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 10))
 ```
 
 Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo.
@@ -136,4 +138,6 @@ ggplot(export_argentina_2017, aes(
   theme_economist() +
   theme(legend.position = "none")
 ```
+
+##Sum-up
 Se nota que la mayoría de los productos que exporta Argentina son productos vegetales, alimentos, productos animales o vegetales. Es decir, recursos naturales extraidos de la tierre o productos agriorula (!!!). No soprene mucho, ya que unos de los principales argumentos de los autores de "middel income trap" es que América Latina, en general, son paises que necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la farmicación de alimentos - areas donde se necesita más habilidades y entonces puede vender los productos más caros en el mercado global. 

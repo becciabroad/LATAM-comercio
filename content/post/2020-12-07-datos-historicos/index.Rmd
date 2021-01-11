@@ -120,7 +120,6 @@ comercio_latam_caribbean <- comercio_latam_modificado %>%
          top_export_trade_value_usd,
          top_import_trade_value_usd) %>%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %>%
-  arrange(desc(trade)) %>%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
                                   "Caribbean" = c("Anguilla", 
                                                   "Neth. Antilles", 

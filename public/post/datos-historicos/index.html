@@ -43,7 +43,11 @@ I rename the column “reporter_iso” to be able to merge it with the second da
          country_iso,
          country_fullname_english, 
          export_value_usd,
-         import_value_usd) %&gt;%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %&gt;%
   filter(country_iso != &quot;usa&quot;, # Excluding the U.S.
          country_iso != &quot;can&quot;, # Excluding Canada
          country_iso != &quot;grl&quot;, # Excluding Greenland
@@ -90,12 +94,15 @@ comercio_latam_modificado &lt;- comercio_latam_reducido %&gt;%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
 comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
-  group_by(year,
+  select(year,
          country_fullname_english,
          export_value_usd,
-         import_value_usd) %&gt;%
+         import_value_usd,
+         top_export_product_code,
+         top_import_product_code,
+         top_export_trade_value_usd,
+         top_import_trade_value_usd) %&gt;%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %&gt;%
-  arrange(desc(trade)) %&gt;%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
                                   &quot;Caribbean&quot; = c(&quot;Anguilla&quot;, 
                                                   &quot;Neth. Antilles&quot;, 
@@ -143,26 +150,65 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(title = &quot;Evolución comercial en América Latina&quot;,
        y = NULL,
-       x = NULL) +
+       x = NULL,
+       caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20graph-1.png" width="672" /></p>
 <p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado).</p>
-<pre class="r"><code>comercio_latam_caribbean1 &lt;- comercio_latam_caribbean %&gt;%
-  filter(country_fullname_english != &quot;Mexico&quot;,
-         country_fullname_english != &quot;Brazil&quot;,
-         country_fullname_english != &quot;Argentina&quot;)
+<pre class="r"><code>producto_latam_import &lt;- tradestatistics::ots_products_shortnames %&gt;%
+  rename(top_import_product_code = &quot;product_code&quot;)
 
-ggplot(comercio_latam_caribbean1) +  
-  geom_line(aes(year,
-                trade,
-                group = country_fullname_english,
-                color = country_fullname_english)) +
-  labs(title = &quot;Evolución comercial en América Latina&quot;,
-       y = &quot;Total comercio en USD&quot;,
-       x = NULL) +
+import_latam_caribbean &lt;- merge(x = comercio_latam_caribbean, 
+                                y = producto_latam_import, 
+                                by = &#39;top_import_product_code&#39;) %&gt;%
+  mutate(producto = as.factor(top_import_product_code))</code></pre>
+<pre class="r"><code>cats_products &lt;- as.character(fct_unique(import_latam_caribbean$producto))
+
+producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
+  mutate(
+    producto = fct_collapse(producto,
+  &quot;Productos agropecuarios&quot; = c(&quot;0201&quot;,&quot;0207&quot;,&quot;0210&quot;,&quot;0303&quot;,&quot;0402&quot;, &quot;0406&quot;, &quot;0603&quot;, &quot;0710&quot;, &quot;0803&quot;, &quot;1001&quot;, &quot;2523&quot;, &quot;2701&quot;, &quot;1006&quot;, &quot;1201&quot;, &quot;1207&quot;, &quot;1507&quot;, &quot;1701&quot;, &quot;1801&quot;, &quot;2401&quot;, &quot;2009&quot;, &quot;2106&quot;, &quot;2201&quot;, &quot;2203&quot;, &quot;2207&quot;, &quot;2208&quot;, &quot;2402&quot;, &quot;2403&quot;),
+  &quot;Petroleo crudo&quot; = c(&quot;2709&quot;),
+  &quot;Petroleo refinado&quot;= c(&quot;2710&quot;, &quot;2711&quot;, &quot;2713&quot;),
+  &quot;Chemicos y Farmacéuticos&quot; = c(&quot;2714&quot;, &quot;2806&quot;, &quot;2814&quot;, &quot;2815&quot;, &quot;2817&quot;, &quot;2915&quot;, &quot;2917&quot;, &quot;2933&quot;, &quot;3105&quot;, &quot;3808&quot;, &quot;3824&quot;, &quot;9027&quot;, &quot;3006&quot;, &quot;3004&quot;, &quot;3003&quot;, &quot;9306&quot;),
+  &quot;Productos Industriales y Maquinas&quot; = c(&quot;3407&quot;, &quot;3701&quot;, &quot;3904&quot;,&quot;3918&quot;, &quot;3926&quot;, &quot;4001&quot;, &quot;4011&quot;, &quot;4016&quot;, &quot;4403&quot;, &quot;4418&quot;, &quot;4804&quot;, &quot;3403&quot;, &quot;7204&quot;, &quot;7204&quot;, &quot;7301&quot;, &quot;7304&quot;, &quot;7305&quot;, &quot;7308&quot;, &quot;7407&quot;, &quot;7604&quot;, &quot;8407&quot;, &quot;8408&quot;, &quot;8409&quot;, &quot;8411&quot;, &quot;8419&quot;, &quot;8421&quot;, &quot;8426&quot;, &quot;8429&quot;, &quot;8431&quot;, &quot;8433&quot;, &quot;8439&quot;, &quot;8455&quot;, &quot;8465&quot;, &quot;8473&quot;, &quot;8474&quot;, &quot;8477&quot;, &quot;8484&quot;, &quot;8501&quot;, &quot;8502&quot;, &quot;8503&quot;, &quot;8504&quot;, &quot;8527&quot;, &quot;8534&quot;, &quot;8536&quot;, &quot;8540&quot;, &quot;8542&quot;, &quot;8544&quot;, &quot;9001&quot;, &quot;7208&quot;, &quot;9018&quot;, &quot;9406&quot;, &quot;9015&quot;),
+ &quot;Textiles&quot; = c(&quot;4819&quot;, &quot;4907&quot;, &quot;5208&quot;, &quot;5210&quot;, &quot;5509&quot;, &quot;5602&quot;, &quot;5802&quot;, &quot;6001&quot;, &quot;6004&quot;, &quot;6109&quot;, &quot;6203&quot;, &quot;6217&quot;),
+ &quot;Consumer goods&quot; = c(&quot;7102&quot;,&quot;7113&quot;, &quot;9003&quot;,&quot;9017&quot;, &quot;9101&quot;, &quot;9403&quot;, &quot;9506&quot;, &quot;9701&quot;, &quot;8713&quot;, &quot;8517&quot;, &quot;8471&quot;, &quot;8519&quot;),
+ &quot;Transporte&quot; = c(&quot;8609&quot;, &quot;8702&quot;, &quot;8704&quot;, &quot;8705&quot;, &quot;8801&quot;, &quot;8802&quot;, &quot;8803&quot;, &quot;8901&quot;, &quot;8902&quot;, &quot;8903&quot;, &quot;8904&quot;, &quot;8905&quot;),
+ &quot;Autos&quot; = c(&quot;8703&quot;, &quot;8708&quot;, &quot;8716&quot;)))</code></pre>
+<pre class="r"><code>producto_import_graph &lt;- producto_latam_import_reducido %&gt;%
+  select(year,
+         import_value_usd,
+         top_import_trade_value_usd,
+         producto) %&gt;%
+  group_by(year)
+
+ggplot(producto_import_graph, aes(x = year, y = top_import_trade_value_usd)) +  
+  geom_point(aes(col = producto)) +
+  labs(title = &quot;Importaciones de América Latina por producto&quot;,
+       y = NULL,
+       x = NULL,
+       caption = &quot;Fuerte: Open Trade Statistics&quot;) +
+  scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20graph2-1.png" width="672" /></p>
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    legend.position = &quot;right&quot;)</code></pre>
+<p><img src="index_files/figure-html/comercio%20LATAM%20import%20graph-1.png" width="672" /></p>
+</div>
+<div id="sum-up-1" class="section level2">
+<h2>Sum-up</h2>
 </div>
 </div>

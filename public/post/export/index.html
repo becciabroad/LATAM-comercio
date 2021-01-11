@@ -118,7 +118,14 @@ mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;) +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = &quot;bottom&quot;) +
   coord_flip()
 
 latam_graph</code></pre>
@@ -140,7 +147,14 @@ latam_graph1 &lt;- ggplot(latam_reduced, aes(
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;) +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = &quot;bottom&quot;) +
   coord_flip()
 
 latam_graph1</code></pre>
@@ -175,12 +189,17 @@ caribbean_graph &lt;- ggplot(comercio_caribbean, aes(
     caption = &quot;Fuerte: Open Trade Statistics&quot;) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = &quot;bottom&quot;) +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = &quot;bottom&quot;) +
   coord_flip()
 
 caribbean_graph</code></pre>
 <p><img src="index_files/figure-html/comercio%20Caribbean-1.png" width="672" /></p>
-<pre class="r"><code>(latam_graph | latam_graph1 | caribbean_graph)</code></pre>
-<p><img src="index_files/figure-html/comercio%20patchwork-1.png" width="672" /></p>
 </div>
 </div>

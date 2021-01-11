@@ -112,6 +112,7 @@ mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
                              "Falkland Isds (Malvinas)")))
 ```
 
+
 ```{r LATAM productos modificar, message=FALSE}
 export_countries_2018 <- export_countries_modificado %>%
   group_by(reporter_fullname_english, 
@@ -137,7 +138,14 @@ latam_graph <- ggplot(export_countries_2018, aes(
     caption = "Fuerte: Open Trade Statistics") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom") +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = "bottom") +
   coord_flip()
 
 latam_graph
@@ -161,7 +169,14 @@ latam_graph1 <- ggplot(latam_reduced, aes(
     caption = "Fuerte: Open Trade Statistics") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom") +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = "bottom") +
   coord_flip()
 
 latam_graph1
@@ -197,12 +212,15 @@ caribbean_graph <- ggplot(comercio_caribbean, aes(
     caption = "Fuerte: Open Trade Statistics") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom") +
+  theme(
+    plot.title = element_text(size = 14),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size=9,
+                               hjust = 0),
+    legend.text = element_text(size = 8),
+    legend.title = element_blank(),
+    legend.position = "bottom") +
   coord_flip()
 
 caribbean_graph
-```
-
-```{r comercio patchwork, message=FALSE}
-(latam_graph | latam_graph1 | caribbean_graph)
 ```
