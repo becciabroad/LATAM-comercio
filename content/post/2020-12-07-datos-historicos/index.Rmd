@@ -24,7 +24,6 @@ library(tradestatistics)
 library(ggplot2)
 library(ggthemes)
 library(scales)
-library(patchwork)
 ```
 
 ## Los datos
@@ -236,6 +235,7 @@ ggplot(producto_import_graph, aes(x = year, y = top_import_trade_value_usd)) +
     legend.title = element_blank(),
     legend.text = element_text(size = 8),
     legend.position = "right")
+
 ```
 
 ## Sum-up
