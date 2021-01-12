@@ -149,7 +149,7 @@ latam_graph1 &lt;- ggplot(latam_reduced, aes(
   theme_economist() +
   theme(
     plot.title = element_text(size = 14),
-    axis.text.x = element_text(size = 9),
+    axis.text.x = element_text(size = 7),
     axis.text.y = element_text(size=9,
                                hjust = 0),
     legend.text = element_text(size = 8),
@@ -162,7 +162,7 @@ latam_graph1</code></pre>
 <pre class="r"><code>comercio_caribbean &lt;- productos_latam_export %&gt;%
   filter(reporter_fullname_english != &quot;Argentina&quot;,
          reporter_fullname_english != &quot;Bolivia&quot;,
-         reporter_fullname_english != &quot;Brasil&quot;,
+         reporter_fullname_english != &quot;Brazil&quot;,
          reporter_fullname_english != &quot;Chile&quot;,
          reporter_fullname_english != &quot;Colombia&quot;,
          reporter_fullname_english != &quot;Ecuador&quot;,
@@ -170,7 +170,8 @@ latam_graph1</code></pre>
          reporter_fullname_english != &quot;Paraguay&quot;,
          reporter_fullname_english != &quot;Peru&quot;,
          reporter_fullname_english != &quot;Uruguay&quot;,
-         reporter_fullname_english != &quot;Venezuela&quot;) %&gt;%
+         reporter_fullname_english != &quot;Venezuela&quot;,
+         reporter_fullname_english != &quot;Falkland Isds (Malvinas)&quot;) %&gt;%
   group_by(reporter_fullname_english, 
            product_shortname_english,
            export_value_usd) %&gt;%
@@ -192,7 +193,7 @@ caribbean_graph &lt;- ggplot(comercio_caribbean, aes(
   theme(
     plot.title = element_text(size = 14),
     axis.text.x = element_text(size = 9),
-    axis.text.y = element_text(size=9,
+    axis.text.y = element_text(size=7,
                                hjust = 0),
     legend.text = element_text(size = 8),
     legend.title = element_blank(),

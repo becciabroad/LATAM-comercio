@@ -171,7 +171,7 @@ latam_graph1 <- ggplot(latam_reduced, aes(
   theme_economist() +
   theme(
     plot.title = element_text(size = 14),
-    axis.text.x = element_text(size = 9),
+    axis.text.x = element_text(size = 7),
     axis.text.y = element_text(size=9,
                                hjust = 0),
     legend.text = element_text(size = 8),
@@ -185,7 +185,7 @@ latam_graph1
 comercio_caribbean <- productos_latam_export %>%
   filter(reporter_fullname_english != "Argentina",
          reporter_fullname_english != "Bolivia",
-         reporter_fullname_english != "Brasil",
+         reporter_fullname_english != "Brazil",
          reporter_fullname_english != "Chile",
          reporter_fullname_english != "Colombia",
          reporter_fullname_english != "Ecuador",
@@ -193,7 +193,8 @@ comercio_caribbean <- productos_latam_export %>%
          reporter_fullname_english != "Paraguay",
          reporter_fullname_english != "Peru",
          reporter_fullname_english != "Uruguay",
-         reporter_fullname_english != "Venezuela") %>%
+         reporter_fullname_english != "Venezuela",
+         reporter_fullname_english != "Falkland Isds (Malvinas)") %>%
   group_by(reporter_fullname_english, 
            product_shortname_english,
            export_value_usd) %>%
@@ -215,7 +216,7 @@ caribbean_graph <- ggplot(comercio_caribbean, aes(
   theme(
     plot.title = element_text(size = 14),
     axis.text.x = element_text(size = 9),
-    axis.text.y = element_text(size=9,
+    axis.text.y = element_text(size=7,
                                hjust = 0),
     legend.text = element_text(size = 8),
     legend.title = element_blank(),

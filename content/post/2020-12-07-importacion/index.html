@@ -113,9 +113,10 @@ productos_latam_import &lt;- merge(x = comercio_latam,
                     place = &quot;centre&quot;,
                     grow = F,
                     reflow = T) +
-  labs(title = &quot;Productos importado en América Latina (2018)&quot;) +
+  labs(title = &quot;Productos importado en América Latina (2018)&quot;,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
   theme_economist() +
-  theme(plot.title = element_text(size = 14),
+  theme(plot.title = element_text(size = 12),
     legend.position = &quot;none&quot;)
 
 producto_2018</code></pre>
