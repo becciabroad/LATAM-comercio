@@ -14,7 +14,14 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-En este post, querría analizar la evolución historico del comercio para  toda la región de América Latin utilizando el base de dato de Open Trade Statistics. Por un lado, me interesa investigar como ha sido el desarrollo tanto de las exportaciones como las importaciones para toda la región en conjunto.. Por el otro lado, me interesa saber qué paísestienen los mayores niveles de comercio en la región.
+En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics. 
+
+El post está divido en tres analisis diferentes:
+(1) Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto. 
+(2) Un analisis de la evolución del comercio de los países en la región para poder analizar quién cuales son los mayores comerciante en la región. Por comercio se entiendo el combinado valor de importaciones y exportaciones. 
+(3) Por último, un analisis del desarrollo desde los 1980s en las mayores categorías de productos importados en la región.
+
+Cómo clave para este post es el analisis historico de los datos sobre América Latina. En los siguientes posts, analizo por separado los flujos de importación y exportación en los últimos años. 
 
 ### Las libraría utilizadas:
 
@@ -56,9 +63,7 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
          country_fullname_english, 
          export_value_usd,
          import_value_usd,
-         top_export_product_code,
          top_import_product_code,
-         top_export_trade_value_usd,
          top_import_trade_value_usd) %>%
   filter(country_iso != "usa", # Excluding the U.S.
          country_iso != "can", # Excluding Canada
