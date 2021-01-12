@@ -106,22 +106,20 @@ ggplot(trade_total) +
 Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:
 
 ```{r comercio Americas, message=FALSE}
-
 comercio_latam_modificado <- comercio_latam_reducido %>%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
 comercio_latam_caribbean <- comercio_latam_modificado %>%
-  select(year,
+  group_by(year,
          country_fullname_english,
          export_value_usd,
          import_value_usd,
-         top_export_product_code,
          top_import_product_code,
-         top_export_trade_value_usd,
          top_import_trade_value_usd) %>%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %>%
+  ungroup() %>%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
-                                  "Caribbean" = c("Anguilla", 
+                                  "Caribe" = c("Anguilla", 
                                                   "Neth. Antilles", 
                                                   "Antigua and Barbuda",
                                                   "Bahamas",
@@ -147,7 +145,7 @@ comercio_latam_caribbean <- comercio_latam_modificado %>%
                                                   "Turks and Caicos Isds",
                                                   "Trinidad and Tobago",
                                                   "Saint Vincent and the Grenadines"),
-                            "Central America" = c("Costa Rica",
+                            "América Central" = c("Costa Rica",
                                                   "Dominica",
                                                   "Dominican Rep.",
                                                   "El Salvador",
