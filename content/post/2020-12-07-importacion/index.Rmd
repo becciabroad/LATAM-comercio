@@ -130,7 +130,8 @@ producto_2018 <- ggplot(productos_latam_import_2018, aes(
                     place = "centre",
                     grow = F,
                     reflow = T) +
-  labs(title = "Productos importado en América Latina (2018)") +
+  labs(title = "Productos importado en América Latina (2018)",
+       caption = "Fuente: Open Trade Statistics") +
   theme_economist() +
   theme(plot.title = element_text(size = 14),
     legend.position = "none")
