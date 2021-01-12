@@ -33,9 +33,16 @@ library(ggthemes)
 library(scales)
 ```
 
-## Los datos
-Descargo el base de datos:
-I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
+## Preparando los datos
+
+### Descargando los datos
+En primer lugar, descargo los datos que voy a utilizar de el base de datos de Open Trade Statistics. 
+
+Open Trade Statistics está dividio en varios data frames, donde el "ots_create_tidy_data" es el más útil porqué dejar descargar varios tipos de información de comercio sobre los país en diferentes años, y el data frame que recibas ya está en forma "tidy".
+
+Para poder más fácil filter los datos y elegir solamente los datos que corresponde a la región de América Latina, necesito unir dos data frames de Open Trade Statistics. Para poder utilizar la función "merger" para unir dos data frames, necesito que los dos tienen una columna que tiene el mismo nombre (y obviamente, representa el mismo variable). 
+
+Por eso,  renombro la columna de "reporter_iso" para que corresponde al segundo data frame que voy a utilizar, donde utilizando "country_iso" en vez de "reporter_iso".
 ```{r comercio API 1, message=FALSE}
 comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
@@ -44,16 +51,16 @@ comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
   rename(country_iso = 'reporter_iso')
 ```
 
-From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:
+Después el otro base de datos, descargo la información solamente sobre los países que pertenecer al continente de las Americas:
 
 ```{r comercio API 2, message=FALSE}
 countries_LATAM <- tradestatistics::ots_countries %>%
   filter(continent == "Americas") 
 ```
 
-Merging the two data frames, I now get a data frame including information only for the region of the Americas.
+Ahora puedo unir los dos bases de datos, y voy a tener solamente la información disponible para la región de las Americas.
 
-However, I only want to include information about Latin American countries. So, I also exclude the US, Canada, Greenland, and some minor US island from the analysis:
+No obstante, en realidad no es toda la región de las Américas que me interesa, sino solamente los países que pertenece a América Latin. Por eso, después de unir los bases de datos, voy a pedir que R me exclude los EEUU, Canada, Gronlandia y otros pequeños territorios estadounidenses y britanicos en el Caribe. Obviamente, se podía discutir si se debería incluir esos últimos somo parte del Caribe, pero acá los excluyo del analisis:
 
 ```{r comercio LATAM merge, message=FALSE}
 comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
@@ -74,10 +81,14 @@ comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
          country_iso != "sgs") # Exclude South Georgia and the South Sandwich Islands (British territory)
 
 ```
+Ahora tengo el data frame que incluye varios tipos de información que voy a utilizar en los siguientes analisis y vizualizaciones, pero que al mismo tiempo excluye los países que no son parte de América Latina.
 
 # Importación y exportación en América Latina
+Primero decidí que querría averiguar un poco más sobre el desarrollo histórico de las importaciones y exportaciones para la región de América Latina en general.
 
 ## Transformando los datos
+Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:
+
 ```{r comercio LATAM export-import, message=FALSE}
 trade_total <- comercio_latam_reducido %>%
   group_by(year) %>%
@@ -85,14 +96,15 @@ trade_total <- comercio_latam_reducido %>%
             import_value_usd = sum(import_value_usd, na.rm = T))
 ```
 
+## Graphicando
 ```{r comercio LATAM export-import graph, message=FALSE}
 ggplot(trade_total) +
-  geom_line(aes(year,
+  geom_col(aes(year,
                 export_value_usd,
-                color = "red")) +
-  geom_line(aes(year,
+                fill = "red")) +
+  geom_col(aes(year,
                 import_value_usd,
-                color = "blue")) +
+                fill = "blue")) +
   scale_y_continuous(labels = scales::dollar_format()) +
     labs(title = "Import y export de América Latina",
        y = NULL,
