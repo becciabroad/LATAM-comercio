@@ -98,10 +98,10 @@ disqusShortname = ""
       url = "post/intro/"
 
     [[params.tiles.showcase]]
-      title = "Datos Historicos del Comercio Exterior"
-      subtitle = "El desarrollo histórico del comercio exterior en América Latina"
+      title = "Comercio Exterior"
+      subtitle = "La evolución histórica del comercio exterior en América Latina"
       image = "pic2.jpg"
-      url = "post/datos-historicos/"
+      url = "post/comercio-exterior/"
 
     [[params.tiles.showcase]]
       title = "¿Qué país importa más?"
