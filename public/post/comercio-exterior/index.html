@@ -1,86 +1,15 @@
-<!DOCTYPE HTML>
-<html>
+---
+title: Comercio Exterior
+author: Rebecca Hoffmann
+date: '2021-01-12'
+slug: comercio-exterior
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
 
-    <head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="description" content="Comercio Exterior en América Latina">
-	<meta name="author" content="Rebecca Hoffmann">
-	<meta name="generator" content="Hugo 0.79.0" />
-	<title>Comercio Exterior &middot; Comercio en América Latina</title>
-	<!-- Stylesheets -->
-	
-	<link rel="stylesheet" href="https://comercio-latam.netlify.app/css/main.css"/>
-	
-	
-
-	
-
-	<!-- Custom Fonts -->
-	<link href="https://comercio-latam.netlify.app/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-	
-	<link rel="shortcut icon" type="image/x-icon" href="https://comercio-latam.netlify.app/favicon.ico">
-	<link rel="icon" type="image/x-icon" href="https://comercio-latam.netlify.app/favicon.ico">
-	
-
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="js/ie/html5shiv.js"></script>
-	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
-	<![endif]-->
-</head>
-
-    <body>
-
-    <!-- Wrapper -->
-        <div id="wrapper">
-
-            <!-- Header -->
-    <header id="header" class="alt">
-        <a href="https://comercio-latam.netlify.app/" class="logo"><strong>Comercio América Latina</strong> <span>By Rebecca Hoffmann</span></a>
-        <nav>
-            <a href="#menu">Menu</a>
-        </nav>
-    </header>
-
-<!-- Menu -->
-    <nav id="menu">
-        <ul class="links">
-            
-                <li><a href="https://comercio-latam.netlify.app/">Home</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs">Blogs</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs/ipsum">Generic Blog</a></li>
-            
-                <li><a href="https://comercio-latam.netlify.app/elements.html">Elements</a></li>
-            
-
-        </ul>
-        <ul class="actions vertical">
-            
-                <li><a href="https://comercio-latam.netlify.app/blogs" class="button special fit">Get Started</a></li>
-            
-            
-                <li><a href="https://comercio-latam.netlify.app/" class="button fit">Log In</a></li>
-            
-        </ul>
-    </nav>
-
-        <!-- Main -->
-            <div id="main" class="alt">
-
-                
-                    <section id="one">
-                        <div class="inner">
-                            <header class="major">
-                                <h1>Comercio Exterior</h1>
-                            </header>
-                            
-                            
 <link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
@@ -124,8 +53,7 @@ library(scales)</code></pre>
          country_fullname_english, 
          export_value_usd,
          import_value_usd,
-         top_import_product_code,
-         top_import_trade_value_usd) %&gt;%
+         top_import_product_code) %&gt;%
   filter(country_iso != &quot;usa&quot;, # Excluding the U.S.
          country_iso != &quot;can&quot;, # Excluding Canada
          country_iso != &quot;grl&quot;, # Excluding Greenland
@@ -136,19 +64,20 @@ library(scales)</code></pre>
 <p>Ahora tengo el data frame que incluye varios tipos de información que voy a utilizar en los siguientes analisis y vizualizaciones, pero que al mismo tiempo excluye los países que no son parte de América Latina.</p>
 </div>
 </div>
-<div id="importación-y-exportación-en-américa-latina" class="section level1">
-<h1>Importación y exportación en América Latina</h1>
+<div id="importación-y-exportación-en-américa-latina" class="section level2">
+<h2>Importación y exportación en América Latina</h2>
 <p>Primero decidí que querría averiguar un poco más sobre el desarrollo histórico de las importaciones y exportaciones para la región de América Latina en general.</p>
-<div id="transformando-los-datos" class="section level2">
-<h2>Transformando los datos</h2>
+<div id="transformando-los-datos" class="section level3">
+<h3>Transformando los datos</h3>
 <p>Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:</p>
 <pre class="r"><code>trade_total &lt;- comercio_latam_reducido %&gt;%
   group_by(year) %&gt;%
   summarise(export_value_usd = sum(export_value_usd, na.rm = T),
             import_value_usd = sum(import_value_usd, na.rm = T))</code></pre>
 </div>
-<div id="graphicando" class="section level2">
-<h2>Graphicando</h2>
+<div id="graphicando" class="section level3">
+<h3>Graphicando</h3>
+<p>Ahora puedo usar el nuevo data frame para graficar la evolución de importaciones y exportaciones para todo la región de América Latina por año desde 1980 hasta 2018:</p>
 <pre class="r"><code>ggplot(trade_total) +
   geom_col(aes(year,
                 export_value_usd,
@@ -164,16 +93,21 @@ library(scales)</code></pre>
   theme_economist() +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20export-import%20graph-1.png" width="672" /></p>
+</div>
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
+<p>En primero lugar, se ve como el comercio exterior (tan importaciones como exportaciones) ha aumentado bastante desde los años 1990s. En la primer decada incluida (1980-1990), el comercio exterior estuve a casi el mismo nivel todos los años.Pero a partir de los 1990, empieza a expandir rápdidamente. Eso corresponde a la introducción del conocido Consenso de Washington y las subsequente reformas neoliberales y aperturas ecónomicas. Después de nota una baja al principio de los 2000s, indicando las crisis ecónomicas que sufriendo algunos países en esta epoca. Al final de la epoca de los 2000s, no obstante, se nota un aumento en, especialmente, las exportaciones, lo cual vendría a ser casi seguramente conectado con el boom de los commodities.</p>
+<p>En segundo lugar, se nota que, en general, la suma de las importaciones (azul) y de las exportaciones para toda la region sigue un desarrollo bastante similar. Solamente en algunos años como, por ejemplo, durante el principio de los 2000s, las importaciones son mayores que las exportaciones. Eso dar una indicación del balance comercial de la region. No obstante, vale subayar que eso como mencioné varias veces se trata de todo la región, y no de cada países, lo cual normalmente es lo que nos interesa.</p>
 </div>
 </div>
-</div>
-<div id="comercio-historico-en-américa-latina" class="section level1">
-<h1>Comercio historico en América Latina</h1>
-<div id="transformando-los-datos-1" class="section level2">
-<h2>Transformando los datos</h2>
-<p>Before, I graph the results, I want to merge all the Caribbean countries into one category for the Caribbean countries:</p>
+<div id="comercio-exterior-en-américa-latina-por-país" class="section level2">
+<h2>Comercio exterior en América Latina por país</h2>
+<p>Ahora me interesa ser un analisis sobre la evolución en el comercio exterior (importación y exportación) de los países en la región por separado para encontrar quién es el mayor comerciante latinoamericano.</p>
+<div id="transformando-los-datos-1" class="section level3">
+<h3>Transformando los datos</h3>
+<p>No obstante, antes de empezar para que el grafico que quiero hacer sea más leible, quiero unir todos los pequeños países de Caribe en una catorgia separada y los países de América Central en otra:</p>
+<p>Hago la unificación, transformando la columna “country_full_name_english” a ser un factor, lo cual después me premite unir las variables de esta columna en una nueva categoría.</p>
+<p>Además, genero una nueva variable para el total del comercio exterior (trade) con el “mutate” y sumo la valor de la exportación con el valor de la importación:</p>
 <pre class="r"><code>comercio_latam_modificado &lt;- comercio_latam_reducido %&gt;%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
@@ -182,12 +116,11 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
          country_fullname_english,
          export_value_usd,
          import_value_usd,
-         top_import_product_code,
-         top_import_trade_value_usd) %&gt;%
+         top_import_product_code) %&gt;%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %&gt;%
   ungroup() %&gt;%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
-                                  &quot;Caribe&quot; = c(&quot;Anguilla&quot;, 
+                                      &quot;Caribe&quot; = c(&quot;Anguilla&quot;, 
                                                   &quot;Neth. Antilles&quot;, 
                                                   &quot;Antigua and Barbuda&quot;,
                                                   &quot;Bahamas&quot;,
@@ -223,8 +156,9 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
                                                   &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
                             &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
 </div>
-<div id="graficando" class="section level2">
-<h2>Graficando</h2>
+<div id="graficando" class="section level3">
+<h3>Graficando</h3>
+<p>Ahora puedo utilzar el data frame con las nuevas categorías del Caribe y América Central (y Argentina) para graficar:</p>
 <pre class="r"><code>ggplot(comercio_latam_caribbean) +
   geom_line(aes(year,
                 trade,
@@ -245,7 +179,20 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
     legend.title = element_blank(),
     legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20graph-1.png" width="672" /></p>
-<p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado).</p>
+</div>
+<div id="sum-up-1" class="section level3">
+<h3>Sum-up</h3>
+<p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado) en la región.</p>
+<p>Además, se nota que el comercio exterior de Brasil y Mexico ha aumentado mucho más rápido que los demás países en la región. Aún los dos sufriendo una fuerte suba y después una fuerte baja en finales de los 2000s, los dos se han levantado mucho más que el resto de la región. Hasta México (azul) se ha llevando mucho más que Brasil durante los 2010s.</p>
+</div>
+</div>
+<div id="comercio-exterior-en-américa-latina-por-producto" class="section level2">
+<h2>Comercio exterior en América Latina por producto</h2>
+<p>Ya que hemos analisado el desarrollo del comercio exterior en total para la región y separado por país y encontrado que México y Brasil son los dos grandes comerciantes de la región, me gustaría investigar un poco más sobre qué productos mayoríamente se importa en la región y su desarrollo historico.</p>
+<div id="transformando-los-datos-2" class="section level3">
+<h3>Transformando los datos</h3>
+<p>En primero lugar, necesito descargar un nuevo base de datos de Open Trade Statistics, lo cual influye la información sobre los códigos de los productos y a qué nombre de producto se corresponden esos códigos.</p>
+<p>Después necesito unir el nuevo base de datos con la que usé anteriormente, donde, a proposito, he estado incluyendo información sobre los productos.</p>
 <pre class="r"><code>producto_latam_import &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_import_product_code = &quot;product_code&quot;)
 
@@ -253,6 +200,7 @@ import_latam_caribbean &lt;- merge(x = comercio_latam_caribbean,
                                 y = producto_latam_import, 
                                 by = &#39;top_import_product_code&#39;) %&gt;%
   mutate(producto = as.factor(top_import_product_code))</code></pre>
+<p>No obstante, existen muchísimos diferente categorías de productos para poder graficar todas, entoces, genero una nueva variable que es un factor para poder juntar los productos en categorías más manejables para realizar el analisis (como hice arriba con los países):</p>
 <pre class="r"><code>cats_products &lt;- as.character(fct_unique(import_latam_caribbean$producto))
 
 producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
@@ -261,20 +209,26 @@ producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
   &quot;Productos agropecuarios&quot; = c(&quot;0201&quot;,&quot;0207&quot;,&quot;0210&quot;,&quot;0303&quot;,&quot;0402&quot;, &quot;0406&quot;, &quot;0603&quot;, &quot;0710&quot;, &quot;0803&quot;, &quot;1001&quot;, &quot;2523&quot;, &quot;2701&quot;, &quot;1006&quot;, &quot;1201&quot;, &quot;1207&quot;, &quot;1507&quot;, &quot;1701&quot;, &quot;1801&quot;, &quot;2401&quot;, &quot;2009&quot;, &quot;2106&quot;, &quot;2201&quot;, &quot;2203&quot;, &quot;2207&quot;, &quot;2208&quot;, &quot;2402&quot;, &quot;2403&quot;),
   &quot;Petroleo crudo&quot; = c(&quot;2709&quot;),
   &quot;Petroleo refinado&quot;= c(&quot;2710&quot;, &quot;2711&quot;, &quot;2713&quot;),
-  &quot;Chemicos y Farmacéuticos&quot; = c(&quot;2714&quot;, &quot;2806&quot;, &quot;2814&quot;, &quot;2815&quot;, &quot;2817&quot;, &quot;2915&quot;, &quot;2917&quot;, &quot;2933&quot;, &quot;3105&quot;, &quot;3808&quot;, &quot;3824&quot;, &quot;9027&quot;, &quot;3006&quot;, &quot;3004&quot;, &quot;3003&quot;, &quot;9306&quot;),
+  &quot;Chemicos y farmacéuticos&quot; = c(&quot;2714&quot;, &quot;2806&quot;, &quot;2814&quot;, &quot;2815&quot;, &quot;2817&quot;, &quot;2915&quot;, &quot;2917&quot;, &quot;2933&quot;, &quot;3105&quot;, &quot;3808&quot;, &quot;3824&quot;, &quot;9027&quot;, &quot;3006&quot;, &quot;3004&quot;, &quot;3003&quot;, &quot;9306&quot;),
   &quot;Productos Industriales y Maquinas&quot; = c(&quot;3407&quot;, &quot;3701&quot;, &quot;3904&quot;,&quot;3918&quot;, &quot;3926&quot;, &quot;4001&quot;, &quot;4011&quot;, &quot;4016&quot;, &quot;4403&quot;, &quot;4418&quot;, &quot;4804&quot;, &quot;3403&quot;, &quot;7204&quot;, &quot;7204&quot;, &quot;7301&quot;, &quot;7304&quot;, &quot;7305&quot;, &quot;7308&quot;, &quot;7407&quot;, &quot;7604&quot;, &quot;8407&quot;, &quot;8408&quot;, &quot;8409&quot;, &quot;8411&quot;, &quot;8419&quot;, &quot;8421&quot;, &quot;8426&quot;, &quot;8429&quot;, &quot;8431&quot;, &quot;8433&quot;, &quot;8439&quot;, &quot;8455&quot;, &quot;8465&quot;, &quot;8473&quot;, &quot;8474&quot;, &quot;8477&quot;, &quot;8484&quot;, &quot;8501&quot;, &quot;8502&quot;, &quot;8503&quot;, &quot;8504&quot;, &quot;8527&quot;, &quot;8534&quot;, &quot;8536&quot;, &quot;8540&quot;, &quot;8542&quot;, &quot;8544&quot;, &quot;9001&quot;, &quot;7208&quot;, &quot;9018&quot;, &quot;9406&quot;, &quot;9015&quot;),
  &quot;Textiles&quot; = c(&quot;4819&quot;, &quot;4907&quot;, &quot;5208&quot;, &quot;5210&quot;, &quot;5509&quot;, &quot;5602&quot;, &quot;5802&quot;, &quot;6001&quot;, &quot;6004&quot;, &quot;6109&quot;, &quot;6203&quot;, &quot;6217&quot;),
  &quot;Consumer goods&quot; = c(&quot;7102&quot;,&quot;7113&quot;, &quot;9003&quot;,&quot;9017&quot;, &quot;9101&quot;, &quot;9403&quot;, &quot;9506&quot;, &quot;9701&quot;, &quot;8713&quot;, &quot;8517&quot;, &quot;8471&quot;, &quot;8519&quot;),
  &quot;Transporte&quot; = c(&quot;8609&quot;, &quot;8702&quot;, &quot;8704&quot;, &quot;8705&quot;, &quot;8801&quot;, &quot;8802&quot;, &quot;8803&quot;, &quot;8901&quot;, &quot;8902&quot;, &quot;8903&quot;, &quot;8904&quot;, &quot;8905&quot;),
  &quot;Autos&quot; = c(&quot;8703&quot;, &quot;8708&quot;, &quot;8716&quot;)))</code></pre>
+<p>Obviamente, puede existir un sesgo cuando las categorías se eligen así manualmente, porqué la categorísación está sujeto a la desción del “investigador”/alumna (en esta caso). Por ejemplo, es podría argumentar que el grupo de “Productos Industriales y Maquinas” es demasiado grande y incluye demasiados tipos de productos. No obstante, cuando vemos el gráfico abajo, notamos que a pesar de un grupo que incluye muchos diferentes productos, su importancía monetaria no es muy relevante para las importaciones de la región.</p>
+</div>
+<div id="graficando-1" class="section level3">
+<h3>Graficando</h3>
+<p>Ahora puedo elegir las variables que necesito para hacer el gráfico:</p>
 <pre class="r"><code>producto_import_graph &lt;- producto_latam_import_reducido %&gt;%
   select(year,
          import_value_usd,
-         top_import_trade_value_usd,
          producto) %&gt;%
-  group_by(year)
+  group_by(year, producto) %&gt;%
+  summarise(import_value_usd = sum(import_value_usd))
 
-ggplot(producto_import_graph, aes(x = year, y = top_import_trade_value_usd)) +  
+
+ggplot(producto_import_graph, aes(x = year, y = import_value_usd)) +  
   geom_point(aes(col = producto)) +
   labs(title = &quot;Importaciones de América Latina por producto&quot;,
        y = NULL,
@@ -291,64 +245,9 @@ ggplot(producto_import_graph, aes(x = year, y = top_import_trade_value_usd)) +
     legend.position = &quot;right&quot;)</code></pre>
 <p><img src="index_files/figure-html/comercio%20LATAM%20import%20graph-1.png" width="672" /></p>
 </div>
-<div id="sum-up-1" class="section level2">
-<h2>Sum-up</h2>
+<div id="sum-up-2" class="section level3">
+<h3>Sum-up</h3>
+<p>En primer lugar, se nota como durante los 1980s y los 1990s, los autos (rosa) poco a poco aumenta como el principal producto de importación para la región, mientras que el petroleo crudo le sigue (marrón). Después, al final de los 2000s, el petroleo refinado aparece como el principal producto de importación para la región y durante los 2010s, el nivel (en USD) de importación de petroleo es mucho más alto que cualquier otro producto.</p>
+<p>En segundo lugar, vale subrayar que las categorías más importantes: autos, petroleo refinado, transporte (lo cual incluye varios tipos de maquinas de transporte) son productos procesados. La única excepción parece ser el petroleo crudo.</p>
 </div>
 </div>
-
-                        </div>
-                    </section>
-            <!-- Disqus Inject -->
-                
-            </div>
-            
-        <!-- Footer -->
-            
-                <!-- Footer -->
-    <footer id="footer">
-        <div class="inner">
-            <ul class="icons">
-                
-                    <li><a href="https://www.twitter.com/becciabroad" class="icon alt fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
-                
-                    <li><a href="https://www.facebook.com" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
-                
-                    <li><a href="https://www.instagram.com/becciabroad" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
-                
-                    <li><a href="https://www.github.com/becciabroad" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
-                
-                    <li><a href="https://www.linkedin.com" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
-                
-            </ul>
-            <ul class="copyright">
-                <li>&copy; Rebecca Hoffmann</li>
-                
-                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
-                
-            </ul>
-        </div>
-    </footer>
-
-            
-        </div>
-
-    <!-- Scripts -->
-        <!-- Scripts -->
-    <!-- jQuery -->
-    <script src="https://comercio-latam.netlify.app/js/jquery.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/jquery.scrolly.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/jquery.scrollex.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/skel.min.js"></script>
-    <script src="https://comercio-latam.netlify.app/js/util.js"></script>
-
-    
-
-    <!-- Main JS -->
-    <script src="https://comercio-latam.netlify.app/js/main.js"></script>
-
-    
-
-    
-
-    </body>
-</html>
