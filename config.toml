@@ -92,8 +92,8 @@ disqusShortname = ""
     # Display your showcases here.
     
     [[params.tiles.showcase]]
-      title = "Introducción al proyecto"
-      subtitle = "Armando la página web etc."
+      title = "Introducción"
+      subtitle = "Objetivos y instalando BlogDown"
       image = "pic1.jpg"
       url = "post/intro/"
 
@@ -104,26 +104,26 @@ disqusShortname = ""
       url = "post/comercio-exterior/"
 
     [[params.tiles.showcase]]
-      title = "¿Qué país importa más?"
-      subtitle = "Analisis de qué país importa más en América Latina"
+      title = "Importación"
+      subtitle = "Analisis de las importaciones en América Latina en 2018"
       image = "pic3.jpg"
       url = "post/importacion/"
 
     [[params.tiles.showcase]]
-      title = "¿Qué productos se exporta?"
-      subtitle = "Analisis del tipo de productos que se exportan en América Latina"
+      title = "Exportación"
+      subtitle = "Analisis de los productos exportados en América Latina en 2018"
       image = "pic4.jpg"
       url = "post/export/"
 
     [[params.tiles.showcase]]
-      title = "Exportación en Argentina"
-      subtitle = "Analisis de las exportaciones en Argentina"
+      title = "Comercio Exterior en Argentina"
+      subtitle = "Analisis del comercio exterior en Argentina"
       image = "pic5.jpg"
       url = "post/comercio-argentina/"
 
     [[params.tiles.showcase]]
       title = "Conclusión"
-      subtitle = "Conclusión de los analisis realizados"
+      subtitle = "Conclusión y consideraciones finales"
       image = "pic6.jpg"
       url = "post/conclusion"
     # You can make more showcases by copy and pasting the code above
