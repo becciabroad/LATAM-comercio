@@ -6,7 +6,17 @@
     <description>Recent content on Comercio en América Latina</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Comercio Exterior</title>
+      <link>https://comercio-latam.netlify.app/post/comercio-exterior/</link>
+      <pubDate>Tue, 12 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/comercio-exterior/</guid>
+      <description>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.
+El post está divido en tres analisis diferentes: (1) Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto. (2) Un analisis de la evolución del comercio de los países en la región para poder analizar quién cuales son los mayores comerciante en la región.</description>
+    </item>
+    
     <item>
       <title>Export</title>
       <link>https://comercio-latam.netlify.app/post/export/</link>
@@ -47,16 +57,6 @@ argentina_export &amp;lt;- tradestatistics::ots_create_tidy_data( years = 1980:2
       
       <guid>https://comercio-latam.netlify.app/post/conclusion/</guid>
       <description>En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina.</description>
-    </item>
-    
-    <item>
-      <title>Datos Historicos del Comercio Exterior de América Latina</title>
-      <link>https://comercio-latam.netlify.app/post/datos-historicos/</link>
-      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://comercio-latam.netlify.app/post/datos-historicos/</guid>
-      <description>En este post, querría analizar la evolución historico del comercio para toda la región de América Latin utilizando el base de dato de Open Trade Statistics. Por un lado, me interesa investigar como ha sido el desarrollo tanto de las exportaciones como las importaciones para toda la región en conjunto.. Por el otro lado, me interesa saber qué paísestienen los mayores niveles de comercio en la región.
-Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(ggplot2) library(ggthemes) library(scales) library(patchwork)  Los datos Descargo el base de datos: I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:</description>
     </item>
     
     <item>
