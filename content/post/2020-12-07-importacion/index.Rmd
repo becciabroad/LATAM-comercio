@@ -147,7 +147,7 @@ productos_latam_import_2018 <- productos_latam_import %>%
 ### Graficando
 Ahora que tengo los datos transformados puedo generar el grapfico: 
 
-```{r LATAM productos categoría graficar, message=FALSE}
+```{r productos categoria graficar, message=FALSE}
 ggplot(productos_latam_import_2018, aes(
   area = import_value_usd,
   fill = product_shortname_english,
