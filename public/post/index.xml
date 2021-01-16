@@ -76,9 +76,9 @@ library(tradestatistics) #parquete de los datos library(tidyverse) library(ggplo
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/importacion/</guid>
-      <description>En este post, querría analizar qué países en América Latina importa más productos graphicandolo con un mapa de color utilizando el paquete de Rworldmaps. Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar acá:
-install.packages(“rworldmap”)
-Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(ggplot2) library(rworldmap) library(treemapify) library(ggthemes) library(scales)  Los datos Descargo el base de datos: I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:</description>
+      <description>En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica analisé un poco sobre qué productos principalmente son importados en la región. En este post, quiero analizar este flujos de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.
+El post está divido en tres analisis diferentes:
+Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps.</description>
     </item>
     
   </channel>
