@@ -215,16 +215,14 @@ grafico_import_2017
 ```
 
 
-##Comparación
-
+## Comparación
 Tengo la liberaría "patchwork" cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código: 
 
 ```{r patchwork, message=FALSE}
 grafico_export_2017 + grafico_import_2017
 ```
 
-
-##Sum-up
+## Sum-up
 
 En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas. Obviamente, se podría haber hecho modificaciones en data frame para juntar esas 4 categorías en una sola de productos agropecarios (pero entonces, nunca terminaría con este proyecto :) )
 
