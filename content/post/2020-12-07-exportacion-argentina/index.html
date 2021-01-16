@@ -21,7 +21,8 @@ output:
 <li><p>Un analisis sobre hacia donde van las exportaciones argentinas: el región de América Latina o el resto de mundo.</p></li>
 <li><p>Una analisis mostrando la composición de los productos más exportados y importados en Argentina en 2017.</p></li>
 </ol>
-<p>##Las librarias utilizadas:</p>
+<div id="las-librarias-utilizadas" class="section level2">
+<h2>Las librarias utilizadas:</h2>
 <pre class="r"><code>library(tidyverse)
 library(ggplot2)
 library(tradestatistics)
@@ -29,6 +30,7 @@ library(treemapify)
 library(ggthemes)
 library(scales)
 library(patchwork)</code></pre>
+</div>
 <div id="evolución-historica-del-comercio-exterior-argentino" class="section level2">
 <h2>Evolución historica del comercio exterior argentino</h2>
 <div id="descargando-los-datos" class="section level3">
@@ -107,7 +109,7 @@ comercio_arg &lt;- comercio_mundo %&gt;%
 <p><img src="index_files/figure-html/arg%20export%20grafico-1.png" width="672" /></p>
 <div id="sum-up-1" class="section level3">
 <h3>Sum-up</h3>
-<p>Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo.</p>
+<p>Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo. Además se nota como las exportaciones de ambos categória ha ido disminuyendo desde 2013 hasta 2017, lo cual se relaciona con lo encontrado en el primer analisis.</p>
 <p>No obstante, también sería interesante averiguar qué las categoría de productos que se exporta más desde Argentina:</p>
 </div>
 </div>
@@ -193,12 +195,12 @@ grafico_export_2017</code></pre>
 
 grafico_import_2017</code></pre>
 <p><img src="index_files/figure-html/arg%20productos%20import%20grafico-1.png" width="672" /></p>
-<p>##Comparación
-Tengo la liberaría “patchwork” cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código:</p>
+<p>##Comparación</p>
+<p>Tengo la liberaría “patchwork” cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código:</p>
 <pre class="r"><code>grafico_export_2017 + grafico_import_2017</code></pre>
 <p><img src="index_files/figure-html/patchwork-1.png" width="672" /></p>
-<p>##Sum-up
-En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas.</p>
+<p>##Sum-up</p>
+<p>En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas.</p>
 <p>Obviamente, se podría haber hecho modificaciones en data frame para juntar esas 4 categorías en una sola de productos agropecarios (pero entonces, nunca terminaría con este proyecto :) )</p>
 <p>En segundo lugar, lo más importado en Argentina en 2017 era en primer lugar productos maquinas (29,72%) y vehiculos relacionados al transporte (20,16 %) y en segundo lugar productos químicos (13,61 %) y minerales (9,20 %). Es llamativa que esas industrias también aparece en el grafico el las exportaciónes. Es decir, ya productos de los mismos sectores que tanto se importa para después ser exportados. Sería interesante hacer un analisis más profundo de este fenonemo - pero será para otro proyecto :)</p>
 <p>Este breve analisis de los flujos de comercio exterior argentina, se nota la tendencia subrayado por varios autores de que los países de América Latina tiende a exportar recursos naturales extraidos de la tierra o productos agropecarios y importar productos ya manifacturados y de alta tecnología. Unos de los principales argumentos de la trampa del medio ingreso es que los países de América Latina necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la fabricación de alimentos, y entrar en las industrias de alta tecnología y donde se necesita más habilidades. Para entonces puede vender eso productos más caros en el mercado global y fortalecer el nivel educativo de sus poblaciones.</p>
