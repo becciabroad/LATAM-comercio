@@ -13,25 +13,38 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-En este post, querría analizar qué países en América Latina importa más productos graphicandolo con un mapa de color utilizando el paquete de Rworldmaps. Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar acá:
+En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica analisé un poco sobre qué productos principalmente son importados en la región. En este post, quiero analizar este flujos de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.
 
+
+El post está divido en tres analisis diferentes:
+
+(1) Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps. 
+Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar con este comando: 
+
+```{r rworldmap, eval=FALSE, include=FALSE}
 install.packages("rworldmap")
+```
+
+(2) Un analisis mostrando la composición de los productos más importados - también durante el año 2018.
+
+(3) Finalmente, un analisis sobre qué categoría de producto cada país en la región importa más. 
 
 ### Las libraría utilizadas:
 
 ```{r libraries, warning=FALSE, message=F}
 library(tidyverse)
-library(tradestatistics)
-library(ggplot2)
-library(rworldmap)
-library(treemapify)
-library(ggthemes)
-library(scales)
+library(tradestatistics) #Para descarga los data frames
+library(ggplot2) #Para graficar
+library(rworldmap) #Para graficar el mapa del América Latina
+library(treemapify) #Para graficar la composición de los productos más importados
+library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
+library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD 
 ```
 
-## Los datos
-Descargo el base de datos:
-I rename the column "reporter_iso" to be able to merge it with the second data frame from Open Trade Statistics:
+## Preparando los datos
+
+### Descargando los datos
+Cómo en el primer post sobre el comercio exterior,  necesito descargar el data frame y modificar el nombre de la columna "reporter_iso" a "country_iso" para poder unirlo con el segundo data frame que separa más fácilmente los países de la región de "las Americas" al resto del mundo:
 ```{r comercio API 1, message=FALSE}
 comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
   years = 2018, 
@@ -41,22 +54,24 @@ comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
   rename(country_iso = 'reporter_iso')
 ```
 
-From another data base in Open Trade Statistics, I can choose only countries belonging to the continent of The Americas:
+Ahora puedo descargar el data frame de Open Trade Statistics sobre los país, y como anteriormente, eligo filtear la región (o continente) de las Americas:
 
 ```{r comercio API 2, message=FALSE}
 countries_LATAM <- tradestatistics::ots_countries %>%
   filter(continent == "Americas") 
 ```
 
-Merging the two data frames, I now get a data frame including information only for the region of the Americas.
+Después puedo unir los dos data frames para que tenga un que solamente incluye información sobre los país de las Americas:
 
 ```{r comercio LATAM merge, message=FALSE}
 comercio_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
       by = "country_iso")
 ```
 
-## Transformando los datos
-I select the row that I want to use to create the map with, however, I leave the data frame with all the info for trade in Latin America, so I can return and use it for another graph.
+## Mapamundi de importaciones
+
+### Transformando los datos
+Eligo las variables que necesito para generar el mapa. No obstante, dejo esta información en un nuevo data frame, para que pueda volver a utilizar la información completa sobre importaciones en América Latina en los otros graficos subsequentes. 
 
 ```{r comercio LATAM select, message=FALSE}
 comercio_latam_import <- comercio_latam %>%
@@ -66,7 +81,7 @@ comercio_latam_import <- comercio_latam %>%
 ```
 
 ## Graficando
-En primer lugar, tengo que asegurar que la identificación de los países en mi base de dato se va a ser entendido por el paquete de Rworldmaps:
+En primer lugar, tengo que asegurar que la identificación de los países en mi data frame se va a ser entendido por el paquete de Rworldmaps. Después puedo genera el mapa:
 
 ```{r comercio LATAM mapped data, warning=FALSE, message=FALSE}
 
@@ -76,18 +91,26 @@ mapped_data <- joinCountryData2Map(comercio_latam_import,
 
 mapCountryData(mapped_data, 
                nameColumnToPlot = "import_value_usd", 
-               mapRegion = "latin america")
+               mapRegion = "latin america",
+               mapTitle = "Importación 2018")
 ```
+### Sum-up
+Eso es un montón de rojo! 
 
-Eso es un montón de rojo! La mayoría de los países de la región bastante importa bastante productos. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguy, los cuales parecen ser los que menos importan. 
+El mapa parece indicar que la mayoría de los países de la región importan más o menos el mismo nivel. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguay, los cuales parecen ser los que menos importan. 
 
-Será interesante, analizar qué productos se que más se importaba en los paises de América Latin en 2018:
+Pero la verdad que el mapa nos dice poco sobre los niveles de importación de cada país. Obviamente, se podría empezar a jugar con crear diferentes escales de colores para los differentes niveles de importación en USD, pero la verdad que no me animaba mucho :)
 
-# Productos de importación en 2018
+Lo qué sí sería interesante analizar qué tipo de productos son los que más se importaron los paises de América Latin en 2018.
 
-Desde otro base de datos de Open Trade Statistics, puedo descargar los nombres de los productos:
+## Productos más importado por categoría en 2018
+Entonces, en esta segunda parte de mi post sobre importaciones en América Latina en el año 2018 quiero realizar un analisis sobre las categorías de productos más importados en 2018 utilizando el grafico "treemap" lo cual me gusto porque parece muy inituitivo. 
 
-## Transformando los datos:
+### Transformando los datos
+En primero lugar, necesito descargar información sobre los productos desde otro base de datos de Open Trade Statistics y unirlo con el data frame que ya tengo sobre la importación en América Latina en el año 2018. 
+
+También necesito sacar los países que no corresponde a la región como hice en el primer post. Vale notar que en el analisis arriba del Rworldmaps, la pre-programación del paquete de Rworldmaps automaticamente sacó los países que el paquete no considerable correspondía a la región de América Latina.
+
 ```{r comercio LATAM productos, message=FALSE}
 productos_latam <- tradestatistics::ots_products_shortnames %>%
   rename(top_import_product_code = "product_code")
@@ -101,10 +124,12 @@ productos_latam_import <- merge(x = comercio_latam,
          reporter_fullname_english != "Greenland",
          reporter_fullname_english != "Br. Virgin Isds",
          reporter_fullname_english != "United States Minor Outlying Islands",
-         reporter_fullname_english != "South Georgia and the South Sandwich Islands")
+         reporter_fullname_english != "South Georgia and the South Sandwich Islands") %>%
+  drop_na()
 ```
 
-## Productos más importado por categoría:
+Ahora puedo eligir las variables que necesito para generar el treemap y modificar los que quiero modificar. Por ejemplo, necesito sumar el valor importado por producto, y generar una variable que me permite demostrar el porcentaje de cada categoría de productos en relación al total:
+
 ```{r LATAM productos, message=FALSE}
 productos_latam_import_2018 <- productos_latam_import %>%
   select(top_import_product_code,
@@ -114,14 +139,14 @@ productos_latam_import_2018 <- productos_latam_import %>%
   summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
   ungroup() %>%
   mutate(
-    etiquetas = paste0(product_shortname_english, "/", round(100*import_value_usd/sum(import_value_usd), 2), "%")
-    ) %>%
-  drop_na()
+    etiquetas = paste0(product_shortname_english, "/", round(100*import_value_usd/sum(import_value_usd), 2), "%")) 
 ```
 
-## Graficando
+### Graficando
+Ahora que tengo los datos transformados puedo generar el grapfico: 
+
 ```{r LATAM productos categoría graficar, message=FALSE}
-producto_2018 <- ggplot(productos_latam_import_2018, aes(
+ggplot(productos_latam_import_2018, aes(
   area = import_value_usd,
   fill = product_shortname_english,
   label = etiquetas)) +
@@ -136,67 +161,71 @@ producto_2018 <- ggplot(productos_latam_import_2018, aes(
   theme(plot.title = element_text(size = 12),
     legend.position = "none")
 
-producto_2018
 ```
+### Sum-up
+Está claro que el producto que más se importa en América Latina en 2018 eran petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región. 
 
-Está claro que el producto que más se importa en América Latina en 2018 eran autos y petroleum refineado.
+Lo qué tal vez suprende es que telefonos ocupa un 5,88% de los productos importados y barcos de pasajes y cargo un 4,24%.
 
-Pero qué países importan más de esos dos productos?
+No obstante, la tendencia de 2018 subraya lo mencionado en el post anterior: son productos que fabriados y generalmente productos que requiere altos nivels de technología que se importan en América Latina. Eso es preocupante, porqué significa que son productos que la región no produce ellos. La falta de impuestos de trabajo que requiere capacidades técnicos especializados es según los investigadores clave para que América Latina salga de la trampa del medio ingreso.
+
+Obviamente, se podría modificar los nombres de los productos para que se queden en español - pero este te debo :)
 
 ## Categoría de productos más importado por país:
-Para no tener un gráfico muy largo, en primer lugar, organizo los países del Caribe en la misma categoría como hice en el primer post:
+En esta última parte del post sobre importación en América Latina, quiero analizar qué países importa de qué categoría de producto:
+
+### Transformando los datos
+En primer lugar, quiero poder cambiar el nombre de Panama, lo cual en el data frama de Open Trade Statistics tiene un nombre muy largo y quiero colapsar Malvinas dentro de la observación de Argentina. Entonces, necesito modificar la columna de "reporter_fullname_english" para que sea un factor.
 
 ```{r LATAM factor, message=FALSE}
 import_countries_modificied <- productos_latam_import %>%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) 
 ```
 
+En segundo lugar, para no tener un gráfico muy largo, elegio sacar todos los pequeños países del Caribe menos Cuba. Después puedo agrupar por país y por producto:
+
 ```{r LATAM productos modificar, message=FALSE}
 import_countries_2018 <- import_countries_modificied %>%
   select(reporter_fullname_english,
          import_value_usd,
          product_shortname_english) %>%
+  filter(reporter_fullname_english != "Anguilla",
+         reporter_fullname_english != "Antigua and Barbuda",
+         reporter_fullname_english != "Bahamas",
+         reporter_fullname_english != "Bahamas",
+         reporter_fullname_english != "Barbados",
+         reporter_fullname_english != "Belize",
+         reporter_fullname_english != "Bermuda",
+         reporter_fullname_english != "Bouvet Island",
+         reporter_fullname_english != "Cocos Isds",
+         reporter_fullname_english != "Cayman Isds",
+         reporter_fullname_english != "Grenada",
+         reporter_fullname_english != "Guyana",
+         reporter_fullname_english != "Haiti",
+         reporter_fullname_english != "Jamaica",
+         reporter_fullname_english != "Saint Kitts and Nevis (includes Anguilla until 1981)",
+         reporter_fullname_english != "Saint Lucia",
+         reporter_fullname_english != "Montserrat",
+         reporter_fullname_english != "Saint Pierre and Miquelon",
+         reporter_fullname_english != "Suriname",
+         reporter_fullname_english != "Turks and Caicos Isds",
+         reporter_fullname_english != "Trinidad and Tobago",
+         reporter_fullname_english != "Saint Vincent and the Grenadines") %>%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
-            "Caribbean" = c("Anguilla", 
-                            "Antigua and Barbuda",
-                            "Bahamas",
-                            "Barbados",
-                            "Belize",
-                            "Bermuda",
-                            "Bouvet Island",
-                            "Cocos Isds",
-                            "Cayman Isds",
-                            "Cuba",
-                            "Grenada",
-                            "Guyana",
-                            "Haiti",
-                            "Jamaica",
-                            "Saint Kitts and Nevis (includes Anguilla until 1981)",
-                            "Saint Lucia",
-                            "Montserrat",
-                            "Saint Pierre and Miquelon",
-                            "Suriname",
-                            "Turks and Caicos Isds",
-                            "Trinidad and Tobago",
-                            "Saint Vincent and the Grenadines"),
-      "Central America" = c("Costa Rica",
-                            "Dominica",
-                            "Dominican Rep.",
-                            "El Salvador",
-                            "Guatemala",
-                            "Honduras",
-                            "Nicaragua",
-                            "Panama (excludes Panama Canal Zone until 1978)"),
-             "Argentina" = c("Argentina", 
+            "Panama"    = c("Panama (excludes Panama Canal Zone until 1978)"),
+            "Argentina" = c("Argentina", 
                              "Falkland Isds (Malvinas)"))) %>% 
   group_by(reporter_fullname_english, 
            product_shortname_english) %>%
-  summarise(import_value_usd = sum(import_value_usd, na.rm = T)) %>%
   arrange(desc(import_value_usd)) %>%
   drop_na()
+
+tibble(import_countries_2018)
 ```
 
 ### Graficando
+El tibble da un buena idea de qué países importaron más de los diferentes productos, pero en un grafico se ve mucho mejor:
+
 ```{r comercio LATAM productos graficar, message=FALSE}
 ggplot(import_countries_2018, aes(
   x = reporter_fullname_english,
@@ -220,5 +249,7 @@ ggplot(import_countries_2018, aes(
   guides(color=guide_legend("Categoría de producto")) +
   coord_flip()
 ```
+### Sum-up
+El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado es el producto más importado en América Latina en 2018. Además, son los dos grandes comerciantes, México y Brasil, quierens importa más. No obstante, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.
 
-Entonces... 
+Otras observaciones interesantes: (1) Argentia y Chile son los principales importados de autos. (2) Colombia y Paraguay son los dos países que tiene los telefonos como el principal producto de importación, mientras que Panama es el país que principalmente importa los barco que vimos en el analisis arriba - y eso casi tantos barcos como Perú importa petroleo refinado!
