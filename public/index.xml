@@ -44,10 +44,11 @@ Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(gg
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/comercio-argentina/</guid>
-      <description>El objetivo de este post es analizar un poco más el comercio de Argentina en particular.
-En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
-library(tidyverse) library(ggplot2) library(tradestatistics) library(treemapify) library(ggthemes) library(scales) Los datos: Después voy cargando el base de datos que deseo utilizar:
-argentina_export &amp;lt;- tradestatistics::ots_create_tidy_data( years = 1980:2018, reporters = &amp;quot;arg&amp;quot;, partners = &amp;quot;all&amp;quot;, products = &amp;quot;all&amp;quot;) %&amp;gt;% group_by(year) %&amp;gt;% summarise( export_value_usd = sum(export_value_usd, na.</description>
+      <description>En este post el objetivo es analizar un poco más el comercio de Argentina en particular. XXX argumenta que Argentina (…)
+El post está divido en tres analisis diferentes:
+Un analisis de la evolución histórico del comerico exterior argentino.
+ Un analisis sobre hacia donde van las exportaciones argentinas: el región de América Latina o el resto de mundo.
+ Una analisis mostrando la composición de los productos que fueron más exportados por Argentina en 2018.</description>
     </item>
     
     <item>

@@ -21,9 +21,7 @@ El post está divido en tres analisis diferentes:
 (1) Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps. 
 Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar con este comando: 
 
-```{r rworldmap, eval=FALSE, include=FALSE}
 install.packages("rworldmap")
-```
 
 (2) Un analisis mostrando la composición de los productos más importados - también durante el año 2018.
 

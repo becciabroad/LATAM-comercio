@@ -14,9 +14,17 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-El objetivo de este post es analizar un poco más el comercio de Argentina en particular. 
+En este post el objetivo es analizar un poco más el comercio de Argentina en particular. XXX argumenta que Argentina (...)
 
-En primer lugar, aprendo las librarias que voy a necesitar para realizar el analisis:
+El post está divido en tres analisis diferentes:
+
+(1) Un analisis de la evolución histórico del comerico exterior argentino.
+
+(2) Un analisis sobre hacia donde van las exportaciones argentinas: el región de América Latina o el resto de mundo.
+
+(3) Una analisis mostrando la composición de los productos que fueron más exportados por Argentina en 2018.
+
+##Las librarias utilizadas:
 
 ```{r libraries, message=F}
 library(tidyverse)
@@ -25,47 +33,61 @@ library(tradestatistics)
 library(treemapify)
 library(ggthemes)
 library(scales)
+library(patchwork)
 ```
 
-## Los datos:
-Después voy cargando el base de datos que deseo utilizar:
+## Evolución historica del comercio exterior argentino
+
+### Descargando los datos
+En primer lugar, descargo la información de Open Trade Statistics el comercio exterior argentino desde 1980 hasta 2018. Con el comando de "reporters = "arg"" filtro así que solamente descargo información sobre Argentina.
+
+En segundo lugar, eligo los datos necesarios para realizar el analisis summando el valor en USD de las exportaciones y las importaciones de cada año:
+
 ```{r base de datos, message=FALSE}
-argentina_export <- tradestatistics::ots_create_tidy_data(
+argentina_comercio <- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
   reporters = "arg",
   partners = "all",
   products = "all") %>%
-  group_by(year) %>%
-  summarise(
-    export_value_usd = sum(export_value_usd, na.rm = T))
+  group_by(year)
+
 ```
 
-## Transformando los datos:
-Eligo los datos necesarios para realizar el analisis del desarrollo historico de las exportaciones argentinas desde 1980 hasta 2018, filtrando Argentina y summando el valor en USD de sus exportaciones de cada año incluido en el analisis:
-
-
-## Graficando
-Ahora a graficar: 
+### Graficando
+Ahora puedo graficar: 
 ```{r argentina export grafico}
-ggplot(data = argentina_export, aes(x = year, y = export_value_usd)) +
-  geom_line() +
+ggplot(argentina_comercio) +
+  geom_line(aes(x = year, 
+                y = export_value_usd),
+            color = "purple") +
+  geom_line(aes(x = year, 
+                y = import_value_usd),
+            color = "red") +
   labs(
     x = NULL,
     y = NULL,
-    title = "Exportaciones de Argentina por año",
+    title = "Comercio Exterior de Argentina (1980-2018)",
     caption = "Fuente: Open Trade Statistics") +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme_economist() +
-  theme(legend.position = "bottom")
+  theme(
+    plot.title = element_text(size = 14),
+    legend.position = "bottom")
 ```
 
-# ¿Argentina se exporta más hacia América Latina o el resto del mundo?
-Querría analizar si en Argentina se exporta más hacia América Latina o hacia el resto del mundo.
 
-## Los datos
-Eligí utilizar el base de datos de Datos de Miércoles de mayo 2019 (link), ya tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. 
+### Sum-up
 
-Entonces, para este analisis utilizar el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos. Primero, filtro por Argentina como el país de origen de las exportaciones (utilizando el codigo ISO de origen para hacer eso). Segundo, genero una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:
+
+## ¿Argentina se exporta más hacia América Latina o el resto del mundo?
+En esta segunda parte del post, me interesa analizar si los flujos de exportación de Argentina en los últimos años han ido más hacia América Latina o hacia el resto del mundo. Así se puede determinar donde se debería focusar iniciativas de mejorar las exportaciones. 
+
+## Descargando los datos
+Para este parte eligí utilizar el base de datos de Datos de Miércoles de mayo 2019 (link), ya que tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo. 
+
+Entonces, para este analisis utilicé el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos. 
+
+Primero, filtro por Argentina como el país de origen de las exportaciones (utilizando el codigo ISO de origen para hacer eso). Segundo, genero una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:
 
 ```{r argentina export, message=FALSE}
 comercio_mundo <- readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv") 
@@ -97,17 +119,23 @@ ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = reg
         legend.text = element_text(size = 10))
 ```
 
+
+### Sum-up
 Está claro que la mayoría de las exportaciones de Argentina va hacia el resto del mundo.
 
 No obstante, también sería interesante averiguar qué las categoría de productos que se exporta más desde Argentina:
 
-# Exportación por producto
-Querría averiguar qué productos se ha exportado más desde Argentina en los últimos años. Para eso necesito juntar el base de datos de arriba con el otro de Open Trade Statistics como he hecho en los posts anteriores: 
+## Comercio exterior por categoría de producto
+En esta última parte del analisis, querría investigar qué productos se ha exportado más desde Argentina en 2017. 
 
-## Cargando los datos
-Cargo la información sobre los nombres de los productos, y cambia el nombre de la columna para que se pueda juntar con la
+Utilizo el mismo data frame que en el segundo analisis, ya que facilita el trabajo, pero también podría haber hecho como en el analisis de importaciones y uniendo varias data frames de la base orginal de Open Trade Statistics. 
+
+## Exportaciones
+
+### Transformando los datos
+Filtro por el año que quiero ver y el país (Argentina o iso "arg"), agrupo por nombre y color ya asignado al producto y sumo el valor de los dólares exportados y genero una nueva columna con los procentajes de cada producto sobre el total: 
+
 ```{r arg export datos, message=FALSE}
-
 export_argentina_2017 <- comercio_mundo %>%
   filter(anio == 2017, 
          codigo_iso_origen == "arg") %>%
@@ -121,9 +149,10 @@ export_argentina_2017 <- comercio_mundo %>%
     )
 ```
 
-Ahora grafico utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:
+### Graficando
+Ahora con esta información puedo graficar utilizando ggplot y treemap para mostar el procentage de cada categoría de productos que la Argentina exportó durante 2017:
 ```{r arg productos grafico, message=FALSE}
-ggplot(export_argentina_2017, aes(
+grafico_export_2017 <- ggplot(export_argentina_2017, aes(
   area = valor_exportado_dolares, 
   fill = nombre_comunidad_producto,
   label = etiquetas)) +
@@ -133,11 +162,68 @@ ggplot(export_argentina_2017, aes(
                     grow = F,
                     reflow = T) +
   scale_fill_manual(values = export_argentina_2017$color_comunidad_producto) +
-  labs(title = "Categorías de productos exportado Argentina",
+  labs(title = "Productos exportado",
        caption = "Fuente: Open Trade Statistics") +
   theme_economist() +
   theme(legend.position = "none")
+
+grafico_export_2017
+```
+
+## Importaciones
+Ahora me interesa ver como se distribuye las importaciones por categoría de productos para después poder comparar los dos.
+
+### Transformando los datos
+Uso el mismo código que arriba, pero cambio la variable de "valor_exportado_dolares" a ser "valor_importado_dolares".
+
+```{r arg import datos, message=FALSE}
+import_argentina_2017 <- comercio_mundo %>%
+  filter(anio == 2017, 
+         codigo_iso_origen == "arg") %>%
+  group_by(anio, 
+           nombre_comunidad_producto,
+           color_comunidad_producto) %>%
+  summarise(valor_importado_dolares = sum(valor_importado_dolares, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, "/", round(100*valor_importado_dolares/sum(valor_importado_dolares), 2), "%")
+    )
+```
+
+### Graficando
+Lo mismo para poder genera el grafico; el código es el mismo pero cambio la variable:
+
+```{r arg productos import grafico, message=FALSE}
+grafico_import_2017 <- ggplot(import_argentina_2017, aes(
+  area = valor_importado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = "black",
+                    place = "centre",
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = import_argentina_2017$color_comunidad_producto) +
+  labs(title = "Productos importado",
+       caption = "Fuente: Open Trade Statistics") +
+  theme_economist() +
+  theme(legend.position = "none")
+
+grafico_import_2017
+```
+
+##Comparación 
+Tengo la liberaría "patchwork" cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código: 
+
+```{r patchwork, message=FALSE}
+grafico_export_2017 + grafico_import_2017
 ```
 
 ##Sum-up
-Se nota que la mayoría de los productos que exporta Argentina son productos vegetales, alimentos, productos animales o vegetales. Es decir, recursos naturales extraidos de la tierre o productos agriorula (!!!). No soprene mucho, ya que unos de los principales argumentos de los autores de "middel income trap" es que América Latina, en general, son paises que necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la farmicación de alimentos - areas donde se necesita más habilidades y entonces puede vender los productos más caros en el mercado global. 
+En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas. 
+
+Obviamente, se podría haber hecho modificaciones en data frame para juntar esas 4 categorías en una sola de productos agropecarios (pero entonces, nunca terminaría con este proyecto :) )
+
+En segundo lugar, lo más importado en Argentina en 2017 era en primer lugar productos maquinas (29,72%) y vehiculos relacionados al transporte (20,16 %) y en segundo lugar productos químicos (13,61 %) y minerales (9,20 %). Es llamativa que esas industrias también aparece en el grafico el las exportaciónes. Es decir, ya productos de los mismos sectores que tanto se importa para después ser exportados. Sería interesante hacer un analisis más profundo de este fenonemo - pero será para otro proyecto :)
+
+Este breve analisis de los flujos de comercio exterior argentina, se nota la tendencia subrayado por varios autores de que los países de América Latina tiende a exportar recursos naturales extraidos de la tierra o productos agropecarios y importar productos ya manifacturados y de alta tecnología. Unos de los principales argumentos de la trampa del medio ingreso es que los países de América Latina necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la fabricación de alimentos, y entrar en las industrias de alta tecnología y donde se necesita más habilidades. Para entonces puede vender eso productos más caros en el mercado global y fortalecer el nivel educativo de sus poblaciones. 
