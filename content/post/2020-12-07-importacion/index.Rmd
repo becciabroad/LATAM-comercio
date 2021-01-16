@@ -94,6 +94,7 @@ mapCountryData(mapped_data,
                mapRegion = "latin america",
                mapTitle = "Importación 2018")
 ```
+
 ### Sum-up
 Eso es un montón de rojo! 
 
@@ -162,6 +163,7 @@ ggplot(productos_latam_import_2018, aes(
     legend.position = "none")
 
 ```
+
 ### Sum-up
 Está claro que el producto que más se importa en América Latina en 2018 eran petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región. 
 
@@ -249,6 +251,8 @@ ggplot(import_countries_2018, aes(
   guides(color=guide_legend("Categoría de producto")) +
   coord_flip()
 ```
+
+
 ### Sum-up
 El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado es el producto más importado en América Latina en 2018. Además, son los dos grandes comerciantes, México y Brasil, quierens importa más. No obstante, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.
 

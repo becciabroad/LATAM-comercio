@@ -77,12 +77,14 @@ mapCountryData(mapped_data,
                nameColumnToPlot = &quot;import_value_usd&quot;, 
                mapRegion = &quot;latin america&quot;,
                mapTitle = &quot;Importación 2018&quot;)</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20mapped%20data-1.png" width="672" />
-### Sum-up
-Eso es un montón de rojo!</p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20mapped%20data-1.png" width="672" /></p>
+<div id="sum-up" class="section level3">
+<h3>Sum-up</h3>
+<p>Eso es un montón de rojo!</p>
 <p>El mapa parece indicar que la mayoría de los países de la región importan más o menos el mismo nivel. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguay, los cuales parecen ser los que menos importan.</p>
 <p>Pero la verdad que el mapa nos dice poco sobre los niveles de importación de cada país. Obviamente, se podría empezar a jugar con crear diferentes escales de colores para los differentes niveles de importación en USD, pero la verdad que no me animaba mucho :)</p>
 <p>Lo qué sí sería interesante analizar qué tipo de productos son los que más se importaron los paises de América Latin en 2018.</p>
+</div>
 </div>
 <div id="productos-más-importado-por-categoría-en-2018" class="section level2">
 <h2>Productos más importado por categoría en 2018</h2>
@@ -133,9 +135,11 @@ productos_latam_import &lt;- merge(x = comercio_latam,
   theme_economist() +
   theme(plot.title = element_text(size = 12),
     legend.position = &quot;none&quot;)</code></pre>
-<p><img src="index_files/figure-html/LATAM%20productos%20categori%CC%81a%20graficar-1.png" width="672" />
-### Sum-up
-Está claro que el producto que más se importa en América Latina en 2018 eran petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región.</p>
+<p><img src="index_files/figure-html/LATAM%20productos%20categori%CC%81a%20graficar-1.png" width="672" /></p>
+</div>
+<div id="sum-up-1" class="section level3">
+<h3>Sum-up</h3>
+<p>Está claro que el producto que más se importa en América Latina en 2018 eran petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región.</p>
 <p>Lo qué tal vez suprende es que telefonos ocupa un 5,88% de los productos importados y barcos de pasajes y cargo un 4,24%.</p>
 <p>No obstante, la tendencia de 2018 subraya lo mencionado en el post anterior: son productos que fabriados y generalmente productos que requiere altos nivels de technología que se importan en América Latina. Eso es preocupante, porqué significa que son productos que la región no produce ellos. La falta de impuestos de trabajo que requiere capacidades técnicos especializados es según los investigadores clave para que América Latina salga de la trampa del medio ingreso.</p>
 <p>Obviamente, se podría modificar los nombres de los productos para que se queden en español - pero este te debo :)</p>
@@ -237,9 +241,11 @@ tibble(import_countries_2018)
     legend.position = &quot;bottom&quot;) +
   guides(color=guide_legend(&quot;Categoría de producto&quot;)) +
   coord_flip()</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" />
-### Sum-up
-El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado es el producto más importado en América Latina en 2018. Además, son los dos grandes comerciantes, México y Brasil, quierens importa más. No obstante, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.</p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" /></p>
+</div>
+<div id="sum-up-2" class="section level3">
+<h3>Sum-up</h3>
+<p>El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado es el producto más importado en América Latina en 2018. Además, son los dos grandes comerciantes, México y Brasil, quierens importa más. No obstante, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.</p>
 <p>Otras observaciones interesantes: (1) Argentia y Chile son los principales importados de autos. (2) Colombia y Paraguay son los dos países que tiene los telefonos como el principal producto de importación, mientras que Panama es el país que principalmente importa los barco que vimos en el analisis arriba - y eso casi tantos barcos como Perú importa petroleo refinado!</p>
 </div>
 </div>
