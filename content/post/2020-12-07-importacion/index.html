@@ -191,10 +191,6 @@ productos_latam_import &lt;- merge(x = comercio_latam,
            product_shortname_english) %&gt;%
   arrange(desc(import_value_usd)) %&gt;%
   drop_na()
-## Warning: Problem with `mutate()` input `reporter_fullname_english`.
-## ℹ Unknown levels in `f`: Falkland Isds (Malvinas)
-## ℹ Input `reporter_fullname_english` is `fct_collapse(...)`.
-## Warning: Unknown levels in `f`: Falkland Isds (Malvinas)
 
 tibble(import_countries_2018)
 ## # A tibble: 19 x 3
