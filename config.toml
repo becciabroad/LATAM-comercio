@@ -39,25 +39,6 @@ disqusShortname = ""
   [params.navigation]
     title = "Comercio América Latina"
     subtitle = "By Rebecca Hoffmann"
-    menu = "Menu"
-    # Optional logo as brand stored in img/
-    # logo = "logo.png"
-
-    [[params.navigation.links]]
-      name = "Home"
-      url = "#"
-
-    [[params.navigation.links]]
-      name = "Blogs"
-      url = "blogs"
-
-    [[params.navigation.links]]
-      name = "Generic Blog"
-      url = "blogs/ipsum"
-
-    [[params.navigation.links]]
-      name = "Elements"
-      url = "elements.html"
 
     # Add custom links here by uncommenting code below. To remove links just delete
     # the [[params.navigation.links]] map associated with that link. Copy and paste
@@ -146,8 +127,8 @@ disqusShortname = ""
     Some scholars have argued that there is a need for heavy investment in education and skills to break out of the middle income-trap that most Latin American countries are in.
     But before coming up with solutions, we need to understand where the comercial strengths of Latin America lies.
     The aim of this project is to explore some of the comercial dynamics of Latin America."""
-    buttonText = "Todos los articulos del proyecto"
-    url = "post"
+    buttonText = "Leer más"
+    url = "post/intro/"
 
 
   # Contact section
