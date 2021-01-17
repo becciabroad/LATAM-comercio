@@ -1,8 +1,8 @@
 ---
-title: Comercio Exterior
+title: Comercio Exterior en América Latina
 author: Rebecca Hoffmann
-date: '2021-01-12'
-slug: comercio-exterior
+date: '2021-01-17'
+slug: comercio-latam
 categories: []
 tags: []
 draft: false
@@ -48,7 +48,8 @@ Por eso,  renombro la columna de "reporter_iso" para que corresponde al segundo 
 comercio_mundo_api <- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
   reporters = "all", 
-  partners = "all") %>%
+  partners = "all", 
+  products = "all") %>%
   rename(country_iso = 'reporter_iso')
 ```
 
@@ -279,3 +280,4 @@ ggplot(producto_import_graph, aes(x = year, y = import_value_usd)) +
 En primer lugar, se nota como durante los 1980s y los 1990s, los autos (rosa) poco a poco aumenta como el principal producto de importación para la región, mientras que el petroleo crudo le sigue (marrón). Después, al final de los 2000s, el petroleo refinado aparece como el principal producto de importación para la región y durante los 2010s, el nivel (en USD) de importación de petroleo es mucho más alto que cualquier otro producto.
 
 En segundo lugar, vale subrayar que las categorías más importantes: autos, petroleo refinado, transporte (lo cual incluye varios tipos de maquinas de transporte) son productos procesados. La única excepción parece ser el petroleo crudo. 
+

@@ -1,8 +1,8 @@
 ---
-title: Comercio Exterior
+title: Comercio Exterior en América Latina
 author: Rebecca Hoffmann
-date: '2021-01-12'
-slug: comercio-exterior
+date: '2021-01-17'
+slug: comercio-latam
 categories: []
 tags: []
 draft: false
@@ -40,7 +40,8 @@ library(patchwork)</code></pre>
 <pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
   reporters = &quot;all&quot;, 
-  partners = &quot;all&quot;) %&gt;%
+  partners = &quot;all&quot;, 
+  products = &quot;all&quot;) %&gt;%
   rename(country_iso = &#39;reporter_iso&#39;)</code></pre>
 <p>Después el otro base de datos, descargo la información solamente sobre los países que pertenecer al continente de las Americas:</p>
 <pre class="r"><code>countries_LATAM &lt;- tradestatistics::ots_countries %&gt;%

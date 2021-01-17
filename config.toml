@@ -101,7 +101,7 @@ disqusShortname = ""
       title = "Comercio Exterior"
       subtitle = "La evolución histórica del comercio exterior en América Latina"
       image = "pic2.jpg"
-      url = "post/comercio-exterior/"
+      url = "post/comercio-latam/"
 
     [[params.tiles.showcase]]
       title = "Importación"
