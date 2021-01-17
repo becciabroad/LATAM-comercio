@@ -22,6 +22,7 @@ El post está divido en dos partes:
 (1) Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma. Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:
 
 install.packages("cartogram")
+utilizando los guías de aca: https://github.com/sjewo/cartogram
 
 (2) Un analisis sobre las categorías de productos que los países más exportaron durante el 2018.
 
@@ -37,7 +38,7 @@ library(maptools)
 library(cartogram)
 ```
 
-## Mapa de Cartograma de las exportaciones en América Latina
+## Cartograma de las exportaciones en América Latina
 
 ### Descargando los datos
 Cómo en el post sobre importación necesito descargar dos diferentes data frames desde el base de datos de Open Trade Statistics y después unirlos en uno para separar la región de las Americas:
@@ -57,6 +58,7 @@ export_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
   select(country_iso,
          reporter_fullname_english,
          export_value_usd,
+         top_export_trade_value_usd,
          top_export_product_code) %>%
   filter(
          reporter_fullname_english != "USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)",
@@ -67,23 +69,42 @@ export_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
          reporter_fullname_english != "South Georgia and the South Sandwich Islands") %>% # Saco los países no correspondiendo a América Latina
   drop_na()
 
+
 ```
 
-### Generando el mapa
+
+
+### Generando el cartograma
 
 ```{r mapa, message=FALSE, warning=FALSE}
+library(sf)
+library(rgdal)
+library(tmap)
+library(broom)
+
+# Data of world map:
 data(wrld_simpl)
+# Eligo el subset de América de Sur y América Central
+latam <- subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) 
 
-latam<-subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) # Eligo el subset de América de Sur y América Central
+# Generando un "spacial element"
+latam <- spTransform(latam, CRS("+init=epsg:31972"))
 
-# Con la función del plot podemos vizualizar el nuevo mapa:
-plot(latam)
+latam@data = latam@data %>%
+  mutate(reporter_fullname_english = latam$NAME)
 
+# creating the data frame with the export data:
+export_latam_2018 <- data.frame(reporter_fullname_english = export_latam$reporter_fullname_english, export = export_latam$export_value_usd)
+
+latam@data <- latam@data %>% left_join(., export_latam_2018, by=c("NAME" = "reporter_fullname_english"))
+
+cartogram <- cartogram_cont(latam, 'export', itermax = 7)
+
+tm_shape(cartogram) + tm_polygons("export", style = "jenks") +
+  tm_layout(frame = FALSE, legend.position = c("left", "bottom")) +
+  labs(title = "Exportación 2018 América Latina")
 ```
 
-```{r mapa cartogram, message=FALSE, warning=FALSE}
-
-```
 ### Sum-up
 
 
@@ -138,7 +159,7 @@ Ahora eligo las columnas que necesito para graficar, y modifico el nombre de Pan
 ```{r LATAM productos modificar, message=FALSE}
 export_countries_2018 <- productos_factor %>%
   select(reporter_fullname_english,
-         export_value_usd,
+         top_export_trade_value_usd,
          product_shortname_english) %>%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
              "Panama"    = c("Panama (excludes Panama Canal Zone until 1978)"),
@@ -154,7 +175,7 @@ Ahora estoy lista para graficar:
 ```{r comercio LATAM productos graficar, message=FALSE}
 ggplot(export_countries_2018, aes(
   x = reporter_fullname_english,
-  y = export_value_usd,
+  y = top_export_trade_value_usd,
   fill = product_shortname_english)) +
     geom_col() +
   labs(
@@ -175,6 +196,8 @@ ggplot(export_countries_2018, aes(
   coord_flip()
 
 ```
+
+
 ### Sum-up
 En primer lugar, se nota que el perfil de exportación de los países latinoamericanos es mucho más diverso que el perfil de importación donde la mayoría importan petroleo refinado. 
 

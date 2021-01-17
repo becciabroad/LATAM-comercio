@@ -20,7 +20,8 @@ output:
 <ol style="list-style-type: decimal">
 <li>Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma. Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:</li>
 </ol>
-<p>install.packages(“cartogram”)</p>
+<p>install.packages(“cartogram”)
+utilizando los guías de aca: <a href="https://github.com/sjewo/cartogram" class="uri">https://github.com/sjewo/cartogram</a></p>
 <ol start="2" style="list-style-type: decimal">
 <li>Un analisis sobre las categorías de productos que los países más exportaron durante el 2018.</li>
 </ol>
@@ -34,8 +35,8 @@ library(scales)
 library(maptools)
 library(cartogram)</code></pre>
 </div>
-<div id="mapa-de-cartograma-de-las-exportaciones-en-américa-latina" class="section level2">
-<h2>Mapa de Cartograma de las exportaciones en América Latina</h2>
+<div id="cartograma-de-las-exportaciones-en-américa-latina" class="section level2">
+<h2>Cartograma de las exportaciones en América Latina</h2>
 <div id="descargando-los-datos" class="section level3">
 <h3>Descargando los datos</h3>
 <p>Cómo en el post sobre importación necesito descargar dos diferentes data frames desde el base de datos de Open Trade Statistics y después unirlos en uno para separar la región de las Americas:</p>
@@ -54,6 +55,7 @@ export_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
   select(country_iso,
          reporter_fullname_english,
          export_value_usd,
+         top_export_trade_value_usd,
          top_export_product_code) %&gt;%
   filter(
          reporter_fullname_english != &quot;USA, Puerto Rico and US Virgin Islands (excludes Virgin Islands until 1981)&quot;,
@@ -62,16 +64,37 @@ export_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
          reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
          reporter_fullname_english != &quot;United States Minor Outlying Islands&quot;,
          reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;) %&gt;% # Saco los países no correspondiendo a América Latina
-  drop_na()</code></pre>
+  drop_na()
+</code></pre>
 </div>
-<div id="generando-el-mapa" class="section level3">
-<h3>Generando el mapa</h3>
-<pre class="r"><code>data(wrld_simpl)
+<div id="generando-el-cartograma" class="section level3">
+<h3>Generando el cartograma</h3>
+<pre class="r"><code>library(sf)
+library(rgdal)
+library(tmap)
+library(broom)
 
-latam&lt;-subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) # Eligo el subset de América de Sur y América Central
+# Data of world map:
+data(wrld_simpl)
+# Eligo el subset de América de Sur y América Central
+latam &lt;- subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) 
 
-# Con la función del plot podemos vizualizar el nuevo mapa:
-plot(latam)</code></pre>
+# Generando un &quot;spacial element&quot;
+latam &lt;- spTransform(latam, CRS(&quot;+init=epsg:31972&quot;))
+
+latam@data = latam@data %&gt;%
+  mutate(reporter_fullname_english = latam$NAME)
+
+# creating the data frame with the export data:
+export_latam_2018 &lt;- data.frame(reporter_fullname_english = export_latam$reporter_fullname_english, export = export_latam$export_value_usd)
+
+latam@data &lt;- latam@data %&gt;% left_join(., export_latam_2018, by=c(&quot;NAME&quot; = &quot;reporter_fullname_english&quot;))
+
+cartogram &lt;- cartogram_cont(latam, &#39;export&#39;, itermax = 7)
+
+tm_shape(cartogram) + tm_polygons(&quot;export&quot;, style = &quot;jenks&quot;) +
+  tm_layout(frame = FALSE, legend.position = c(&quot;left&quot;, &quot;bottom&quot;)) +
+  labs(title = &quot;Exportación 2018 América Latina&quot;)</code></pre>
 <p><img src="index_files/figure-html/mapa-1.png" width="672" /></p>
 </div>
 <div id="sum-up" class="section level3">
@@ -83,7 +106,7 @@ plot(latam)</code></pre>
 <p>En esta parte, quiero realizar una breve analisis de qué categoría de producto los país exporta más.</p>
 <div id="transformando-los-datos" class="section level3">
 <h3>Transformando los datos</h3>
-<p>Como hice en el analisis sobre importaciones, necesito descargar el data frame con los nombres de los productos y después unirlo con el data frame que generé antes. Para no tener un grafico muy largo excluyo todos los pequeños países del Caribe</p>
+<p>Como hice en el analisis sobre importaciones, necesito descargar el data frame con los nombres de los productos y después unirlo con el data frame que generé antes. Para no tener un grafico muy largo excluyo todos los pequeños países del Caribe:</p>
 <pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_export_product_code = &quot;product_code&quot;)
 
@@ -116,12 +139,13 @@ productos_latam_export &lt;- merge(x = export_latam,
          reporter_fullname_english != &quot;Saint Vincent and the Grenadines&quot;) %&gt;%
   drop_na()
  </code></pre>
+<p>Modifico la columna “reporter_fullname_english” para que sea un factor, porqué eso me permite modificar los nombres de las observaciones y juntarlos en la misma observación:</p>
 <pre class="r"><code>productos_factor &lt;- productos_latam_export %&gt;%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english))</code></pre>
-<pre class="r"><code>  
-export_countries_2018 &lt;- productos_factor %&gt;%
+<p>Ahora eligo las columnas que necesito para graficar, y modifico el nombre de Panama y junto Argentina y Malvinas en un grupo:</p>
+<pre class="r"><code>export_countries_2018 &lt;- productos_factor %&gt;%
   select(reporter_fullname_english,
-         export_value_usd,
+         top_export_trade_value_usd,
          product_shortname_english) %&gt;%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
              &quot;Panama&quot;    = c(&quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
@@ -132,9 +156,10 @@ export_countries_2018 &lt;- productos_factor %&gt;%
 </div>
 <div id="graficando" class="section level3">
 <h3>Graficando</h3>
+<p>Ahora estoy lista para graficar:</p>
 <pre class="r"><code>ggplot(export_countries_2018, aes(
   x = reporter_fullname_english,
-  y = export_value_usd,
+  y = top_export_trade_value_usd,
   fill = product_shortname_english)) +
     geom_col() +
   labs(
@@ -153,7 +178,11 @@ export_countries_2018 &lt;- productos_factor %&gt;%
     legend.title = element_blank(),
     legend.position = &quot;bottom&quot;) +
   coord_flip()</code></pre>
-<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" />
-### Sum-up</p>
+<p><img src="index_files/figure-html/comercio%20LATAM%20productos%20graficar-1.png" width="672" /></p>
+</div>
+<div id="sum-up-1" class="section level3">
+<h3>Sum-up</h3>
+<p>En primer lugar, se nota que el perfil de exportación de los países latinoamericanos es mucho más diverso que el perfil de importación donde la mayoría importan petroleo refinado.</p>
+<p>En segundo lugar, también llama la atención que México de nuevo es el mayor comerciante, lo cual explica su posición fuerte en el primer analisis que hice sobre la evolución del comercio exterior. Además, México es el único país en la región que tiene los autos como principal producto de exportación.</p>
 </div>
 </div>

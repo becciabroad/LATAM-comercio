@@ -187,7 +187,7 @@ import_countries_modificied <- productos_latam_import %>%
 
 En segundo lugar, para no tener un gráfico muy largo, elegio sacar todos los pequeños países del Caribe menos Cuba. Después puedo agrupar por país y por producto:
 
-```{r LATAM productos modificar, message=FALSE}
+```{r LATAM productos modificar, message=FALSE, warning=FALSE}
 import_countries_2018 <- import_countries_modificied %>%
   select(reporter_fullname_english,
          import_value_usd,
