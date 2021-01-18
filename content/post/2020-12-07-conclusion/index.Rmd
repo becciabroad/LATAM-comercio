@@ -14,5 +14,8 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina.
+En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina. Además, de unas consideraciones finales sobre el uso de BlogDown y Rstudio
 
+## Conclusión
+
+## Consideraciones finales sobre BlogDown y Rstudio

@@ -16,19 +16,10 @@ El comercio exterior ha expandido en América Latina, especialmente, desde los a
 
 En este proyecto trato de analizar algunos de los flujos en el comercio exterior latinoamerica de la apertura economía hasta los años recientes basandome en el API de Open Trade Statistics.
 
-El proyecto está compuesto por 5 post (a parte de esta  primer introducción) que analizar diferentes tematicas del comercio exterior en América Latina:
-
-### Index
-#### 1. Comercio exterior en América en una perspectiva histórica
-#### 2. Importación y composición de productos importados
-#### 3. Exportación y composición de productos exportados
-#### 4. Comercio Exterior en Argentina
-#### 5. Conclusión y consideraciones finales
-
 ## Objetivo del proyecto
 El objetivo del proyecto es analizar varios aspectos del comercio exterior de los países de América Latina para así entender mejor qué los países exportan, qué productos importan desde afuera, y quienes son los mayores comerciantes de la región.
 
-### Trampa del medio ingreso
+### Antecedentes académcios: Trampa del medio ingreso
 El enfoque de los flujos del comercio exterior latinoamericano es especificalmente interesante desde el punto de vista de desarrollo industrial y social.
 
 Los grupos empresariales latinoamericanos tienden a specializarse en sectores de baja-tecnología donde principalmente se demanda empleados con bajas cualificaciones (skills). Eso, en cambio, ha dejado los trabajadores latinoamericanos con pocas incentivas de invertir en education o entrenamiento, por qué no hay tanta demanda de los empresarios de empleados con altas capacidades. La falta de una base importante de trabajadores con altas capacidades, en cima, desaniman a los empresarios locales de invertir mejor la tecnología de su producción o invertir en sectores de alta tecnología. Por lo tanto, la actitud ambos partes (trabajadores y empresarios locales) reenforza la presencia de empresas locales enfocados en sectores de baja tecnología (Schneider, 2013). Schneider (2013) resalta que régimen de capacidades es el nexus central entre las empresas y los mercados laborales en América Latina, y también una de las areas principales de enfoque para mejorar la condiciones económicas de la región Schneider (2013).
@@ -36,6 +27,15 @@ Los grupos empresariales latinoamericanos tienden a specializarse en sectores de
 En conexión, otros investigadores han argumentado que para América Latina salga de la "trampa del medio ingreso" (e.i. Middle-Income Trap), existe una necesidad de politicas que puede aumentar la productividad de la región. Entre las políticas resaltas son reformas de educación y mejora de capacidades. Para así empezar a empujar las empresas a invertir en sectores de mayores niveles de tecnología, ya que tendrían disponible una base más fuerte de trabajadores capacidados. Para poder competir en el mercado global con otro tipo de productos, que pagan mejores precios y así mejorar el salario de los trabajadores (Doner & Schneider, 2016).
 
 Por lo tanto, no es sin importancia qué productos se exportan y importan, ya que indica algo sobre los sectores que concernan más empleados y qué capabilidades están requieridos. 
+
+El proyecto está compuesto por 5 post (a parte de esta  primer introducción) que analizar diferentes tematicas del comercio exterior en América Latina:
+
+### Index
+#### 1. [Comercio exterior en América en una perspectiva histórica](https://comercio-latam.netlify.app/post/comercio-latam/)
+#### 2. [Importación](https://comercio-latam.netlify.app/post/importacion/)
+#### 3. [Exportación](https://comercio-latam.netlify.app/post/export/)
+#### 4. [Comercio Exterior en Argentina](https://comercio-latam.netlify.app/post/comercio-argentina/)
+#### 5. [Conclusión y consideraciones finales](https://comercio-latam.netlify.app/post/conclusion/)
 
 ## BlogDown
 Para la presención/comunicación del proyecto eligí hacer una pagina web utilizando el paquete de blogdown.
@@ -51,7 +51,7 @@ blogdown:::new_post_addin()
 No obstante, el díficil venía en los dos próximos pasos: (1) intalar el diseño y (2) conectarlo a Netlify:
 
 ### Instalando y modificando el diseño
-Eligí el diseño llamado "Forty" (https://themes.gohugo.io/forty/), lo cual parecía tener una linda y fácil estructura para navigar la página web.
+Eligí el diseño llamado ["Forty"](https://themes.gohugo.io/forty/), lo cual parecía tener una linda y fácil estructura para navigar la página web.
 
 No obstante, no tenía experiencia en el hecho de que tenía que generar el diseño como un "submodule" para que funcionaría con Netlify. Usé muchísimo tiempo en leer y intentar generar correctamente el submodule para el diseño.
 

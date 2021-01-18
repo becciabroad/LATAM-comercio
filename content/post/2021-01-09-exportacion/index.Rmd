@@ -19,10 +19,13 @@ En el post sobre el desarrollo histórico del comercio exterior en América Lati
 
 El post está divido en dos partes:
 
-(1) Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma. Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:
+(1) Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma. 
 
+Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:
+
+```{r, eval=FALSE}
 install.packages("cartogram")
-utilizando los guías de aca: https://github.com/sjewo/cartogram
+```
 
 (2) Un analisis sobre las categorías de productos que los países más exportaron durante el 2018.
 
@@ -76,14 +79,14 @@ export_latam <- merge(x = comercio_mundo_api, y = countries_LATAM,
 ### Generando cartogramas
 Estuve trabajando mucho tiempo para lograr hacer el cartograma que encontré dos diferentes metodos de hacer el cartograma.
 
-Las mayoría de las guías que encontré online utilizaban principalmente la información que viene cargada con el parquete de maptools (donde se encuentra "wrld_simpl") (como por ejemplo este articulo: https://www.r-graph-gallery.com/331-basic-cartogram.html, donde parece muy fácil hacer un cartograma). 
+Las mayoría de las guías que encontré online utilizaban principalmente la información que viene cargada con el parquete de maptools (donde se encuentra "wrld_simpl") (como por ejemplo [este articulo](https://www.r-graph-gallery.com/331-basic-cartogram.html, donde parece muy fácil hacer un cartograma) ). 
 
 Así, estaba buscando durante mucho tiempo como hacer para poder utilizar los datos de exportación que tenía desde Open Trade Statistics. En el camino de idas y vueltas, encontré que había encontrado dos diferente metodos de hacer los cartogramas, así decidí mostrar ambos metodos:
 
 #### Metodo 1: 
-Este primer metodo se base principalmente en un articulo de r-graph-gallery.com (https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html) y los ejemplos de graficos del Github del paquete de "cartogram"  (https://github.com/sjewo/cartogram).
+Este primer metodo se base principalmente en un articulo de [r-graph-gallery.com](https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html) y los ejemplos de graficos del Github del [paquete de "cartogram"](https://github.com/sjewo/cartogram).
 
-El articlo de r-graph-gallery.com me ayudó mucho a entender como manipular los datos de Open Trade Statistics para poder implementarlos con el
+El articlo de [r-graph-gallery.com](https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html) me ayudó mucho a entender como manipular los datos de Open Trade Statistics para poder implementarlos con el
 
 ```{r mapa, message=FALSE, warning=FALSE}
 # Data of world map:
@@ -122,7 +125,7 @@ tm_shape(cartogram) + tm_polygons("export", style = "jenks") +
 #### Metodo 2:
 Durante el tiempo que intenté unir las data frames correctamente y terminé con muchos errores de R, encontré otra manera de generar el "geospatial object" y que permite utilizar ggplot para graficar el mapa.
 
-Así, en este metodo de graficar un cartograma, sigo el metodo explicado acá: https://stackoverflow.com/questions/59809551/error-with-plotting-cartogram-this-function-does-not-give-correct-centroids-a
+Así, en este metodo de graficar un cartograma, sigo el metodo explicado [acá en Stack Overflow](https://stackoverflow.com/questions/59809551/error-with-plotting-cartogram-this-function-does-not-give-correct-centroids-a)
 
 La mayoría de los pases son iguales pero el mapa que puedo graficar es diferente con este metodo y por eso lo incluí también. Además me gustó mucho más este cartograma que el primero que logré hacer y es más fácil customizarlo ya que utilizar ggplot:
 
@@ -172,7 +175,7 @@ En ambos cartogramas quedó muy claro que México sin  duda ninguna es el mayor 
 
 Lo interesante de utilizar el cartograma es que además de los colors, expande el tamaño de los países según el nivel de la variable elegido. Por eso, México se ve muy muy grande, mientras que Brasil en realidad se ve más chico de lo que es.
 
-Además, el cartograma demuestra como casi todos los demás países parecen tener más o menos al mismo nivel de exportaciones. Algún lugar entre 100,000,000,000 y 200,000,000,000.
+Además, el cartograma demuestra como casi todos los demás países parecen tener más o menos al mismo nivel de exportaciones. Algún lugar entre 100,000,000,000 USD y 200,000,000,000 USD.
 
 No obstante, el cartograma no demuestra nada sobre qué tipo de productos que se está exportando, por eso en la siguiente parte trato de hacer un breve analisis de los productos que más se exporta de América Latina.
 
