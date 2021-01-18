@@ -50,7 +50,7 @@ disqusShortname = ""
     # Button Style 1
     [[params.navigation.button1]]
       name = "Get Started"
-      url = "blogs"
+      url = "https://comercio-latam.netlify.app/"
 
     # Button Style 2
     [[params.navigation.button2]]
