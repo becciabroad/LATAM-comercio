@@ -186,8 +186,6 @@ grafico_export_2017
 ```
 
 
-
-
 ## Comparación
 Tengo la liberaría "patchwork" cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código: 
 
