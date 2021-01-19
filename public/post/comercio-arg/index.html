@@ -1,5 +1,5 @@
 ---
-title: comercio-arg
+title: Comercio Exterior en Argentina
 author: Rebecca Hoffmann
 date: '2021-01-19'
 slug: comercio-arg
@@ -34,7 +34,7 @@ library(treemapify)
 library(ggthemes)
 library(scales)
 library(patchwork)</code></pre>
-<p>Trying to fix an error with the new version of dplyr:</p>
+<p>Evitando el error de "“<code>summarise()</code> ungrouping output (override with <code>.groups</code> argument)” de la nueva versión de dplyr:</p>
 <pre class="r"><code>library(dplyr, warn.conflicts = FALSE)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)</code></pre>
@@ -164,11 +164,51 @@ grafico_export_2017</code></pre>
 <p><img src="index_files/figure-html/arg%20productos%20grafico-1.png" width="672" /></p>
 </div>
 </div>
+<div id="importaciones" class="section level2">
+<h2>Importaciones</h2>
+<p>Ahora me interesa ver como se distribuye las importaciones por categoría de productos para después poder comparar los dos.</p>
+<div id="transformando-los-datos-1" class="section level3">
+<h3>Transformando los datos</h3>
+<p>Uso el mismo código que arriba, pero cambio la variable de “valor_exportado_dolares” a ser “valor_importado_dolares”.</p>
+<pre class="r"><code>import_argentina_2017 &lt;- comercio_mundo %&gt;%
+  filter(anio == 2017, 
+         codigo_iso_origen == &quot;arg&quot;) %&gt;%
+  group_by(anio, 
+           nombre_comunidad_producto,
+           color_comunidad_producto) %&gt;%
+  summarise(valor_importado_dolares = sum(valor_importado_dolares, na.rm = T)) %&gt;%
+  ungroup() %&gt;%
+  mutate(
+    etiquetas = paste0(nombre_comunidad_producto, &quot;/&quot;, round(100*valor_importado_dolares/sum(valor_importado_dolares), 2), &quot;%&quot;)
+    )</code></pre>
+</div>
+<div id="graficando-3" class="section level3">
+<h3>Graficando</h3>
+<p>Lo mismo para poder genera el grafico; el código es el mismo pero cambio la variable:</p>
+<pre class="r"><code>grafico_import_2017 &lt;- ggplot(import_argentina_2017, aes(
+  area = valor_importado_dolares, 
+  fill = nombre_comunidad_producto,
+  label = etiquetas)) +
+  geom_treemap() +
+  geom_treemap_text(color = &quot;black&quot;,
+                    place = &quot;centre&quot;,
+                    grow = F,
+                    reflow = T) +
+  scale_fill_manual(values = import_argentina_2017$color_comunidad_producto) +
+  labs(title = &quot;Productos exportado&quot;,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  theme_economist() +
+  theme(legend.position = &quot;none&quot;)
+
+grafico_import_2017</code></pre>
+<p><img src="index_files/figure-html/arg%20import%20grafico-1.png" width="672" /></p>
+</div>
+</div>
 <div id="comparación" class="section level2">
 <h2>Comparación</h2>
 <p>Tengo la liberaría “patchwork” cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código:</p>
 <pre class="r"><code>
-grafico_export_2017</code></pre>
+grafico_export_2017 + grafico_import_2017</code></pre>
 <p><img src="index_files/figure-html/patchwork-1.png" width="672" /></p>
 </div>
 <div id="sum-up-2" class="section level2">
