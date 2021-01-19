@@ -242,3 +242,9 @@ En primer lugar, esta claro que lo que más exportó Argentina en 2017 era produ
 En segundo lugar, lo más importado en Argentina en 2017 era en primer lugar productos maquinas (29,72%) y vehiculos relacionados al transporte (20,16 %) y en segundo lugar productos químicos (13,61 %) y minerales (9,20 %). Es llamativa que esas industrias también aparece en el grafico el las exportaciónes. Es decir, ya productos de los mismos sectores que tanto se importa para después ser exportados. Sería interesante hacer un analisis más profundo de este fenonemo - pero será para otro proyecto :)
 
 Este breve analisis de los flujos de comercio exterior argentina, se nota la tendencia subrayado por varios autores de que los países de América Latina tiende a exportar recursos naturales extraidos de la tierra o productos agropecarios y importar productos ya manifacturados y de alta tecnología. Unos de los principales argumentos de la trampa del medio ingreso es que los países de América Latina necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la fabricación de alimentos, y entrar en las industrias de alta tecnología y donde se necesita más habilidades. Para entonces puede vender eso productos más caros en el mercado global y fortalecer el nivel educativo de sus poblaciones. 
+
+----
+
+## References
+  - Bernat, Gonzalo (2011). “Crecimiento en la Argentina: del stop and go al go (slowly) non stop”, ​Boletín Informativo Techint 335
+  - Kulfas, Matías (2016). L​ os tres Kirchnerismos - Una historia de la economía argentina, 2003-2015​.- 1a ed.- Buenos Aires: Siglo Veintiuno Editores.

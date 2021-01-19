@@ -34,6 +34,7 @@ library(rworldmap) #Para graficar el mapa del América Latina
 library(treemapify) #Para graficar la composición de los productos más importados
 library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
 library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD </code></pre>
+<p>Evitando el error de "“<code>summarise()</code> ungrouping output (override with <code>.groups</code> argument)” de la nueva versión de dplyr:</p>
 <pre class="r"><code>library(dplyr, warn.conflicts = FALSE)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)</code></pre>

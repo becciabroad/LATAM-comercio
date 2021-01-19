@@ -62,5 +62,14 @@ No obstante, no tenía experiencia en el hecho de que tenía que generar el dise
 Sin embargo, cuando finalmente logré generar el submodule correctamente, fue bastante fácil modificar el diseño en el archivo "config.toml". Ahí pude modificar titulos, los enlaces de cuadros en la primera página y actualizar las fotos cambiando las en la carperta en mi computadora y después actualizandolas en el GitHub a través de Rstudio.
 
 ### Connectando con Netlify
-Segunda desafío fue conectar el repositor de GitHub/Blogdown página a Netlify. Principalmente, mi obstaculo fue que Netlify seguía diciendo que no tenía la correcta versión de Hugo para conectar, y seguía rechazando la coneción hasta que logré encontrar el lugar corecto para poner mi versión de Hugo y de repente funcionó! :D 
+Segunda desafío fue conectar el repositor de GitHub/Blogdown página a Netlify. Principalmente, mi obstaculo fue que Netlify seguía diciendo que no tenía la correcta versión de Hugo para conectar, y seguía rechazando la coneción hasta que logré encontrar el lugar corecto para poner mi versión de Hugo y de repente funcionó! :) 
 
+----
+
+## References
+  - Birch, Melissa H., & Halton, Garrett (2001). “Foreign Direct Investment in Latin America in the 1990s”, Latin American Business Review, 2:1-2, 13-31,
+DOI: 10.1300/J140v02n01_03
+  - Chudnovsky, Daniel (1999). "MNEs, Globalization and Economic Development: The Case of Argentina in the 1990s" in Neil Hood & Stephen Young (1999) The Globalization of Multinational Enterprise Activity and Economic Development, Palgrave Macmillan
+  - Doner, Richard & Ben Ross Schneider (2016) “The Middle-Income Trap: More Politics than Economics”. World Politics 68 (4).
+  - Post, Alice (2014). Foreign and Domestic Investment in Argentina – The politics of Privatized Infrastructure. Cambridge: Cambridge University Press
+  - Schneider, Ben Ross (2013). Hierarchical Capitalism: Business, Labor, and the Challenges of Equitable Development in Latin America. Cambridge: Cambridge University Press.
