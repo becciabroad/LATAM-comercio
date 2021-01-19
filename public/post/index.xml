@@ -6,13 +6,13 @@
     <description>Recent content in Posts on Comercio en América Latina</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://comercio-latam.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Comercio Exterior</title>
-      <link>https://comercio-latam.netlify.app/post/comercio-exterior/</link>
-      <pubDate>Tue, 12 Jan 2021 00:00:00 +0000</pubDate>
+      <title>Comercio Exterior en América Latina</title>
+      <link>https://comercio-latam.netlify.app/post/comercio-latam/</link>
+      <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://comercio-latam.netlify.app/post/comercio-exterior/</guid>
+      <guid>https://comercio-latam.netlify.app/post/comercio-latam/</guid>
       <description>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.
 El post está divido en tres analisis diferentes: (1) Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto. (2) Un analisis de la evolución del comercio de los países en la región para poder analizar quién cuales son los mayores comerciante en la región.</description>
     </item>
@@ -25,17 +25,6 @@ El post está divido en tres analisis diferentes: (1) Un analisis del desarrollo
       <guid>https://comercio-latam.netlify.app/post/export/</guid>
       <description>En este post, el objetivo es analizar la composición de las exportaciones en América Latina. Cómo hemos visto en los últimos posts, el comercio exterior han aumentado en América Latina desde los años 1990s. Pero aún parece que hay una sesgo en qué tipo de productos se importa y exporta en la región. Por lo tanto, en este post se enfoca en las exportaciones de la región.
 En el post sobre el desarrollo histórico del comercio exterior en América Latina, ya vimos unas tendencias, pero en este post desarrolla el tema sobre las exportaciones.</description>
-    </item>
-    
-    <item>
-      <title>Import</title>
-      <link>https://comercio-latam.netlify.app/post/import/</link>
-      <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://comercio-latam.netlify.app/post/import/</guid>
-      <description>En este post, querría analizar qué países en América Latina importa más productos graphicandolo con un mapa de color utilizando el paquete de Rworldmaps. Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar acá:
-install.packages(“rworldmap”)
-Las libraría utilizadas: library(tidyverse) library(tradestatistics) library(ggplot2) library(rworldmap) library(treemapify) library(ggthemes) library(scales)  Los datos Descargo el base de datos: I rename the column “reporter_iso” to be able to merge it with the second data frame from Open Trade Statistics:</description>
     </item>
     
     <item>
@@ -57,18 +46,8 @@ Un analisis de la evolución histórico del comerico exterior argentino.
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/conclusion/</guid>
-      <description>En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina.</description>
-    </item>
-    
-    <item>
-      <title>Exportación</title>
-      <link>https://comercio-latam.netlify.app/post/exportacion/</link>
-      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://comercio-latam.netlify.app/post/exportacion/</guid>
-      <description>El objetivo de este post es analizar qué países en América Latina exportan qué tipo de productos utilizando un grafico de sets paralelos del parquete ggforce que permite visualizar en una manera muy lógica los datos.
-Cómo en los otros posts, utilizaría el API de Open Trade Statistics. En primer lugar, aprendo las librarías necesarias para realizar el analisis:
-library(tradestatistics) #parquete de los datos library(tidyverse) library(ggplot2) library(ggforce) #para graficos de sets paralelos library(ggthemes) library(scales) En segundo lugar, eligo los datos que necesito para realizar el set de parelelo.</description>
+      <description>  En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina. Además, de unas consideraciones finales sobre el uso de BlogDown y Rstudio
+Conclusión  Consideraciones finales sobre BlogDown y Rstudio  </description>
     </item>
     
     <item>
@@ -80,6 +59,16 @@ library(tradestatistics) #parquete de los datos library(tidyverse) library(ggplo
       <description>En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica analisé un poco sobre qué productos principalmente son importados en la región. En este post, quiero analizar este flujos de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.
 El post está divido en tres analisis diferentes:
 Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps.</description>
+    </item>
+    
+    <item>
+      <title>Introducción</title>
+      <link>https://comercio-latam.netlify.app/post/intro/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://comercio-latam.netlify.app/post/intro/</guid>
+      <description>El comercio exterior ha expandido en América Latina, especialmente, desde los años 1990s donde el consenso del Washtingon y reformas neoliberales abrieron los mercados latinomercados a la economía globalizada (Birch &amp;amp; Halton, 2001; Post, 2014). Anteriormente, las economías latinoamericanos fueron por su mayoría economías semi-cerradas bajo el modelo de industrialización por sustitución de importaciones (ISI), enfocados la industrialización interna en vez de importaciones del exterior (Chudnovsky, 1999).
+En este proyecto trato de analizar algunos de los flujos en el comercio exterior latinoamerica de la apertura economía hasta los años recientes basandome en el API de Open Trade Statistics.</description>
     </item>
     
   </channel>

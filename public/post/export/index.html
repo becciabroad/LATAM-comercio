@@ -18,10 +18,10 @@ output:
 <p>En el post sobre el desarrollo histórico del comercio exterior en América Latina, ya vimos unas tendencias, pero en este post desarrolla el tema sobre las exportaciones.</p>
 <p>El post está divido en dos partes:</p>
 <ol style="list-style-type: decimal">
-<li>Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma. Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:</li>
+<li>Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma.</li>
 </ol>
-<p>install.packages(“cartogram”)
-utilizando los guías de aca: <a href="https://github.com/sjewo/cartogram" class="uri">https://github.com/sjewo/cartogram</a></p>
+<p>Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:</p>
+<pre class="r"><code>install.packages(&quot;cartogram&quot;)</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Un analisis sobre las categorías de productos que los países más exportaron durante el 2018.</li>
 </ol>
@@ -33,7 +33,9 @@ library(ggplot2)
 library(ggthemes)
 library(scales)
 library(maptools)
-library(cartogram)</code></pre>
+library(cartogram)
+library(sf)
+library(tmap)</code></pre>
 </div>
 <div id="cartograma-de-las-exportaciones-en-américa-latina" class="section level2">
 <h2>Cartograma de las exportaciones en América Latina</h2>
@@ -64,41 +66,182 @@ export_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
          reporter_fullname_english != &quot;Br. Virgin Isds&quot;,
          reporter_fullname_english != &quot;United States Minor Outlying Islands&quot;,
          reporter_fullname_english != &quot;South Georgia and the South Sandwich Islands&quot;) %&gt;% # Saco los países no correspondiendo a América Latina
-  drop_na()
-</code></pre>
+  drop_na()</code></pre>
 </div>
-<div id="generando-el-cartograma" class="section level3">
-<h3>Generando el cartograma</h3>
-<pre class="r"><code>library(sf)
-library(rgdal)
-library(tmap)
-library(broom)
-
-# Data of world map:
+<div id="generando-cartogramas" class="section level3">
+<h3>Generando cartogramas</h3>
+<p>Estuve trabajando mucho tiempo para lograr hacer el cartograma que encontré dos diferentes metodos de hacer el cartograma.</p>
+<p>Las mayoría de las guías que encontré online utilizaban principalmente la información que viene cargada con el parquete de maptools (donde se encuentra “wrld_simpl”) (como por ejemplo <a href="https://www.r-graph-gallery.com/331-basic-cartogram.html,%20donde%20parece%20muy%20fácil%20hacer%20un%20cartograma">este articulo</a> ).</p>
+<p>Así, estaba buscando durante mucho tiempo como hacer para poder utilizar los datos de exportación que tenía desde Open Trade Statistics. En el camino de idas y vueltas, encontré que había encontrado dos diferente metodos de hacer los cartogramas, así decidí mostrar ambos metodos:</p>
+<div id="metodo-1" class="section level4">
+<h4>Metodo 1:</h4>
+<p>Este primer metodo se base principalmente en un articulo de <a href="https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html">r-graph-gallery.com</a> y los ejemplos de graficos del Github del <a href="https://github.com/sjewo/cartogram">paquete de “cartogram”</a>.</p>
+<p>El articlo de <a href="https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html">r-graph-gallery.com</a> me ayudó mucho a entender como manipular los datos de Open Trade Statistics para poder implementarlos con el</p>
+<pre class="r"><code># Data of world map:
 data(wrld_simpl)
+
 # Eligo el subset de América de Sur y América Central
 latam &lt;- subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) 
 
-# Generando un &quot;spacial element&quot;
+# Generando un &quot;geospatial object&quot; que cubre América Latina:
 latam &lt;- spTransform(latam, CRS(&quot;+init=epsg:31972&quot;))
 
+# Añadí una variable que se llama &quot;reporter_fullname_english&quot; al geospatial object&quot;
+# y indico que es igual al &quot;NAME&quot; en el objeto &quot;latam&quot;, así puedo unir los dos data frames más adelante
 latam@data = latam@data %&gt;%
   mutate(reporter_fullname_english = latam$NAME)
 
-# creating the data frame with the export data:
+# Generé un data frame con la importación cargada arriba de información de las exportaciones:
 export_latam_2018 &lt;- data.frame(reporter_fullname_english = export_latam$reporter_fullname_english, export = export_latam$export_value_usd)
 
+# Uno los dos elementos:
 latam@data &lt;- latam@data %&gt;% left_join(., export_latam_2018, by=c(&quot;NAME&quot; = &quot;reporter_fullname_english&quot;))
 
-cartogram &lt;- cartogram_cont(latam, &#39;export&#39;, itermax = 7)
+# Genero el cartograma con el package &quot;cartogram&quot;
+cartogram &lt;- cartogram_cont(latam, &#39;export&#39;, itermax = 5)
 
+# Usando &quot;tmap&quot; para dujar el mapa:
 tm_shape(cartogram) + tm_polygons(&quot;export&quot;, style = &quot;jenks&quot;) +
-  tm_layout(frame = FALSE, legend.position = c(&quot;left&quot;, &quot;bottom&quot;)) +
-  labs(title = &quot;Exportación 2018 América Latina&quot;)</code></pre>
+  tm_layout(frame = FALSE, 
+            legend.position = c(&quot;left&quot;, &quot;bottom&quot;), 
+            title = &quot;Exportación 2018 América Latina&quot;,
+            title.size = 10,
+            title.bg.color = &quot;light grey&quot;)</code></pre>
 <p><img src="index_files/figure-html/mapa-1.png" width="672" /></p>
+</div>
+<div id="metodo-2" class="section level4">
+<h4>Metodo 2:</h4>
+<p>Durante el tiempo que intenté unir las data frames correctamente y terminé con muchos errores de R, encontré otra manera de generar el “geospatial object” y que permite utilizar ggplot para graficar el mapa.</p>
+<p>Así, en este metodo de graficar un cartograma, sigo el metodo explicado <a href="https://stackoverflow.com/questions/59809551/error-with-plotting-cartogram-this-function-does-not-give-correct-centroids-a">acá en Stack Overflow</a></p>
+<p>La mayoría de los pases son iguales pero el mapa que puedo graficar es diferente con este metodo y por eso lo incluí también. Además me gustó mucho más este cartograma que el primero que logré hacer y es más fácil customizarlo ya que utilizar ggplot:</p>
+<pre class="r"><code># Data of world map:
+data(wrld_simpl)
+
+# Eligo el subset de América de Sur y América Central
+latam &lt;- subset(wrld_simpl,wrld_simpl$SUBREGION==5|wrld_simpl$SUBREGION==13) 
+
+# Generando un &quot;geospatial object&quot;
+sfno &lt;- st_as_sf(latam)
+st_crs(sfno)
+## Coordinate Reference System:
+##   User input: +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
+##   wkt:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]]
+sfnoproj &lt;- st_transform(sfno, coords = c(&quot;lon&quot;, &quot;lat&quot;), 
+                        crs = &quot;+proj=longlat +datum=WGS84&quot;, 
+                        agr = &quot;constant&quot;)
+st_crs(sfnoproj)
+## Coordinate Reference System:
+##   User input: +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
+##   wkt:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]]
+sfproj &lt;- st_transform(sfno, crs = 31972)
+st_crs(sfproj)
+## Coordinate Reference System:
+##   User input: EPSG:31972 
+##   wkt:
+## PROJCRS[&quot;SIRGAS 2000 / UTM zone 18N&quot;,
+##     BASEGEOGCRS[&quot;SIRGAS 2000&quot;,
+##         DATUM[&quot;Sistema de Referencia Geocentrico para las AmericaS 2000&quot;,
+##             ELLIPSOID[&quot;GRS 1980&quot;,6378137,298.257222101,
+##                 LENGTHUNIT[&quot;metre&quot;,1]]],
+##         PRIMEM[&quot;Greenwich&quot;,0,
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##         ID[&quot;EPSG&quot;,4674]],
+##     CONVERSION[&quot;UTM zone 18N&quot;,
+##         METHOD[&quot;Transverse Mercator&quot;,
+##             ID[&quot;EPSG&quot;,9807]],
+##         PARAMETER[&quot;Latitude of natural origin&quot;,0,
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##             ID[&quot;EPSG&quot;,8801]],
+##         PARAMETER[&quot;Longitude of natural origin&quot;,-75,
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##             ID[&quot;EPSG&quot;,8802]],
+##         PARAMETER[&quot;Scale factor at natural origin&quot;,0.9996,
+##             SCALEUNIT[&quot;unity&quot;,1],
+##             ID[&quot;EPSG&quot;,8805]],
+##         PARAMETER[&quot;False easting&quot;,500000,
+##             LENGTHUNIT[&quot;metre&quot;,1],
+##             ID[&quot;EPSG&quot;,8806]],
+##         PARAMETER[&quot;False northing&quot;,0,
+##             LENGTHUNIT[&quot;metre&quot;,1],
+##             ID[&quot;EPSG&quot;,8807]]],
+##     CS[Cartesian,2],
+##         AXIS[&quot;(E)&quot;,east,
+##             ORDER[1],
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         AXIS[&quot;(N)&quot;,north,
+##             ORDER[2],
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##     USAGE[
+##         SCOPE[&quot;unknown&quot;],
+##         AREA[&quot;Latin America - 78°W to 72°West; N hemisphere and SIRGAS by country&quot;],
+##         BBOX[0,-78,15.04,-72]],
+##     ID[&quot;EPSG&quot;,31972]]
+
+sfproj = sfproj %&gt;%
+  mutate(reporter_fullname_english = sfproj$NAME)
+
+# Data frame sobre exportaciones
+export_latam_2018 &lt;- data.frame(reporter_fullname_english = export_latam$reporter_fullname_english, export = export_latam$export_value_usd)
+
+# Unir los dos elementos
+sfproj = sfproj %&gt;% left_join(., export_latam_2018, by=c(&quot;NAME&quot; = &quot;reporter_fullname_english&quot;))
+
+cartogram_1 &lt;- cartogram_cont(sfproj, &#39;export&#39;, itermax = 5)
+
+# Utilizando ggplot to graficar el cartograma:
+ggplot() +
+  geom_sf(data=cartogram_1, aes(fill = export)) +
+  labs(title = &quot;Exportación 2018 América Latina&quot;,
+  caption = &quot;Fuerte: Open Trade Statistics&quot;) +
+  scale_fill_continuous(labels = scales::dollar_format()) +
+  theme(
+    legend.text = element_text(size = 8),
+    plot.background = element_rect(fill = &quot;#f5f5f4&quot;, color = NA),
+    panel.background = element_rect(fill = &quot;#f5f5f4&quot;, color = NA), 
+    legend.background = element_rect(fill = &quot;#f5f5f4&quot;, color = NA))</code></pre>
+<p><img src="index_files/figure-html/mapa%20blue-1.png" width="672" /></p>
+</div>
 </div>
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
+<p>En ambos cartogramas quedó muy claro que México sin duda ninguna es el mayor exportador en la región. Después le sigue Brasil.</p>
+<p>Lo interesante de utilizar el cartograma es que además de los colors, expande el tamaño de los países según el nivel de la variable elegido. Por eso, México se ve muy muy grande, mientras que Brasil en realidad se ve más chico de lo que es.</p>
+<p>Además, el cartograma demuestra como casi todos los demás países parecen tener más o menos al mismo nivel de exportaciones. Algún lugar entre 100,000,000,000 USD y 200,000,000,000 USD.</p>
+<p>No obstante, el cartograma no demuestra nada sobre qué tipo de productos que se está exportando, por eso en la siguiente parte trato de hacer un breve analisis de los productos que más se exporta de América Latina.</p>
 </div>
 </div>
 <div id="exportaciones-por-categorías-de-productos" class="section level2">

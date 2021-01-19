@@ -14,9 +14,17 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-En este post el objetivo es analizar un poco más el comercio de Argentina en particular. XXX argumenta que Argentina (...)
+En este post el objetivo es analizar un poco más especifico sobre el comercio exterior de Argentina. 
 
-El post está divido en tres analisis diferentes:
+La economía argentina está fuertemente vinculado a los flujos de exportaciones y importaciones, ya que, como Bernat (2011) resalta, Argentina alinea al modelo económico de "stop and go" de continuamente ciclos de expansiones económicos seguido a rececesiones.
+
+El modelo "stop and go" implica que en una economía donde las exportaciones de principalmente productos agropecarios está estagnados y el desarrollo industrial necesario para sostener el crecimiento no existe, la economía va cada vez más a demandar importar productos no producido internamente.
+
+La fuerte dependencia de importaciones con el tiempo genera un déficit comercial, lo cual tiende a ser corregido con una devalución de la monera local. Debido al hecho de que tantos productos internas están conectados al tipo de cambio porqué son importados disminuye el poder adquisitivo local. Eso disminuye el consumo local y reduce el nivel de importación. Al mismo tiempo, las exportaciones no se afectan por la bajada. Eventualmente, eso llegaría a una nueva expansión ecónomica. 
+
+En Argentina durante los 2000s, el tipo de cambio se mantuvo artificalmente devalorado con el objetivo de generar condiciones favorables para las exportaciones (Kulfas, 2016). No obstante, Bernat (2011) resalta que eso generó un aumento en la demanda de mano de obra poco cualificada, mientras que lo que realmente se necesitaba era un aumento en la demanda de mano de obra más cualificado para entender sacar el país de la trampa del medio ingreso. (Bernat, 2011).
+
+Este post trata de analizar algunas de las muchas dinamicas que existen en el comercio exterior. Está divido en tres analisis diferentes:
 
 (1) Un analisis de la evolución histórico del comerico exterior argentino.
 
@@ -24,8 +32,7 @@ El post está divido en tres analisis diferentes:
 
 (3) Una analisis mostrando la composición de los productos más exportados y importados en Argentina en 2017.
 
-## Las librarias utilizadas:
-
+## Las librarias utilizadas
 ```{r libraries, message=F}
 library(tidyverse)
 library(ggplot2)
@@ -85,7 +92,7 @@ En segundo, es llamativa como el flujo de importaciones caye mucho más drámati
 En esta segunda parte del post, me interesa analizar si los flujos de exportación de Argentina en los últimos años han ido más hacia América Latina o hacia el resto del mundo. Así se puede determinar donde se debería focusar iniciativas de mejorar las exportaciones. 
 
 ## Descargando los datos
-Para este parte eligí utilizar el base de datos de Datos de Miércoles de mayo 2019 (link), ya que tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo. 
+Para este parte eligí utilizar el base de datos de [Datos de Miércoles de mayo 2019](link), ya que tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo. 
 
 Entonces, para este analisis utilicé el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos. 
 

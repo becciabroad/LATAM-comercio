@@ -32,8 +32,7 @@ Este post trata de analizar algunas de las muchas dinamicas que existen en el co
 
 (3) Una analisis mostrando la composición de los productos más exportados y importados en Argentina en 2017.
 
-## Las librarias utilizadas:
-
+## Las librarias utilizadas
 ```{r libraries, message=F}
 library(tidyverse)
 library(ggplot2)
