@@ -40,6 +40,12 @@ library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
 library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD 
 ```
 
+```{r dplyr error, message=F}
+library(dplyr, warn.conflicts = FALSE)
+# Suppress summarise info
+options(dplyr.summarise.inform = FALSE)
+```
+
 ## Preparando los datos
 
 ### Descargando los datos
