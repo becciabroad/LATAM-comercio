@@ -121,34 +121,14 @@ disqusShortname = ""
     enable = true
     title = "¿Dónde tiene América Latina su fuerza comercial?"
     subtitle = """ 
-    Scholars and practictioners alike have been debating how to drive growth to Latin America. 
-    The economic models of the ISI didn't bring suitanable growth to the region.
-    Nor did the neoliberal models of the 1990s.
-    Some scholars have argued that there is a need for heavy investment in education and skills to break out of the middle income-trap that most Latin American countries are in.
-    But before coming up with solutions, we need to understand where the comercial strengths of Latin America lies.
-    The aim of this project is to explore some of the comercial dynamics of Latin America."""
+    Investigadores y políticos discuten como se puede generar un crecimiento más sostentable en América Latina. 
+    El modelo económico de la ISI no generó el desarrollo deseado para la región. Tampoco los modelos neoliberales de los 1990s. 
+    Investigadores recientes ha argumentado que es necesario un cambio profundo en los productos que se comercializan en América Latina,
+    y que se necesita una base de trabajadores más calificados para empujar un cambio hacia producción en sectores de alta tecnología.
+    No obstante, antes de poder dar soluciones, necesitamos entender la situación actual del comercio exterior en América Latina. 
+    El objetivo de este proyecto es explorar algunas de los flujos de comercio exterior en América Latina. """
     buttonText = "Leer más"
     url = "post/intro/"
-
-
-  # Contact section
-  [params.contact]
-    enable = true
-    buttonSend = "Envia mensaje"
-    buttonClear = "Clear"
-
-    # Since this template is static, the contact form uses www.formspree.io as a
-    # proxy. The form makes a POST request to their servers to send the actual
-    # email. Visitors can send up to a 1000 emails each month for free.
-    #
-    # What you need to do for the setup?
-    #
-    # - set your email address under 'email' below and uncomment
-    # - upload the generated site to your server
-    # - send a dummy email yourself to confirm your account
-    # - click the confirm link in the email from www.formspree.io
-    # - you're done. Happy mailing!
-    # formEmail = "example@domain.com"
 
     # Contact Section
     # You can add multiple emails, phone numbers, or addresses
@@ -156,10 +136,6 @@ disqusShortname = ""
     [[params.contact.email]]
     title = "Email"
     email = "hola@becci.com"
-
-    [[params.contact.phone]]
-    title = "Telefono"
-    phone = "(000) 000-0000 x1234"
 
     [[params.contact.address]]
     title = "Address"
@@ -178,11 +154,6 @@ disqusShortname = ""
       label = "Twitter"
 
     [[params.footer.social]]
-      icon = "fa-facebook"
-      url= "https://www.facebook.com"
-      label = "Facebook"
-
-    [[params.footer.social]]
       icon = "fa-instagram"
       url= "https://www.instagram.com/becciabroad"
       label = "Instagram"
@@ -194,7 +165,7 @@ disqusShortname = ""
 
     [[params.footer.social]]
       icon = "fa-linkedin"
-      url= "https://www.linkedin.com"
+      url= "https://www.linkedin.com/in/rehoffmann/"
       label = "LinkedIn"
 
     [[params.footer.quicklinks]]
