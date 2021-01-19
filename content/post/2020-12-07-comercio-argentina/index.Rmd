@@ -41,7 +41,11 @@ library(treemapify)
 library(ggthemes)
 library(scales)
 library(patchwork)
+```
 
+Trying to fix an error with the new version of dplyr:
+
+```{r dplyr error, message=F}
 library(dplyr, warn.conflicts = FALSE)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
@@ -181,47 +185,7 @@ grafico_export_2017 <- ggplot(export_argentina_2017, aes(
 grafico_export_2017
 ```
 
-## Importaciones
-Ahora me interesa ver como se distribuye las importaciones por categoría de productos para después poder comparar los dos.
 
-### Transformando los datos
-Uso el mismo código que arriba, pero cambio la variable de "valor_exportado_dolares" a ser "valor_importado_dolares".
-
-```{r arg import datos, message=FALSE}
-import_argentina_2017 <- comercio_mundo %>%
-  filter(anio == 2017, 
-         codigo_iso_origen == "arg") %>%
-  group_by(anio, 
-           nombre_comunidad_producto,
-           color_comunidad_producto) %>%
-  mutate(valor_importado_dolares = sum(valor_importado_dolares)) %>%
-  ungroup() %>%
-  mutate(
-    etiquetas = paste0(nombre_comunidad_producto, "/", round(100*valor_importado_dolares/sum(valor_importado_dolares), 2), "%")
-    )
-```
-
-### Graficando
-Lo mismo para poder genera el grafico; el código es el mismo pero cambio la variable:
-
-```{r arg productos import grafico, message=FALSE}
-grafico_import_2017 <- ggplot(import_argentina_2017, aes(
-  area = valor_importado_dolares, 
-  fill = nombre_comunidad_producto,
-  label = etiquetas)) +
-  geom_treemap() +
-  geom_treemap_text(color = "black",
-                    place = "centre",
-                    grow = F,
-                    reflow = T) +
-  scale_fill_manual(values = import_argentina_2017$color_comunidad_producto) +
-  labs(title = "Productos importado",
-       caption = "Fuente: Open Trade Statistics") +
-  theme_economist() +
-  theme(legend.position = "none")
-
-grafico_import_2017
-```
 
 
 ## Comparación
@@ -229,7 +193,7 @@ Tengo la liberaría "patchwork" cargada, lo cual me permite mostrar los dos graf
 
 ```{r patchwork, message=FALSE}
 
-grafico_export_2017 + grafico_import_2017
+grafico_export_2017
 
 ```
 
