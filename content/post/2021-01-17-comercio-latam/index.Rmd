@@ -65,8 +65,9 @@ Ahora puedo unir los dos bases de datos, y voy a tener solamente la información
 No obstante, en realidad no es toda la región de las Américas que me interesa, sino solamente los países que pertenece a América Latin. Por eso, después de unir los bases de datos, voy a pedir que R me exclude los EEUU, Canada, Gronlandia y otros pequeños territorios estadounidenses y britanicos en el Caribe. Obviamente, se podía discutir si se debería incluir esos últimos somo parte del Caribe, pero acá los excluyo del analisis:
 
 ```{r comercio LATAM merge, message=FALSE}
-comercio_latam_reducido <- merge(x = comercio_mundo_api, y = countries_LATAM,
-      by = "country_iso") %>%
+comercio_latam_reducido <- merge(x = comercio_mundo_api, 
+                                 y = countries_LATAM,
+                                 by = "country_iso") %>%
   filter(country_iso != "usa", # Excluding the U.S.
          country_iso != "can", # Excluding Canada
          country_iso != "grl", # Excluding Greenland
@@ -84,33 +85,9 @@ Primero decidí que querría averiguar un poco más sobre el desarrollo históri
 ### Transformando los datos
 Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:
 
-```{r comercio LATAM export-import, message=FALSE}
-trade_total <- comercio_latam_reducido %>%
-  group_by(year) %>%
-  summarise(export_value_usd = sum(export_value_usd, na.rm = T),
-            import_value_usd = sum(import_value_usd, na.rm = T))
-```
-
 ### Graphicando
 Ahora puedo usar el nuevo data frame para graficar la evolución de importaciones y exportaciones para todo la región de América Latina por año desde 1980 hasta 2018:
 
-```{r LATAM graph, message=FALSE}
-ggplot(trade_total) +
-  geom_line(aes(year,
-                export_value_usd,
-                color = "red")) +
-  geom_line(aes(year,
-                import_value_usd,
-                color = "blue")) +
-  scale_y_continuous(labels = scales::dollar_format()) +
-    labs(title = "Export de América Latina",
-       y = NULL,
-       x = NULL,
-       caption = "Fuente: Open Trade Statistics") +
-  theme_economist() +
-  theme(legend.position = "none")
-  
-```
 
 ### Sum-up
 En primero lugar, se ve como el comercio exterior (tan importaciones como exportaciones) ha aumentado bastante desde los años 1990s. En la primer decada incluida (1980-1990), el comercio exterior estuve a casi el mismo nivel todos los años.Pero a partir de los 1990, empieza a expandir rápdidamente. Eso corresponde a la introducción del conocido Consenso de Washington y las subsequente reformas neoliberales y aperturas ecónomicas. Después de nota una baja al principio de los 2000s, indicando las crisis ecónomicas que sufriendo algunos países en esta epoca. Al final de la epoca de los 2000s, no obstante, se nota un aumento en, especialmente, las exportaciones, lo cual vendría a ser casi seguramente conectado con el boom de los commodities. 
