@@ -25,13 +25,11 @@ Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de
 install.packages("rworldmap")
 ```
 
-
 (2) Un analisis mostrando la composición de los productos más importados - también durante el año 2018.
 
 (3) Finalmente, un analisis sobre qué categoría de producto cada país en la región importa más. 
 
 ### Las libraría utilizadas:
-
 ```{r libraries, warning=FALSE, message=F}
 library(tidyverse)
 library(tradestatistics) #Para descarga los data frames
@@ -218,9 +216,7 @@ import_countries_2018 <- import_countries_modificied %>%
          reporter_fullname_english != "Trinidad and Tobago",
          reporter_fullname_english != "Saint Vincent and the Grenadines") %>%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
-            "Panama"    = c("Panama (excludes Panama Canal Zone until 1978)"),
-            "Argentina" = c("Argentina", 
-                             "Falkland Isds (Malvinas)"))) %>% 
+            "Panama"    = c("Panama (excludes Panama Canal Zone until 1978)"))) %>% 
   group_by(reporter_fullname_english, 
            product_shortname_english) %>%
   arrange(desc(import_value_usd)) %>%

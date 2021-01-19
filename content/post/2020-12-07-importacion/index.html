@@ -184,9 +184,7 @@ productos_latam_import &lt;- merge(x = comercio_latam,
          reporter_fullname_english != &quot;Trinidad and Tobago&quot;,
          reporter_fullname_english != &quot;Saint Vincent and the Grenadines&quot;) %&gt;%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
-            &quot;Panama&quot;    = c(&quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
-            &quot;Argentina&quot; = c(&quot;Argentina&quot;, 
-                             &quot;Falkland Isds (Malvinas)&quot;))) %&gt;% 
+            &quot;Panama&quot;    = c(&quot;Panama (excludes Panama Canal Zone until 1978)&quot;))) %&gt;% 
   group_by(reporter_fullname_english, 
            product_shortname_english) %&gt;%
   arrange(desc(import_value_usd)) %&gt;%
