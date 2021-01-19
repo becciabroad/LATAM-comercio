@@ -45,8 +45,7 @@ library(patchwork)</code></pre>
   years = 1980:2018, 
   reporters = &quot;arg&quot;,
   partners = &quot;all&quot;,
-  products = &quot;all&quot;) %&gt;%
-  group_by(year)</code></pre>
+  products = &quot;all&quot;)</code></pre>
 </div>
 <div id="graficando" class="section level3">
 <h3>Graficando</h3>
@@ -82,7 +81,7 @@ library(patchwork)</code></pre>
 </div>
 <div id="descargando-los-datos-1" class="section level2">
 <h2>Descargando los datos</h2>
-<p>Para este parte eligí utilizar el base de datos de <a href="link">Datos de Miércoles de mayo 2019</a>, ya que tenía ciertos problemas de “newbee” en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo.</p>
+<p>Para este parte eligí utilizar el base de datos de <a href="https://github.com/cienciadedatos/datos-de-miercoles/tree/master/datos/2019/2019-05-01">Datos de Miércoles de mayo 2019</a>, ya que tenía ciertos problemas de “newbee” en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo.</p>
 <p>Entonces, para este analisis utilicé el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos.</p>
 <p>Primero, filtro por Argentina como el país de origen de las exportaciones (utilizando el codigo ISO de origen para hacer eso). Segundo, genero una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:</p>
 <pre class="r"><code>comercio_mundo &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-05-01/comercio_hispanoamerica_mundo_agregado.csv&quot;) 
@@ -204,7 +203,8 @@ grafico_import_2017</code></pre>
 <div id="comparación" class="section level2">
 <h2>Comparación</h2>
 <p>Tengo la liberaría “patchwork” cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código:</p>
-<pre class="r"><code>grafico_export_2017 + grafico_import_2017</code></pre>
+<pre class="r"><code>
+grafico_export_2017 + grafico_import_2017</code></pre>
 <p><img src="index_files/figure-html/patchwork-1.png" width="672" /></p>
 </div>
 <div id="sum-up-2" class="section level2">

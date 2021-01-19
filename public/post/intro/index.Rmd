@@ -42,11 +42,15 @@ Para la presención/comunicación del proyecto eligí hacer una pagina web utili
 
 Los comandos de blogdown son bastante sencillos, ya que puedes generar una nueva pagina nada más utilizando el comando:
 
-blogdown::new_site()
+```{r, eval=FALSE}
+blogdown:::new_site()
+```
 
 Para generar un nuevo post, utilizas:
 
+```{r, eval=FALSE}
 blogdown:::new_post_addin()
+```
 
 No obstante, el díficil venía en los dos próximos pasos: (1) intalar el diseño y (2) conectarlo a Netlify:
 

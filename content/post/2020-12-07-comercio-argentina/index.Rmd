@@ -55,8 +55,7 @@ argentina_comercio <- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
   reporters = "arg",
   partners = "all",
-  products = "all") %>%
-  group_by(year)
+  products = "all")
 ```
 
 ### Graficando
@@ -225,7 +224,9 @@ grafico_import_2017
 Tengo la liberaría "patchwork" cargada, lo cual me permite mostrar los dos graficos uno al lado del otro con este fácil código: 
 
 ```{r patchwork, message=FALSE}
+
 grafico_export_2017 + grafico_import_2017
+
 ```
 
 ## Sum-up
