@@ -100,7 +100,7 @@ disqusShortname = ""
       title = "Comercio Exterior en Argentina"
       subtitle = "Analisis del comercio exterior en Argentina"
       image = "pic5.jpg"
-      url = "post/comercio-argentina/"
+      url = "post/comercio-arg"
 
     [[params.tiles.showcase]]
       title = "Conclusión"
