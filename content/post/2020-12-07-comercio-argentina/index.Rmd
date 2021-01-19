@@ -41,6 +41,10 @@ library(treemapify)
 library(ggthemes)
 library(scales)
 library(patchwork)
+
+library(dplyr, warn.conflicts = FALSE)
+# Suppress summarise info
+options(dplyr.summarise.inform = FALSE)
 ```
 
 ## Evolución historica del comercio exterior argentino
@@ -190,7 +194,7 @@ import_argentina_2017 <- comercio_mundo %>%
   group_by(anio, 
            nombre_comunidad_producto,
            color_comunidad_producto) %>%
-  summarise(valor_importado_dolares = sum(valor_importado_dolares, na.rm = T)) %>%
+  mutate(valor_importado_dolares = sum(valor_importado_dolares)) %>%
   ungroup() %>%
   mutate(
     etiquetas = paste0(nombre_comunidad_producto, "/", round(100*valor_importado_dolares/sum(valor_importado_dolares), 2), "%")
