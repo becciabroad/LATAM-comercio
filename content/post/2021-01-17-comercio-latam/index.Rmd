@@ -109,11 +109,12 @@ comercio_latam_modificado <- comercio_latam_reducido %>%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
 comercio_latam_caribbean <- comercio_latam_modificado %>%
-  select(year,
+  group_by(year,
          country_fullname_english,
          export_value_usd,
          import_value_usd,
          top_import_product_code) %>%
+  ungroup() %>%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %>%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
                                       "Caribe" = c("Anguilla", 
