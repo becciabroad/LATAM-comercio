@@ -1,0 +1,81 @@
+---
+title: Comercio Exterior
+author: Rebecca Hoffmann
+date: '2021-01-19'
+slug: comercio-exterior
+categories: []
+tags: []
+draft: false
+output:
+  blogdown::html_page
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<p>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.</p>
+<p>El post está divido en tres analisis diferentes:
+(1) Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto.
+(2) Un analisis de la evolución del comercio de los países en la región para poder analizar quién cuales son los mayores comerciante en la región. Por comercio se entiendo el combinado valor de importaciones y exportaciones.
+(3) Por último, un analisis del desarrollo desde los 1980s en las mayores categorías de productos importados en la región.</p>
+<p>Cómo clave para este post es el analisis historico de los datos sobre América Latina. En los siguientes posts, analizo por separado los flujos de importación y exportación en los últimos años.</p>
+<div id="las-libraría-utilizadas" class="section level3">
+<h3>Las libraría utilizadas:</h3>
+<pre class="r"><code>library(tidyverse)
+library(tradestatistics)
+library(ggplot2)
+library(ggthemes)
+library(scales)
+library(patchwork)</code></pre>
+</div>
+<div id="preparando-los-datos" class="section level2">
+<h2>Preparando los datos</h2>
+<div id="descargando-los-datos" class="section level3">
+<h3>Descargando los datos</h3>
+<p>En primer lugar, descargo los datos que voy a utilizar de el base de datos de Open Trade Statistics.</p>
+<p>Open Trade Statistics está dividio en varios data frames, donde el “ots_create_tidy_data” es el más útil porqué dejar descargar varios tipos de información de comercio sobre los país en diferentes años, y el data frame que recibas ya está en forma “tidy”.</p>
+<p>Para poder más fácil filter los datos y elegir solamente los datos que corresponde a la región de América Latina, necesito unir dos data frames de Open Trade Statistics. Para poder utilizar la función “merger” para unir dos data frames, necesito que los dos tienen una columna que tiene el mismo nombre (y obviamente, representa el mismo variable).</p>
+<p>Por eso, renombro la columna de “reporter_iso” para que corresponde al segundo data frame que voy a utilizar, donde utilizando “country_iso” en vez de “reporter_iso”.</p>
+<pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
+  years = 1980:2018, 
+  reporters = &quot;all&quot;, 
+  partners = &quot;all&quot;, 
+  products = &quot;all&quot;) %&gt;%
+  rename(country_iso = &#39;reporter_iso&#39;)</code></pre>
+<p>Después el otro base de datos, descargo la información solamente sobre los países que pertenecer al continente de las Americas:</p>
+<pre class="r"><code>countries_LATAM &lt;- tradestatistics::ots_countries %&gt;%
+  filter(continent == &quot;Americas&quot;) </code></pre>
+<p>Ahora puedo unir los dos bases de datos, y voy a tener solamente la información disponible para la región de las Americas.</p>
+<p>No obstante, en realidad no es toda la región de las Américas que me interesa, sino solamente los países que pertenece a América Latin. Por eso, después de unir los bases de datos, voy a pedir que R me exclude los EEUU, Canada, Gronlandia y otros pequeños territorios estadounidenses y britanicos en el Caribe. Obviamente, se podía discutir si se debería incluir esos últimos somo parte del Caribe, pero acá los excluyo del analisis:</p>
+<pre class="r"><code>comercio_latam_reducido &lt;- merge(x = comercio_mundo_api, 
+                                 y = countries_LATAM,
+                                 by = &quot;country_iso&quot;) %&gt;%
+  filter(country_iso != &quot;usa&quot;, # Excluding the U.S.
+         country_iso != &quot;can&quot;, # Excluding Canada
+         country_iso != &quot;grl&quot;, # Excluding Greenland
+         country_iso != &quot;vir&quot;, # Excluding one observation of US Virgin Islands
+         country_iso != &quot;umi&quot;, # Excluding &quot;United States Minor Outlying Islands&quot;
+         country_iso != &quot;vgb&quot;, # Excluding British Virgin Islands
+         country_iso != &quot;sgs&quot;) # Exclude South Georgia and the South Sandwich Islands (British territory)</code></pre>
+<pre class="r"><code>trade_total &lt;- comercio_latam_reducido %&gt;%
+  group_by(year) %&gt;%
+  mutate(export = sum(export_value_usd),
+         import = sum(import_value_usd))</code></pre>
+<pre class="r"><code>ggplot(trade_total) +
+  geom_line(aes(year,
+                export,
+                color = &quot;red&quot;)) +
+  geom_line(aes(year,
+                import,
+                color = &quot;blue&quot;)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+    labs(title = &quot;Export de América Latina&quot;,
+       y = NULL,
+       x = NULL,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  theme_economist() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="index_files/figure-html/LATAM%20graph-1.png" width="672" /></p>
+</div>
+</div>

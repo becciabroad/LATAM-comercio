@@ -85,9 +85,32 @@ Primero decidí que querría averiguar un poco más sobre el desarrollo históri
 ### Transformando los datos
 Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:
 
+```{r LATAM modify, message=FALSE}
+trade_total <- comercio_latam_reducido %>%
+  group_by(year) %>%
+  mutate(export = sum(export_value_usd),
+         import = sum(import_value_usd))
+```
+
 ### Graphicando
 Ahora puedo usar el nuevo data frame para graficar la evolución de importaciones y exportaciones para todo la región de América Latina por año desde 1980 hasta 2018:
-
+```{r LATAM graph, message=FALSE}
+ggplot(trade_total) +
+  geom_line(aes(year,
+                export,
+                color = "red")) +
+  geom_line(aes(year,
+                import,
+                color = "blue")) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+    labs(title = "Export de América Latina",
+       y = NULL,
+       x = NULL,
+       caption = "Fuente: Open Trade Statistics") +
+  theme_economist() +
+  theme(legend.position = "none")
+  
+```
 
 ### Sum-up
 En primero lugar, se ve como el comercio exterior (tan importaciones como exportaciones) ha aumentado bastante desde los años 1990s. En la primer decada incluida (1980-1990), el comercio exterior estuve a casi el mismo nivel todos los años.Pero a partir de los 1990, empieza a expandir rápdidamente. Eso corresponde a la introducción del conocido Consenso de Washington y las subsequente reformas neoliberales y aperturas ecónomicas. Después de nota una baja al principio de los 2000s, indicando las crisis ecónomicas que sufriendo algunos países en esta epoca. Al final de la epoca de los 2000s, no obstante, se nota un aumento en, especialmente, las exportaciones, lo cual vendría a ser casi seguramente conectado con el boom de los commodities. 
@@ -232,7 +255,7 @@ producto_import_graph <- producto_latam_import_reducido %>%
          import_value_usd,
          producto) %>%
   group_by(year, producto) %>%
-  summarise(import_value_usd = sum(import_value_usd))
+  summarise(import_value_usd = sum(import_value_usd), .groups = 'drop')
 
 
 ggplot(producto_import_graph, aes(x = year, y = import_value_usd)) +  

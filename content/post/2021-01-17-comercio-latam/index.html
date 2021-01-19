@@ -67,10 +67,29 @@ library(patchwork)</code></pre>
 <div id="transformando-los-datos" class="section level3">
 <h3>Transformando los datos</h3>
 <p>Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:</p>
+<pre class="r"><code>trade_total &lt;- comercio_latam_reducido %&gt;%
+  group_by(year) %&gt;%
+  mutate(export = sum(export_value_usd),
+         import = sum(import_value_usd))</code></pre>
 </div>
 <div id="graphicando" class="section level3">
 <h3>Graphicando</h3>
 <p>Ahora puedo usar el nuevo data frame para graficar la evolución de importaciones y exportaciones para todo la región de América Latina por año desde 1980 hasta 2018:</p>
+<pre class="r"><code>ggplot(trade_total) +
+  geom_line(aes(year,
+                export,
+                color = &quot;red&quot;)) +
+  geom_line(aes(year,
+                import,
+                color = &quot;blue&quot;)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+    labs(title = &quot;Export de América Latina&quot;,
+       y = NULL,
+       x = NULL,
+       caption = &quot;Fuente: Open Trade Statistics&quot;) +
+  theme_economist() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="index_files/figure-html/LATAM%20graph-1.png" width="672" /></p>
 </div>
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
@@ -203,7 +222,7 @@ producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
          import_value_usd,
          producto) %&gt;%
   group_by(year, producto) %&gt;%
-  summarise(import_value_usd = sum(import_value_usd))
+  summarise(import_value_usd = sum(import_value_usd), .groups = &#39;drop&#39;)
 
 
 ggplot(producto_import_graph, aes(x = year, y = import_value_usd)) +  
