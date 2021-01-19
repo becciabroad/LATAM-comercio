@@ -40,6 +40,7 @@ library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
 library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD 
 ```
 
+Evitando el error de ""`summarise()` ungrouping output (override with `.groups` argument)" de la nueva versión de dplyr: 
 ```{r dplyr error, message=F}
 library(dplyr, warn.conflicts = FALSE)
 # Suppress summarise info
