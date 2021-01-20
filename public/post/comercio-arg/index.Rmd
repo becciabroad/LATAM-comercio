@@ -16,15 +16,17 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 En este post el objetivo es analizar un poco más especifico sobre el comercio exterior de Argentina. 
 
-La economía argentina está fuertemente vinculado a los flujos de exportaciones y importaciones, ya que, como Bernat (2011) resalta, Argentina alinea al modelo económico de "stop and go" de continuamente ciclos de expansiones económicos seguido a rececesiones.
+Bernat (2011) resalta qu Argentina alinea al modelo económico de "stop and go" de continuamente ciclos de expansiones económicos seguido a rececesiones basados muy fuerte en los flujos de exportaciones y importaciones.
 
-El modelo "stop and go" implica que en una economía donde las exportaciones de principalmente productos agropecarios está estagnados y el desarrollo industrial necesario para sostener el crecimiento no existe, la economía va cada vez más a demandar importar productos no producido internamente.
+El modelo "stop and go" implica en una economía donde las exportaciones de principalmente productos agropecarios está estagnados y el desarrollo industrial necesario para sostener el crecimiento no existe, la economía va cada vez más a depender de importar productos para seguir el crecimiento.
 
-La fuerte dependencia de importaciones con el tiempo genera un déficit comercial, lo cual tiende a ser corregido con una devalución de la monera local. Debido al hecho de que tantos productos internas están conectados al tipo de cambio porqué son importados disminuye el poder adquisitivo local. Eso disminuye el consumo local y reduce el nivel de importación. Al mismo tiempo, las exportaciones no se afectan por la bajada. Eventualmente, eso llegaría a una nueva expansión ecónomica. 
+La fuerte dependencia de importaciones con el tiempo genera un déficit comercial, lo cual tiende a ser corregido con una devalución de la monera local. Debido al hecho de que tantos productos internas están conectados al tipo de cambio a través de las importaciones, eso disminuye el poder adquisitivo local. Eso en cambio disminuye el consumo local y reduce el nivel de importación. Eventualmente, eso llegaría a una nueva expansión ecónomica. Las exportaciones tradicionalmente se ven poco afectadas por la bajada de la economía. No obstante, en Argentina en algunas epocas se ha tratado de impulsar un aumento de exportaciones con un tipo de cambio artificalmente devalorado.
 
 En Argentina durante los 2000s, el tipo de cambio se mantuvo artificalmente devalorado con el objetivo de generar condiciones favorables para las exportaciones (Kulfas, 2016). No obstante, Bernat (2011) resalta que eso generó un aumento en la demanda de mano de obra poco cualificada, mientras que lo que realmente se necesitaba era un aumento en la demanda de mano de obra más cualificado para entender sacar el país de la trampa del medio ingreso (Bernat, 2011).
 
-Este post trata de analizar algunas de las muchas dinamicas que existen en el comercio exterior. Está divido en tres analisis diferentes:
+Este post trata de analizar algunas de las muchas dinamicas que existen en el comercio exterior en Argentina. 
+
+El post está divido en tres analisis diferentes:
 
 (1) Un analisis de la evolución histórico del comerico exterior argentino.
 
@@ -43,7 +45,7 @@ library(scales)
 library(patchwork)
 ```
 
-Evitando el error de ""`summarise()` ungrouping output (override with `.groups` argument)" de la nueva versión de dplyr: 
+Para evitar el error de ""`summarise()` ungrouping output (override with `.groups` argument)" de la nueva versión de dplyr: 
 
 ```{r dplyr error, message=F}
 library(dplyr, warn.conflicts = FALSE)
@@ -54,9 +56,7 @@ options(dplyr.summarise.inform = FALSE)
 ## Evolución historica del comercio exterior argentino
 
 ### Descargando los datos
-En primer lugar, descargo la información de Open Trade Statistics el comercio exterior argentino desde 1980 hasta 2018. Con el comando de "reporters = "arg"" filtro así que solamente descargo información sobre Argentina.
-
-En segundo lugar, eligo los datos necesarios para realizar el analisis summando el valor en USD de las exportaciones y las importaciones de cada año:
+Primero descargo la información de Open Trade Statistics el comercio exterior argentino desde 1980 hasta 2018. Con el comando de "reporters = "arg"" filtro para que solamente me descarge información sobre Argentina.
 
 ```{r base de datos, message=FALSE}
 argentina_comercio <- tradestatistics::ots_create_tidy_data(
@@ -67,7 +67,7 @@ argentina_comercio <- tradestatistics::ots_create_tidy_data(
 ```
 
 ### Graficando
-Ahora puedo graficar: 
+Segundo, grafico los resultados con ggplot: 
 ```{r argentina export grafico}
 ggplot(argentina_comercio) +
   geom_line(aes(x = year, 
@@ -90,17 +90,17 @@ ggplot(argentina_comercio) +
 
 
 ### Sum-up
-En primer lugar, se nota como Argentina ha seguido el desarrollo del resto de la región como analicé en el primero post sobre comercio exterior general de la región: durante la década de los 1980s los flujos de tanto importaciones (rojo) y exportaciones (lilla) son más o menos al mismo nivel. Después en los 1990s con las liberalizaciones y aperatura económica aumentan ambos flujos.
+En primer lugar, se nota como Argentina ha seguido el desarrollo del resto de la región como analicé en [el primero post sobre comercio exterior general de la región](https://comercio-latam.netlify.app/post/comercio-latam/): durante la década de los 1980s los flujos de tanto importaciones (rojo) y exportaciones (lilla) se mantienen a más o menos el mismo nivel. Después en los 1990s con las liberalizaciones y aperatura económica aumentan ambos flujos.
 
-En segundo, es llamativa como el flujo de importaciones caye mucho más drámatico a través de la crisis de 2001 que el flujo de exportaciones. Después durante la última mitad de los 2000s se nota como el boom de los commodities impuja especialmente el nivel de las exportaciones hacia arriba. Hacia nivels de la última parte de los 2010s, ambos flujos caye de nuevo, pero vale notar todavía son mucho más altos que durantes los 1990s. 
+En segundo lugar, el flujo de importaciones caye mucho más drámatico a través de la crisis de 2001 que el flujo de exportaciones. Después durante la última mitad de los 2000s se nota como el boom de los commodities impuja especialmente el nivel de las exportaciones hacia arriba. Hacia nivels de la última parte de los 2010s, ambos flujos empezan a caer de nuevo, pero vale notar todavía son mucho más altos que durantes los 1990s. 
 
 ## ¿Argentina se exporta más hacia América Latina o el resto del mundo?
 En esta segunda parte del post, me interesa analizar si los flujos de exportación de Argentina en los últimos años han ido más hacia América Latina o hacia el resto del mundo. Así se puede determinar donde se debería focusar iniciativas de mejorar las exportaciones. 
 
 ## Descargando los datos
-Para este parte eligí utilizar el base de datos de [Datos de Miércoles de mayo 2019](https://github.com/cienciadedatos/datos-de-miercoles/tree/master/datos/2019/2019-05-01), ya que tenía ciertos problemas de "newbee" en utilizar el API de Tradestatistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones. Por lo tanto, era dificíl dividirlo. 
+Para este parte eligí utilizar el base de datos de [Datos de Miércoles de mayo 2019](https://github.com/cienciadedatos/datos-de-miercoles/tree/master/datos/2019/2019-05-01), ya que tenía ciertos problemas de "newbee" en utilizar el API de Open Trade Statistics y no encontré como podría llegar a cargar la informar sobre los países destinos de las exportaciones.
 
-Entonces, para este analisis utilicé el base de datos de Datos de Miercoles, que ya viene con la información sobre los países destinos. 
+Entonces, para este analisis utilicé el base de datos de [Datos de Miércoles ](https://github.com/cienciadedatos/datos-de-miercoles/tree/master/datos/2019/2019-05-01) que ya viene con la información sobre los países destinos. 
 
 Primero, filtro por Argentina como el país de origen de las exportaciones (utilizando el codigo ISO de origen para hacer eso). Segundo, genero una nueva variable dummy que domina si el país de destino pertenece a América Latina o no (si pertenece se domina con 1, si no se domina con 0). Después se grupea por region y año, y por ultimó se suma el valor total en USD de las exportaciones:
 
@@ -118,7 +118,7 @@ comercio_arg <- comercio_mundo %>%
 ```
 
 ## Graficando
-Ahora bien, se grafica la cantidad de USD exportado hacía América Latina y hacía el resto del mundo por año:
+Ahora bien, grafico la cantidad de USD exportado hacía América Latina y hacía el resto del mundo por año:
 
 ```{r arg export grafico, message=FALSE}
 ggplot(data = comercio_arg,aes(x = anio, y = valor_exportado_dolares, fill = region)) +
@@ -141,14 +141,14 @@ Está claro que la mayoría de las exportaciones de Argentina va hacia el resto 
 No obstante, también sería interesante averiguar qué las categoría de productos que se exporta más desde Argentina:
 
 ## Comercio exterior por categoría de producto
-En esta última parte del analisis, querría investigar qué productos se ha exportado más desde Argentina en 2017. 
+En esta última parte del analisis, quería investigar qué productos se han exportado y importado más en Argentina en 2017. 
 
 Utilizo el mismo data frame que en el segundo analisis, ya que facilita el trabajo, pero también podría haber hecho como en el analisis de importaciones y uniendo varias data frames de la base orginal de Open Trade Statistics. 
 
 ## Exportaciones
 
 ### Transformando los datos
-Filtro por el año que quiero ver y el país (Argentina o iso "arg"), agrupo por nombre y color ya asignado al producto y sumo el valor de los dólares exportados y genero una nueva columna con los procentajes de cada producto sobre el total: 
+Filtro por el año que quiero ver y el país (Argentina o iso "arg"), agrupo por nombre y color del producto y sumo el valor de los dólares exportados y genero una nueva columna con los procentajes de cada producto sobre el total: 
 
 ```{r arg export datos, message=FALSE}
 export_argentina_2017 <- comercio_mundo %>%
@@ -186,7 +186,7 @@ grafico_export_2017
 ```
 
 ## Importaciones
-Ahora me interesa ver como se distribuye las importaciones por categoría de productos para después poder comparar los dos.
+También me interesa ver como se distribuye las importaciones por categoría de productos para después poder comparar los dos.
 
 ### Transformando los datos
 Uso el mismo código que arriba, pero cambio la variable de "valor_exportado_dolares" a ser "valor_importado_dolares".
@@ -206,7 +206,8 @@ import_argentina_2017 <- comercio_mundo %>%
 ```
 
 ### Graficando
-Lo mismo para poder genera el grafico; el código es el mismo pero cambio la variable:
+Para poder genera el grafico uso el mismo código pero cambiando la variable:
+
 ```{r arg import grafico, message=FALSE}
 grafico_import_2017 <- ggplot(import_argentina_2017, aes(
   area = valor_importado_dolares, 
@@ -237,14 +238,20 @@ grafico_export_2017 + grafico_import_2017
 
 ## Sum-up
 
-En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas. Obviamente, se podría haber hecho modificaciones en data frame para juntar esas 4 categorías en una sola de productos agropecarios (pero entonces, nunca terminaría con este proyecto :) )
+En primer lugar, esta claro que lo que más exportó Argentina en 2017 era productos agropecarios de productos vegetales (21,72 %), productos de composición vegetal y animal (8,40 %), y productos animales (7,83 %). Eso solo llegaría a un total de 37,95 %. A eso es puede sumar la categoría de alimentos (22,19 %). Obviamente, habrá que ver que incluye especificamente la categoría de alimentos, pero más probable es un alto porcentaje de productos agropecarios procesados. Esas 4 categorías en conjunto llegaría a un total del 60,14% de las exportaciones argentinas en 2017. Muy llamativa en relación a los aconocimientos de la literatura sobre el sistema productivo en América Latina.
 
-En segundo lugar, lo más importado en Argentina en 2017 era en primer lugar productos maquinas (29,72%) y vehiculos relacionados al transporte (20,16 %) y en segundo lugar productos químicos (13,61 %) y minerales (9,20 %). Es llamativa que esas industrias también aparece en el grafico el las exportaciónes. Es decir, ya productos de los mismos sectores que tanto se importa para después ser exportados. Sería interesante hacer un analisis más profundo de este fenonemo - pero será para otro proyecto :)
+Obviamente, se podría haber hecho modificaciones en data frame para juntar esas 4 categorías en una sola de productos agropecarios (pero entonces, nunca terminaría con este proyecto :) )
 
-Este breve analisis de los flujos de comercio exterior argentina, se nota la tendencia subrayado por varios autores de que los países de América Latina tiende a exportar recursos naturales extraidos de la tierra o productos agropecarios y importar productos ya manifacturados y de alta tecnología. Unos de los principales argumentos de la trampa del medio ingreso es que los países de América Latina necesitan desarrollar su ventaja competitiva en otros areas que la agricultura y la fabricación de alimentos, y entrar en las industrias de alta tecnología y donde se necesita más habilidades. Para entonces puede vender eso productos más caros en el mercado global y fortalecer el nivel educativo de sus poblaciones. 
+En segundo lugar, lo más importado en Argentina en 2017 era en primer lugar productos maquinas (29,72%) y vehiculos relacionados al transporte (20,16 %) y en segundo lugar productos químicos (13,61 %) y minerales (9,20 %). Es llamativa que esos productos también aparece en el grafico el las exportaciónes. Es decir, hay productos de los mismos sectores que tanto se importa para después ser exportados. Sería interesante hacer un analisis más profundo de este fenonemo - pero será para otro proyecto :)
+
+----
+
+## ¿Cómo seguir?
+Para seguir leyendo, puedes volver a [la página principal acá](https://comercio-latam.netlify.app/) y elegir el tema que más te guste o puedes ir al [último post con la conclusión](https://comercio-latam.netlify.app/post/conclusion/). 
+
 
 ----
 
 ## References
-  - Bernat, Gonzalo (2011). “Crecimiento en la Argentina: del stop and go al go (slowly) non stop”, ​Boletín Informativo Techint 335
-  - Kulfas, Matías (2016). L​ os tres Kirchnerismos - Una historia de la economía argentina, 2003-2015​.- 1a ed.- Buenos Aires: Siglo Veintiuno Editores.
+  - Bernat, Gonzalo (2011). “Crecimiento en la Argentina: del stop and go al go (slowly) non stop”, Boletín Informativo Techint 335
+  - Kulfas, Matías (2016). Los tres Kirchnerismos - Una historia de la economía argentina, 2003-2015.- 1a ed.- Buenos Aires: Siglo Veintiuno Editores.

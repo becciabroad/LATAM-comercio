@@ -14,8 +14,8 @@
       
       <guid>https://comercio-latam.netlify.app/post/comercio-arg/</guid>
       <description>En este post el objetivo es analizar un poco más especifico sobre el comercio exterior de Argentina.
-La economía argentina está fuertemente vinculado a los flujos de exportaciones y importaciones, ya que, como Bernat (2011) resalta, Argentina alinea al modelo económico de “stop and go” de continuamente ciclos de expansiones económicos seguido a rececesiones.
-El modelo “stop and go” implica que en una economía donde las exportaciones de principalmente productos agropecarios está estagnados y el desarrollo industrial necesario para sostener el crecimiento no existe, la economía va cada vez más a demandar importar productos no producido internamente.</description>
+Bernat (2011) resalta qu Argentina alinea al modelo económico de “stop and go” de continuamente ciclos de expansiones económicos seguido a rececesiones basados muy fuerte en los flujos de exportaciones y importaciones.
+El modelo “stop and go” implica en una economía donde las exportaciones de principalmente productos agropecarios está estagnados y el desarrollo industrial necesario para sostener el crecimiento no existe, la economía va cada vez más a depender de importar productos para seguir el crecimiento.</description>
     </item>
     
     <item>
@@ -24,10 +24,10 @@ El modelo “stop and go” implica que en una economía donde las exportaciones
       <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/comercio-latam/</guid>
-      <description>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.
+      <description>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.
+Analizando la evolución puede premitirnos entender mejor como ha cambiado parte del comercio exterior.
 El post está divido en tres analisis diferentes:
-Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto.
- Un analisis de la evolución del comercio de los países en la región para poder analizar quién cuales son los mayores comerciante en la región.</description>
+Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto.</description>
     </item>
     
     <item>
@@ -36,8 +36,8 @@ Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda
       <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/export/</guid>
-      <description>En este post, el objetivo es analizar la composición de las exportaciones en América Latina. Cómo hemos visto en los últimos posts, el comercio exterior han aumentado en América Latina desde los años 1990s. Pero aún parece que hay una sesgo en qué tipo de productos se importa y exporta en la región. Por lo tanto, en este post se enfoca en las exportaciones de la región.
-En el post sobre el desarrollo histórico del comercio exterior en América Latina, ya vimos unas tendencias, pero en este post desarrolla el tema sobre las exportaciones.</description>
+      <description>En este post, el objetivo es analizar la composición de las exportaciones en América Latina. Cómo hemos visto en los últimos posts, el comercio exterior han aumentado en América Latina desde los años 1990s. Pero aún parece que hay un sesgo de que se importan productos de alta tecnología a la región. En este post, entonces, se enfoca en los flujos de exportaciones de la región.
+El post está divido en dos partes:</description>
     </item>
     
     <item>
@@ -46,8 +46,8 @@ En el post sobre el desarrollo histórico del comercio exterior en América Lati
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/conclusion/</guid>
-      <description>  En este post, querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio en América Latina. Además, de unas consideraciones finales sobre el uso de BlogDown y Rstudio
-Conclusión  Consideraciones finales sobre BlogDown y Rstudio  </description>
+      <description>Querría sumar un poco sobre los analísis realizados en esta pequeña página web/proyecto final sobre comercio exterior en América Latina. Además, de unas consideraciones finales sobre el uso de BlogDown y Rstudio
+Conclusión Con estos breves analisis de los flujos de comercio exterior latinoamericanos se nota la tendencia subrayado en la introducción de que los países de América Latina tiende a exportar recursos naturales extraidos de la tierra o productos agropecarios y importar productos ya manifacturados y/o de alta tecnología.</description>
     </item>
     
     <item>
@@ -56,7 +56,7 @@ Conclusión  Consideraciones finales sobre BlogDown y Rstudio  </description>
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://comercio-latam.netlify.app/post/importacion/</guid>
-      <description>En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica analisé un poco sobre qué productos principalmente son importados en la región. En este post, quiero analizar este flujos de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.
+      <description>En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica, analisé brevemente qué fueron los productos principalmente importados en la región. En este post, quiero analizar este flujo de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.
 El post está divido en tres analisis diferentes:
 Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps.</description>
     </item>

@@ -14,7 +14,8 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible en el base de datos) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.</p>
+<p>En este post, quiero analizar la evolución historico del comercio desde los 1980s hasta 2018 (el último año disponible) para toda la región de América Latin utilizando el base de dato de Open Trade Statistics.</p>
+<p>Analizando la evolución puede premitirnos entender mejor como ha cambiado parte del comercio exterior.</p>
 <p>El post está divido en tres analisis diferentes:</p>
 <ol style="list-style-type: decimal">
 <li><p>Un analisis del desarrollo del conjunto de exportaciones y importaciones de toda la región en conjunto.</p></li>
@@ -25,19 +26,19 @@ output:
 <div id="las-libraría-utilizadas" class="section level3">
 <h3>Las libraría utilizadas:</h3>
 <pre class="r"><code>library(tidyverse)
-library(tradestatistics)
-library(ggplot2)
-library(ggthemes)
-library(scales)
-library(patchwork)</code></pre>
+library(tradestatistics) #Para descarga los data frames
+library(ggplot2) #Para graficar
+library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
+library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD</code></pre>
 </div>
 <div id="preparando-los-datos" class="section level2">
 <h2>Preparando los datos</h2>
+<p>Antes de empezar a graficar necesito preparar los datos que puedo descargar de Open Trade Statistics.</p>
 <div id="descargando-los-datos" class="section level3">
 <h3>Descargando los datos</h3>
 <p>En primer lugar, descargo los datos que voy a utilizar de el base de datos de Open Trade Statistics.</p>
-<p>Open Trade Statistics está dividio en varios data frames, donde el “ots_create_tidy_data” es el más útil porqué dejar descargar varios tipos de información de comercio sobre los país en diferentes años, y el data frame que recibas ya está en forma “tidy”.</p>
-<p>Para poder más fácil filter los datos y elegir solamente los datos que corresponde a la región de América Latina, necesito unir dos data frames de Open Trade Statistics. Para poder utilizar la función “merger” para unir dos data frames, necesito que los dos tienen una columna que tiene el mismo nombre (y obviamente, representa el mismo variable).</p>
+<p>Open Trade Statistics está dividio en varias bases de datos, donde el “ots_create_tidy_data” es el más útil porqué dejar descargar varios tipos de información del comercio sobre los país en diferentes años, y el data frame que recibas ya está en forma “tidy”.</p>
+<p>Para poder más fácil filter los datos y elegir solamente los datos que corresponde a la región de América Latina, necesito unir dos base de datos de Open Trade Statistics. Para poder utilizar la función “merger” para unir dos data frames, necesito que los dos tienen una columna que tiene el mismo nombre (y obviamente, representa el mismo variable).</p>
 <p>Por eso, renombro la columna de “reporter_iso” para que corresponde al segundo data frame que voy a utilizar, donde utilizando “country_iso” en vez de “reporter_iso”.</p>
 <pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
   years = 1980:2018, 
@@ -45,10 +46,10 @@ library(patchwork)</code></pre>
   partners = &quot;all&quot;, 
   products = &quot;all&quot;) %&gt;%
   rename(country_iso = &#39;reporter_iso&#39;)</code></pre>
-<p>Después el otro base de datos, descargo la información solamente sobre los países que pertenecer al continente de las Americas:</p>
+<p>Después en el otro base de datos, descargo la información solamente sobre los países que pertenecer al continente de las Americas:</p>
 <pre class="r"><code>countries_LATAM &lt;- tradestatistics::ots_countries %&gt;%
   filter(continent == &quot;Americas&quot;) </code></pre>
-<p>Ahora puedo unir los dos bases de datos, y voy a tener solamente la información disponible para la región de las Americas.</p>
+<p>Ahora puedo unir los dos bases de datos, y voy a tener solamente la información disponible para las Americas.</p>
 <p>No obstante, en realidad no es toda la región de las Américas que me interesa, sino solamente los países que pertenece a América Latin. Por eso, después de unir los bases de datos, voy a pedir que R me exclude los EEUU, Canada, Gronlandia y otros pequeños territorios estadounidenses y britanicos en el Caribe. Obviamente, se podía discutir si se debería incluir esos últimos somo parte del Caribe, pero acá los excluyo del analisis:</p>
 <pre class="r"><code>comercio_latam_reducido &lt;- merge(x = comercio_mundo_api, 
                                  y = countries_LATAM,
@@ -65,7 +66,7 @@ library(patchwork)</code></pre>
 </div>
 <div id="importación-y-exportación-en-américa-latina" class="section level2">
 <h2>Importación y exportación en América Latina</h2>
-<p>Primero decidí que querría averiguar un poco más sobre el desarrollo histórico de las importaciones y exportaciones para la región de América Latina en general.</p>
+<p>Primero decidí que quería averiguar un poco más sobre el desarrollo histórico de las importaciones y exportaciones para América Latina en general.</p>
 <div id="transformando-los-datos" class="section level3">
 <h3>Transformando los datos</h3>
 <p>Genero un nuevo data frame agrupado por año y summando el valor de importación y exportación de cada país y de cada año:</p>
@@ -95,18 +96,19 @@ library(patchwork)</code></pre>
 </div>
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
-<p>En primero lugar, se ve como el comercio exterior (tan importaciones como exportaciones) ha aumentado bastante desde los años 1990s. En la primer decada incluida (1980-1990), el comercio exterior estuve a casi el mismo nivel todos los años.Pero a partir de los 1990, empieza a expandir rápdidamente. Eso corresponde a la introducción del conocido Consenso de Washington y las subsequente reformas neoliberales y aperturas ecónomicas. Después de nota una baja al principio de los 2000s, indicando las crisis ecónomicas que sufriendo algunos países en esta epoca. Al final de la epoca de los 2000s, no obstante, se nota un aumento en, especialmente, las exportaciones, lo cual vendría a ser casi seguramente conectado con el boom de los commodities.</p>
-<p>En segundo lugar, se nota que, en general, la suma de las importaciones (azul) y de las exportaciones para toda la region sigue un desarrollo bastante similar. Solamente en algunos años como, por ejemplo, durante el principio de los 2000s, las importaciones son mayores que las exportaciones. Eso dar una indicación del balance comercial de la region. No obstante, vale subayar que eso como mencioné varias veces se trata de todo la región, y no de cada países, lo cual normalmente es lo que nos interesa.</p>
+<p>En primero lugar, se ve como el comercio exterior (tanto importaciones como exportaciones) ha aumentado bastante desde los años 1990s. En la primer decada incluida (1980-1990), el comercio exterior estuve a casi el mismo nivel todos los años. Pero a partir de los 1990, empezó a expandir rápdidamente. Eso corresponde a la introducción del Consenso de Washington y las subsequente reformas neoliberales y aperturas ecónomicas.</p>
+<p>Después se nota una baja al principio de los 2000s, indicando las crisis ecónomicas que sufriendo algunos países la principio de esta década. Al final de la década de los 2000s, no obstante, se nota un aumento en, especialmente, las exportaciones (linea roja), lo cual vendría a ser casi seguramente conectado con el boom de los commodities.</p>
+<p>En segundo lugar, se nota que, en general, la suma de las importaciones (azul) y de las exportaciones (rojo) para el conjunto de region sigue un desarrollo bastante similar. Solamente en algunos años como, por ejemplo, durante el principio de los 2000s, las importaciones son mayores que las exportaciones. Eso da una indicación del balance comercial de la region. No obstante, vale subayar que eso como mencioné varias veces se trata de todo la región, y no de cada países, lo cual normalmente es lo que nos interesa y lo que vamos a ver en el siguiente analisis.</p>
 </div>
 </div>
 <div id="comercio-exterior-en-américa-latina-por-país" class="section level2">
 <h2>Comercio exterior en América Latina por país</h2>
-<p>Ahora me interesa ser un analisis sobre la evolución en el comercio exterior (importación y exportación) de los países en la región por separado para encontrar quién es el mayor comerciante latinoamericano.</p>
+<p>Ahora me interesa hacer un analisis sobre la evolución en el comercio exterior (importaciones y exportaciones) de los países en la región por separado para encontrar quién es el mayor comerciante latinoamericano.</p>
 <div id="transformando-los-datos-1" class="section level3">
 <h3>Transformando los datos</h3>
-<p>No obstante, antes de empezar para que el grafico que quiero hacer sea más leible, quiero unir todos los pequeños países de Caribe en una catorgia separada y los países de América Central en otra:</p>
-<p>Hago la unificación, transformando la columna “country_full_name_english” a ser un factor, lo cual después me premite unir las variables de esta columna en una nueva categoría.</p>
-<p>Además, genero una nueva variable para el total del comercio exterior (trade) con el “mutate” y sumo la valor de la exportación con el valor de la importación:</p>
+<p>Antes de empezar quiero hacer que el grafico sea lo más legible posible. Por lo tanto, quiero unir los pequeños países de Caribe en una catorgia separada y los países de América Central en otra.</p>
+<p>Para poder hacer esta unificación, transformo la columna “country_full_name_english” a ser un factor, lo cual después me premite unir las variables de esta columna en una nueva categoría.</p>
+<p>Además, genero una nueva variable con el “mutate” para el total del comercio exterior y sumo la valor de la exportación con el valor de la importación:</p>
 <pre class="r"><code>comercio_latam_modificado &lt;- comercio_latam_reducido %&gt;%
   mutate(country_fullname_english = as.factor(country_fullname_english))
 
@@ -120,41 +122,41 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
            country_fullname_english) %&gt;%
   mutate(trade = sum(export_value_usd+import_value_usd, na.rm = T)) %&gt;%
   mutate(country_fullname_english = fct_collapse(country_fullname_english,
-                                      &quot;Caribe&quot; = c(&quot;Anguilla&quot;, 
-                                                  &quot;Neth. Antilles&quot;, 
-                                                  &quot;Antigua and Barbuda&quot;,
-                                                  &quot;Bahamas&quot;,
-                                                  &quot;Barbados&quot;,
-                                                  &quot;Belize&quot;,
-                                                  &quot;Bermuda&quot;,
-                                                  &quot;Bouvet Island&quot;,
-                                                  &quot;Cocos Isds&quot;,
-                                                  &quot;Cayman Isds&quot;,
-                                                  &quot;Guadeloupe&quot;,
-                                                  &quot;Cuba&quot;,
-                                                  &quot;Grenada&quot;,
-                                                  &quot;French Guiana&quot;,
-                                                  &quot;Guyana&quot;,
-                                                  &quot;Haiti&quot;,
-                                                  &quot;Jamaica&quot;,
-                                                  &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
-                                                  &quot;Saint Lucia&quot;,
-                                                  &quot;Montserrat&quot;,
-                                                  &quot;Martinique&quot;,
-                                                  &quot;Saint Pierre and Miquelon&quot;,
-                                                  &quot;Suriname&quot;,
-                                                  &quot;Turks and Caicos Isds&quot;,
-                                                  &quot;Trinidad and Tobago&quot;,
-                                                  &quot;Saint Vincent and the Grenadines&quot;),
-                            &quot;América Central&quot; = c(&quot;Costa Rica&quot;,
-                                                  &quot;Dominica&quot;,
-                                                  &quot;Dominican Rep.&quot;,
-                                                  &quot;El Salvador&quot;,
-                                                  &quot;Guatemala&quot;,
-                                                  &quot;Honduras&quot;,
-                                                  &quot;Nicaragua&quot;,
-                                                  &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
-                            &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
+                    &quot;Caribe&quot; = c(&quot;Anguilla&quot;, 
+                                  &quot;Neth. Antilles&quot;, 
+                                  &quot;Antigua and Barbuda&quot;,
+                                  &quot;Bahamas&quot;,
+                                  &quot;Barbados&quot;,
+                                  &quot;Belize&quot;,
+                                  &quot;Bermuda&quot;,
+                                  &quot;Bouvet Island&quot;,
+                                  &quot;Cocos Isds&quot;,
+                                  &quot;Cayman Isds&quot;,
+                                  &quot;Guadeloupe&quot;,
+                                  &quot;Cuba&quot;,
+                                  &quot;Grenada&quot;,
+                                  &quot;French Guiana&quot;,
+                                  &quot;Guyana&quot;,
+                                  &quot;Haiti&quot;,
+                                  &quot;Jamaica&quot;,
+                                  &quot;Saint Kitts and Nevis (includes Anguilla until 1981)&quot;,
+                                  &quot;Saint Lucia&quot;,
+                                  &quot;Montserrat&quot;,
+                                  &quot;Martinique&quot;,
+                                  &quot;Saint Pierre and Miquelon&quot;,
+                                  &quot;Suriname&quot;,
+                                  &quot;Turks and Caicos Isds&quot;,
+                                  &quot;Trinidad and Tobago&quot;,
+                                  &quot;Saint Vincent and the Grenadines&quot;),
+            &quot;América Central&quot; = c(&quot;Costa Rica&quot;,
+                                  &quot;Dominica&quot;,
+                                  &quot;Dominican Rep.&quot;,
+                                  &quot;El Salvador&quot;,
+                                  &quot;Guatemala&quot;,
+                                  &quot;Honduras&quot;,
+                                  &quot;Nicaragua&quot;,
+                                  &quot;Panama (excludes Panama Canal Zone until 1978)&quot;),
+             &quot;Argentina&quot; = c(&quot;Argentina&quot;, &quot;Falkland Isds (Malvinas)&quot;)))</code></pre>
 </div>
 <div id="graficando" class="section level3">
 <h3>Graficando</h3>
@@ -182,16 +184,17 @@ comercio_latam_caribbean &lt;- comercio_latam_modificado %&gt;%
 </div>
 <div id="sum-up-1" class="section level3">
 <h3>Sum-up</h3>
-<p>Aún es difícil ver los detalles de los países con menores niveles de comercio, pero queda claro que Mexico y Brasil son los países con mayores flujos comerciales (tanto import como export, ya que tenemos que recordar que esos es la variable que hemos generado) en la región.</p>
-<p>Además, se nota que el comercio exterior de Brasil y Mexico ha aumentado mucho más rápido que los demás países en la región. Aún los dos sufriendo una fuerte suba y después una fuerte baja en finales de los 2000s, los dos se han levantado mucho más que el resto de la región. Hasta México (azul) se ha llevando mucho más que Brasil durante los 2010s.</p>
+<p>Aunque es difícil ver los detalles de los países con menores niveles de comercio, queda claro que Mexico (azul) y Brasil (verde) son los países con mayores flujos comerciales (tanto importación como exportación) en la región.</p>
+<p>Además, se nota que el comercio exterior de Brasil y Mexico aumentó mucho más rápido que los demás países en la región después de los 1990s.</p>
+<p>Tanto México como Brasil sufriendo una fuerte suba y después una fuerte baja en finales de los 2000s, pero igual los dos se han levantado mucho más rápido que el resto de la región. Hasta México se ha llevando mucho más que Brasil durante los 2010s.</p>
 </div>
 </div>
 <div id="comercio-exterior-en-américa-latina-por-producto" class="section level2">
 <h2>Comercio exterior en América Latina por producto</h2>
-<p>Ya que hemos analisado el desarrollo del comercio exterior en total para la región y separado por país y encontrado que México y Brasil son los dos grandes comerciantes de la región, me gustaría investigar un poco más sobre qué productos mayoríamente se importa en la región y su desarrollo historico.</p>
+<p>Ya que hemos analisado el desarrollo del comercio exterior en total para la región y separado por país y encontramos que México y Brasil son los dos grandes comerciantes de la región, me gustaría investigar un poco más sobre qué productos mayoríamente se importa en la región y su evolución histórica.</p>
 <div id="transformando-los-datos-2" class="section level3">
 <h3>Transformando los datos</h3>
-<p>En primero lugar, necesito descargar un nuevo base de datos de Open Trade Statistics, lo cual influye la información sobre los códigos de los productos y a qué nombre de producto se corresponden esos códigos.</p>
+<p>En primero lugar, necesito descargar una nueva base de datos de Open Trade Statistics, lo cual incluye la información sobre los códigos de los productos y a qué nombre de producto se corresponden esos códigos.</p>
 <p>Después necesito unir el nuevo base de datos con la que usé anteriormente, donde, a proposito, he estado incluyendo información sobre los productos.</p>
 <pre class="r"><code>producto_latam_import &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_import_product_code = &quot;product_code&quot;)
@@ -200,7 +203,7 @@ import_latam_caribbean &lt;- merge(x = comercio_latam_caribbean,
                                 y = producto_latam_import, 
                                 by = &#39;top_import_product_code&#39;) %&gt;%
   mutate(producto = as.factor(top_import_product_code))</code></pre>
-<p>No obstante, existen muchísimos diferente categorías de productos para poder graficar todas, entoces, genero una nueva variable que es un factor para poder juntar los productos en categorías más manejables para realizar el analisis (como hice arriba con los países):</p>
+<p>No obstante, existen muchísimos diferente categorías de productos para poder graficar todas. Entoces, genero una nueva variable que es un factor para poder juntar los productos en categorías más manejables para realizar el analisis (como hice arriba con los países):</p>
 <pre class="r"><code>cats_products &lt;- as.character(fct_unique(import_latam_caribbean$producto))
 
 producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
@@ -215,7 +218,8 @@ producto_latam_import_reducido &lt;- import_latam_caribbean %&gt;%
  &quot;Consumer goods&quot; = c(&quot;7102&quot;,&quot;7113&quot;, &quot;9003&quot;,&quot;9017&quot;, &quot;9101&quot;, &quot;9403&quot;, &quot;9506&quot;, &quot;9701&quot;, &quot;8713&quot;, &quot;8517&quot;, &quot;8471&quot;, &quot;8519&quot;),
  &quot;Transporte&quot; = c(&quot;8609&quot;, &quot;8702&quot;, &quot;8704&quot;, &quot;8705&quot;, &quot;8801&quot;, &quot;8802&quot;, &quot;8803&quot;, &quot;8901&quot;, &quot;8902&quot;, &quot;8903&quot;, &quot;8904&quot;, &quot;8905&quot;),
  &quot;Autos&quot; = c(&quot;8703&quot;, &quot;8708&quot;, &quot;8716&quot;)))</code></pre>
-<p>Obviamente, puede existir un sesgo cuando las categorías se eligen así manualmente, porqué la categorísación está sujeto a la desción del “investigador”/alumna (en esta caso). Por ejemplo, es podría argumentar que el grupo de “Productos Industriales y Maquinas” es demasiado grande y incluye demasiados tipos de productos. No obstante, cuando vemos el gráfico abajo, notamos que a pesar de un grupo que incluye muchos diferentes productos, su importancía monetaria no es muy relevante para las importaciones de la región.</p>
+<p>Obviamente, puede existir un sesgo cuando las categorías se eligen así manualmente, porqué la categorísación está sujeto a la desción del “investigador” (alumna - en esta caso).</p>
+<p>Por ejemplo, se podría argumentar que el grupo de “Productos Industriales y Maquinas” es demasiado grande y incluye demasiados tipos de productos. No obstante, cuando vemos el gráfico abajo, se nota que a pesar de un grupo que incluye muchos diferentes productos, su importancía monetaria no es muy relevante en la región.</p>
 </div>
 <div id="graficando-1" class="section level3">
 <h3>Graficando</h3>
@@ -247,7 +251,13 @@ ggplot(producto_import_graph, aes(x = year, y = import_value_usd)) +
 </div>
 <div id="sum-up-2" class="section level3">
 <h3>Sum-up</h3>
-<p>En primer lugar, se nota como durante los 1980s y los 1990s, los autos (rosa) poco a poco aumenta como el principal producto de importación para la región, mientras que el petroleo crudo le sigue (marrón). Después, al final de los 2000s, el petroleo refinado aparece como el principal producto de importación para la región y durante los 2010s, el nivel (en USD) de importación de petroleo es mucho más alto que cualquier otro producto.</p>
-<p>En segundo lugar, vale subrayar que las categorías más importantes: autos, petroleo refinado, transporte (lo cual incluye varios tipos de maquinas de transporte) son productos procesados. La única excepción parece ser el petroleo crudo.</p>
+<p>En primer lugar, se nota como durante los 1980s y los 1990s, los autos (rosa) poco a poco aumenta como el principal producto de importación para la región, mientras que el petroleo crudo (marrón) le sigue bastante de cerca.</p>
+<p>Después, al final de los 2000s, el petroleo refinado aparece como el principal producto de importación para la región y durante los 2010s, el nivel (en USD) de importación de petroleo es mucho más alto que cualquier otro producto.</p>
+<p>En segundo lugar, vale subrayar que las categorías más importantes: autos, petroleo refinado, transporte (lo cual incluye varios tipos de maquinas de transporte) son productos procesados con necesidad de tecnología bastante alto para realizarlo. Eso es llamativa en relación a lo subrayado en la introducción sobre la necesidad de los países de la región de hacer un cambio en su sistema productivo hacia sectores de mayores niveles de tecnología.</p>
+<hr />
 </div>
+</div>
+<div id="cómo-seguir" class="section level2">
+<h2>¿Cómo seguir?</h2>
+<p>Para seguir leyendo, puedes volver a <a href="https://comercio-latam.netlify.app/">la página principal acá</a> y elegir el tema que más te guste o puedes ir al <a href="https://comercio-latam.netlify.app/post/importacion/">próximo post de analisis sobre las importaciones</a>.</p>
 </div>

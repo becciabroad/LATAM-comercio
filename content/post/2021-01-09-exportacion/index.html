@@ -14,11 +14,10 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>En este post, el objetivo es analizar la composición de las exportaciones en América Latina. Cómo hemos visto en los últimos posts, el comercio exterior han aumentado en América Latina desde los años 1990s. Pero aún parece que hay una sesgo en qué tipo de productos se importa y exporta en la región. Por lo tanto, en este post se enfoca en las exportaciones de la región.</p>
-<p>En el post sobre el desarrollo histórico del comercio exterior en América Latina, ya vimos unas tendencias, pero en este post desarrolla el tema sobre las exportaciones.</p>
+<p>En este post, el objetivo es analizar la composición de las exportaciones en América Latina. Cómo hemos visto en los últimos posts, el comercio exterior han aumentado en América Latina desde los años 1990s. Pero aún parece que hay un sesgo de que se importan productos de alta tecnología a la región. En este post, entonces, se enfoca en los flujos de exportaciones de la región.</p>
 <p>El post está divido en dos partes:</p>
 <ol style="list-style-type: decimal">
-<li>Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa estilo cartograma.</li>
+<li>Un analisis sobre los niveles de exportación de los países de América Latina en 2018 utilizando un mapa de estilo cartograma.</li>
 </ol>
 <p>Si aún no tienes el paquete de cartograma se puede descargar con el siguiente comando:</p>
 <pre class="r"><code>install.packages(&quot;cartogram&quot;)</code></pre>
@@ -37,11 +36,11 @@ library(cartogram)
 library(sf)
 library(tmap)</code></pre>
 </div>
-<div id="cartograma-de-las-exportaciones-en-américa-latina" class="section level2">
-<h2>Cartograma de las exportaciones en América Latina</h2>
+<div id="cartograma-de-las-exportaciones-en-américa-latina-2018" class="section level2">
+<h2>Cartograma de las exportaciones en América Latina 2018</h2>
 <div id="descargando-los-datos" class="section level3">
 <h3>Descargando los datos</h3>
-<p>Cómo en el post sobre importación necesito descargar dos diferentes data frames desde el base de datos de Open Trade Statistics y después unirlos en uno para separar la región de las Americas:</p>
+<p>Cómo en el post sobre importación necesito descargar dos diferentes bases de datos desde Open Trade Statistics y después unirlos en uno para separar la región de las Americas:</p>
 <pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
   years = 2018, 
   reporters = &quot;all&quot;, 
@@ -70,13 +69,13 @@ export_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
 </div>
 <div id="generando-cartogramas" class="section level3">
 <h3>Generando cartogramas</h3>
-<p>Estuve trabajando mucho tiempo para lograr hacer el cartograma que encontré dos diferentes metodos de hacer el cartograma.</p>
+<p>Estuve trabajando mucho tiempo para lograr hacer el cartograma correctamente que encontré dos diferentes metodos de hacer el cartograma.</p>
 <p>Las mayoría de las guías que encontré online utilizaban principalmente la información que viene cargada con el parquete de maptools (donde se encuentra “wrld_simpl”) (como por ejemplo <a href="https://www.r-graph-gallery.com/331-basic-cartogram.html,%20donde%20parece%20muy%20fácil%20hacer%20un%20cartograma">este articulo</a> ).</p>
-<p>Así, estaba buscando durante mucho tiempo como hacer para poder utilizar los datos de exportación que tenía desde Open Trade Statistics. En el camino de idas y vueltas, encontré que había encontrado dos diferente metodos de hacer los cartogramas, así decidí mostrar ambos metodos:</p>
+<p>Así, durante mucho tiempo estuve buscando como hacer para poder utilizar los datos de exportación que tenía de Open Trade Statistics. En el camino de idas y vueltas, encontré que había encontrado dos diferente metodos de hacer los cartogramas, así decidí mostrar ambos metodos acá:</p>
 <div id="metodo-1" class="section level4">
 <h4>Metodo 1:</h4>
 <p>Este primer metodo se base principalmente en un articulo de <a href="https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html">r-graph-gallery.com</a> y los ejemplos de graficos del Github del <a href="https://github.com/sjewo/cartogram">paquete de “cartogram”</a>.</p>
-<p>El articlo de <a href="https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html">r-graph-gallery.com</a> me ayudó mucho a entender como manipular los datos de Open Trade Statistics para poder implementarlos con el</p>
+<p>El articlo de <a href="https://www.r-graph-gallery.com/332-hexbin-chloropleth-cartogram.html">r-graph-gallery.com</a> me ayudó mucho a entender como transformar los datos de Open Trade Statistics para poder conectarlos con el cartograma:</p>
 <pre class="r"><code># Data of world map:
 data(wrld_simpl)
 
@@ -111,9 +110,9 @@ tm_shape(cartogram) + tm_polygons(&quot;export&quot;, style = &quot;jenks&quot;)
 </div>
 <div id="metodo-2" class="section level4">
 <h4>Metodo 2:</h4>
-<p>Durante el tiempo que intenté unir las data frames correctamente y terminé con muchos errores de R, encontré otra manera de generar el “geospatial object” y que permite utilizar ggplot para graficar el mapa.</p>
+<p>Durante el tiempo que intenté unir las data frames correctamente y terminé con muchos errores de R, y terminé encontrando este segundo método de generar el “geospatial object” y que permite utilizar ggplot para graficar el mapa.</p>
 <p>Así, en este metodo de graficar un cartograma, sigo el metodo explicado <a href="https://stackoverflow.com/questions/59809551/error-with-plotting-cartogram-this-function-does-not-give-correct-centroids-a">acá en Stack Overflow</a></p>
-<p>La mayoría de los pases son iguales pero el mapa que puedo graficar es diferente con este metodo y por eso lo incluí también. Además me gustó mucho más este cartograma que el primero que logré hacer y es más fácil customizarlo ya que utilizar ggplot:</p>
+<p>La mayoría de los pasos son iguales pero el mapa que puedo graficar es diferente con este metodo y por eso lo incluí también. Además me gustó mucho más este cartograma que el primero que logré hacer y es más fácil customizarlo ya que es nada más utilizando ggplot:</p>
 <pre class="r"><code># Data of world map:
 data(wrld_simpl)
 
@@ -238,18 +237,18 @@ ggplot() +
 </div>
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
-<p>En ambos cartogramas quedó muy claro que México sin duda ninguna es el mayor exportador en la región. Después le sigue Brasil.</p>
+<p>En ambos cartogramas queda muy claro que México sin duda ninguna fue el mayor exportador en la región en 2018. Después le sigue Brasil.</p>
 <p>Lo interesante de utilizar el cartograma es que además de los colors, expande el tamaño de los países según el nivel de la variable elegido. Por eso, México se ve muy muy grande, mientras que Brasil en realidad se ve más chico de lo que es.</p>
-<p>Además, el cartograma demuestra como casi todos los demás países parecen tener más o menos al mismo nivel de exportaciones. Algún lugar entre 100,000,000,000 USD y 200,000,000,000 USD.</p>
+<p>Además, el cartograma demuestra como casi todos los demás países parecen tener más o menos al mismo nivel de exportaciones. Algún lugar entre 100 mil millones USD y 200 mil millones USD.</p>
 <p>No obstante, el cartograma no demuestra nada sobre qué tipo de productos que se está exportando, por eso en la siguiente parte trato de hacer un breve analisis de los productos que más se exporta de América Latina.</p>
 </div>
 </div>
 <div id="exportaciones-por-categorías-de-productos" class="section level2">
 <h2>Exportaciones por categorías de productos</h2>
-<p>En esta parte, quiero realizar una breve analisis de qué categoría de producto los país exporta más.</p>
+<p>En esta parte, quiero realizar un breve analisis de qué categoría de producto los país exporta más.</p>
 <div id="transformando-los-datos" class="section level3">
 <h3>Transformando los datos</h3>
-<p>Como hice en el analisis sobre importaciones, necesito descargar el data frame con los nombres de los productos y después unirlo con el data frame que generé antes. Para no tener un grafico muy largo excluyo todos los pequeños países del Caribe:</p>
+<p>Como hice en el analisis sobre importaciones, necesito descargar la base de datos con los nombres de los productos y después unirlo con el data frame que generé antes. Para no tener un grafico muy largo excluyo todos los pequeños países del Caribe:</p>
 <pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_export_product_code = &quot;product_code&quot;)
 
@@ -327,5 +326,11 @@ productos_latam_export &lt;- merge(x = export_latam,
 <h3>Sum-up</h3>
 <p>En primer lugar, se nota que el perfil de exportación de los países latinoamericanos es mucho más diverso que el perfil de importación donde la mayoría importan petroleo refinado.</p>
 <p>En segundo lugar, también llama la atención que México de nuevo es el mayor comerciante, lo cual explica su posición fuerte en el primer analisis que hice sobre la evolución del comercio exterior. Además, México es el único país en la región que tiene los autos como principal producto de exportación.</p>
+<p>En tercer lugar, vale subrayar como muchísimos de los productos exportados son de origen de recursos naturales (petroleo crudo, petroleo gas, cobre) o agropecuarios (bananas y soya). Sin embargo, también es interesante notar el mayor producto de exportación en países como Costa Rica, Dominica y República Dominican es instrumentos medicales, lo cual se podía considerar un producto que requiere cierta nivel del tecnología y mano de obra especializada.</p>
+<hr />
 </div>
+</div>
+<div id="cómo-seguir" class="section level2">
+<h2>¿Cómo seguir?</h2>
+<p>Para seguir leyendo, puedes volver a <a href="https://comercio-latam.netlify.app/">la página principal acá</a> y elegir el tema que más te guste o puedes ir al <a href="https://comercio-latam.netlify.app/post/comercio-arg/">próximo post de analisis sobre comercio exterior en Argentina</a>.</p>
 </div>

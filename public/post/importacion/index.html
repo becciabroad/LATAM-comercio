@@ -14,16 +14,16 @@ output:
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>En el último post sobre los flujos del comercio exterior en América Latina en una perspectiva histórica analisé un poco sobre qué productos principalmente son importados en la región. En este post, quiero analizar este flujos de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.</p>
+<p>En el último post sobre <a href="https://comercio-latam.netlify.app/post/comercio-latam/">los flujos del comercio exterior en América Latina en una perspectiva histórica</a>, analisé brevemente qué fueron los productos principalmente importados en la región. En este post, quiero analizar este flujo de importación un poco más para entender un poco mejor qué país importa qué tipo de productos.</p>
 <p>El post está divido en tres analisis diferentes:</p>
 <ol style="list-style-type: decimal">
-<li>Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps.
-Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tienes Rworldmap installado se puede instalar con este comando:</li>
+<li>Un analisis graficando qué países importó más en total en USD en 2018 utilizando un mapa de color del paquete de Rworldmaps.</li>
 </ol>
+<p>Existen varios paquetes para realizar mapas, pero me gustó el simple diseño de Rworldmaps. Si aún no tenes Rworldmap installado se puede instalar con este comando:</p>
 <pre class="r"><code>install.packages(&quot;rworldmap&quot;)</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Un analisis mostrando la composición de los productos más importados - también durante el año 2018.</p></li>
-<li><p>Finalmente, un analisis sobre qué categoría de producto cada país en la región importa más.</p></li>
+<li><p>Un analisis mostrando la composición de los productos más importados durante el año 2018.</p></li>
+<li><p>Finalmente, un analisis sobre qué categoría de producto cada país en la región importó más en 2018.</p></li>
 </ol>
 <div id="las-libraría-utilizadas" class="section level3">
 <h3>Las libraría utilizadas:</h3>
@@ -34,7 +34,7 @@ library(rworldmap) #Para graficar el mapa del América Latina
 library(treemapify) #Para graficar la composición de los productos más importados
 library(ggthemes) #Para utilizar el tema especial de ggplot del Economist
 library(scales) #Para cambiar el y-axis en los graficos de ggplot a USD </code></pre>
-<p>Evitando el error de "“<code>summarise()</code> ungrouping output (override with <code>.groups</code> argument)” de la nueva versión de dplyr:</p>
+<p>Para evitar el error de "“<code>summarise()</code> ungrouping output (override with <code>.groups</code> argument)” de la nueva versión de dplyr (<a href="https://rstats-tips.net/2020/07/31/get-rid-of-info-of-dplyr-when-grouping-summarise-regrouping-output-by-species-override-with-groups-argument/">gracias a Rstats-tips.net</a> por este solución a un problema que me estaba volviendo loca porqué bloqueó a realizar la página):</p>
 <pre class="r"><code>library(dplyr, warn.conflicts = FALSE)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)</code></pre>
@@ -43,26 +43,26 @@ options(dplyr.summarise.inform = FALSE)</code></pre>
 <h2>Preparando los datos</h2>
 <div id="descargando-los-datos" class="section level3">
 <h3>Descargando los datos</h3>
-<p>Cómo en el primer post sobre el comercio exterior, necesito descargar el data frame y modificar el nombre de la columna “reporter_iso” a “country_iso” para poder unirlo con el segundo data frame que separa más fácilmente los países de la región de “las Americas” al resto del mundo:</p>
+<p>Cómo en el primer post sobre el comercio exterior, necesito descargar la base de datos y modificar el nombre de la columna “reporter_iso” a “country_iso” para poder unirlo con el segundo base de datos y así separa más fácilmente los países de la región de “las Americas” al resto del mundo:</p>
 <pre class="r"><code>comercio_mundo_api &lt;- tradestatistics::ots_create_tidy_data(
   years = 2018, 
   reporters = &quot;all&quot;, 
   partners = &quot;all&quot;, 
   products = &quot;all&quot;) %&gt;%
   rename(country_iso = &#39;reporter_iso&#39;)</code></pre>
-<p>Ahora puedo descargar el data frame de Open Trade Statistics sobre los país, y como anteriormente, eligo filtear la región (o continente) de las Americas:</p>
+<p>Ahora puedo descargar la base de datos de Open Trade Statistics sobre los país, y como anteriormente, filtear el continente de las Americas:</p>
 <pre class="r"><code>countries_LATAM &lt;- tradestatistics::ots_countries %&gt;%
   filter(continent == &quot;Americas&quot;) </code></pre>
-<p>Después puedo unir los dos data frames para que tenga un que solamente incluye información sobre los país de las Americas:</p>
+<p>Después puedo unir las dos bases de datos para que tenga un que solamente incluye información sobre los país de las Americas:</p>
 <pre class="r"><code>comercio_latam &lt;- merge(x = comercio_mundo_api, y = countries_LATAM,
       by = &quot;country_iso&quot;)</code></pre>
 </div>
 </div>
-<div id="mapamundi-de-importaciones" class="section level2">
-<h2>Mapamundi de importaciones</h2>
+<div id="mapamundi-de-importaciones-2018" class="section level2">
+<h2>Mapamundi de importaciones 2018</h2>
 <div id="transformando-los-datos" class="section level3">
 <h3>Transformando los datos</h3>
-<p>Eligo las variables que necesito para generar el mapa. No obstante, dejo esta información en un nuevo data frame, para que pueda volver a utilizar la información completa sobre importaciones en América Latina en los otros graficos subsequentes.</p>
+<p>Eligo las variables que necesito para generar el mapa. No obstante, dejo esta información en un nuevo data frame, para que pueda volver a utilizar la información completa sobre importaciones en América Latina en los graficos subsequentes.</p>
 <pre class="r"><code>comercio_latam_import &lt;- comercio_latam %&gt;%
   select(country_iso,
          reporter_fullname_english,
@@ -71,7 +71,7 @@ options(dplyr.summarise.inform = FALSE)</code></pre>
 </div>
 <div id="graficando" class="section level2">
 <h2>Graficando</h2>
-<p>En primer lugar, tengo que asegurar que la identificación de los países en mi data frame se va a ser entendido por el paquete de Rworldmaps. Después puedo genera el mapa:</p>
+<p>En primer lugar, tengo que asegurar que la identificación de los países en mi data frame se va a ser entendido por el paquete de Rworldmaps. Después puedo generar el mapa:</p>
 <pre class="r"><code>
 mapped_data &lt;- joinCountryData2Map(comercio_latam_import, 
                                    joinCode = &quot;NAME&quot;, 
@@ -88,18 +88,19 @@ mapCountryData(mapped_data,
 <div id="sum-up" class="section level3">
 <h3>Sum-up</h3>
 <p>Eso es un montón de rojo!</p>
-<p>El mapa parece indicar que la mayoría de los países de la región importan más o menos el mismo nivel. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguay, los cuales parecen ser los que menos importan.</p>
+<p>El mapa parece indicar que la mayoría de los países de la región importan al mismo nivel. Menos algunos países chicos en America Central, el Caribe, Venezuela, Bolivia y Uruguay, los cuales parecen ser los que menos importan (más amarillas menos importaciones).</p>
 <p>Pero la verdad que el mapa nos dice poco sobre los niveles de importación de cada país. Obviamente, se podría empezar a jugar con crear diferentes escales de colores para los differentes niveles de importación en USD, pero la verdad que no me animaba mucho :)</p>
 <p>Lo qué sí sería interesante analizar qué tipo de productos son los que más se importaron los paises de América Latin en 2018.</p>
 </div>
 </div>
 <div id="productos-más-importado-por-categoría-en-2018" class="section level2">
 <h2>Productos más importado por categoría en 2018</h2>
-<p>Entonces, en esta segunda parte de mi post sobre importaciones en América Latina en el año 2018 quiero realizar un analisis sobre las categorías de productos más importados en 2018 utilizando el grafico “treemap” lo cual me gusto porque parece muy inituitivo.</p>
+<p>En esta segunda parte de mi post sobre importaciones en América Latina en el año 2018 quiero realizar un analisis sobre las categorías de productos más importados utilizando el grafico “treemap”, lo cual me gusto porque parece muy inituitivo.</p>
 <div id="transformando-los-datos-1" class="section level3">
 <h3>Transformando los datos</h3>
-<p>En primero lugar, necesito descargar información sobre los productos desde otro base de datos de Open Trade Statistics y unirlo con el data frame que ya tengo sobre la importación en América Latina en el año 2018.</p>
-<p>También necesito sacar los países que no corresponde a la región como hice en el primer post. Vale notar que en el analisis arriba del Rworldmaps, la pre-programación del paquete de Rworldmaps automaticamente sacó los países que el paquete no considerable correspondía a la región de América Latina.</p>
+<p>En primero lugar, necesito descargar la información sobre los productos desde otra base de datos de Open Trade Statistics y unirlo con el data frame que ya tengo sobre la importación en América Latina en el año 2018.</p>
+<p>También necesito sacar los países que no corresponde a la región como hice en el primer post.</p>
+<p>Vale notar que en el analisis arriba del Rworldmaps, la pre-programación del paquete de Rworldmaps automaticamente sacó los países que el paquete no considerable correspondía a la región de América Latina.</p>
 <pre class="r"><code>productos_latam &lt;- tradestatistics::ots_products_shortnames %&gt;%
   rename(top_import_product_code = &quot;product_code&quot;)
 
@@ -146,24 +147,24 @@ productos_latam_import &lt;- merge(x = comercio_latam,
 </div>
 <div id="sum-up-1" class="section level3">
 <h3>Sum-up</h3>
-<p>Está claro que el producto que más se importa en América Latina en 2018 eran petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región.</p>
+<p>Está claro que los productos que más se importaron en América Latina en 2018 fueron petroleum refineado (74,53%) y autos (12,28%). Eso se alinea muy bien con los hallazgos del breve analisis de la evolución de los flujos de importación en la región.</p>
 <p>Lo qué tal vez suprende es que telefonos ocupa un 5,88% de los productos importados y barcos de pasajes y cargo un 4,24%.</p>
-<p>No obstante, la tendencia de 2018 subraya lo mencionado en el post anterior: son productos que fabriados y generalmente productos que requiere altos nivels de technología que se importan en América Latina. Eso es preocupante, porqué significa que son productos que la región no produce ellos. La falta de impuestos de trabajo que requiere capacidades técnicos especializados es según los investigadores clave para que América Latina salga de la trampa del medio ingreso.</p>
-<p>Obviamente, se podría modificar los nombres de los productos para que se queden en español - pero este te debo :)</p>
+<p>No obstante, la tendencia de 2018 subraya lo mencionado en el post anterior: los productos que se importan en América Latina son generalmente productos requiere altos niveles de technología. Es preocupante, porqué significa que son productos que la región casi no produce, y por lo tanto, no se demanda mano de obra con cualificaciones técnicas especializadas. Según los investigadores este es el punto clave para que América Latina salga de la trampa de los ingresos medios.</p>
+<p>(Obviamente, se podría modificar los nombres de los productos para que se queden en español - pero este te debo :) )</p>
 </div>
 </div>
 <div id="categoría-de-productos-más-importado-por-país" class="section level2">
 <h2>Categoría de productos más importado por país:</h2>
-<p>En esta última parte del post sobre importación en América Latina, quiero analizar qué países importa de qué categoría de producto:</p>
+<p>En esta última parte del post sobre importación en América Latina, quiero analizar qué países importa más de qué categoría de producto:</p>
 <div id="transformando-los-datos-2" class="section level3">
 <h3>Transformando los datos</h3>
-<p>En primer lugar, quiero poder cambiar el nombre de Panama, lo cual en el data frama de Open Trade Statistics tiene un nombre muy largo y quiero colapsar Malvinas dentro de la observación de Argentina. Entonces, necesito modificar la columna de “reporter_fullname_english” para que sea un factor.</p>
+<p>En primer lugar, quiero poder cambiar el nombre de Panama, por que tiene un nombre muy largo en la base de datos de Open Trade Statistics (y va a “matar” a mi gráfico). Como antes, necesito modificar la columna de “reporter_fullname_english” para que sea un factor.</p>
 <pre class="r"><code>import_countries_modificied &lt;- productos_latam_import %&gt;%
   mutate(reporter_fullname_english = as.factor(reporter_fullname_english)) </code></pre>
-<p>En segundo lugar, para no tener un gráfico muy largo, elegio sacar todos los pequeños países del Caribe menos Cuba. Después puedo agrupar por país y por producto:</p>
+<p>En segundo lugar, para no tener un gráfico muy largo, elegio sacar todos los pequeños países del Caribe. Después puedo agrupar por país y por producto:</p>
 <pre class="r"><code>import_countries_2018 &lt;- import_countries_modificied %&gt;%
   select(reporter_fullname_english,
-         import_value_usd,
+         top_import_trade_value_usd,
          product_shortname_english) %&gt;%
   filter(reporter_fullname_english != &quot;Anguilla&quot;,
          reporter_fullname_english != &quot;Antigua and Barbuda&quot;,
@@ -188,42 +189,42 @@ productos_latam_import &lt;- merge(x = comercio_latam,
          reporter_fullname_english != &quot;Trinidad and Tobago&quot;,
          reporter_fullname_english != &quot;Saint Vincent and the Grenadines&quot;) %&gt;%
   mutate(reporter_fullname_english = fct_collapse(reporter_fullname_english,
-            &quot;Panama&quot;    = c(&quot;Panama (excludes Panama Canal Zone until 1978)&quot;))) %&gt;% 
+            &quot;Panama&quot; = c(&quot;Panama (excludes Panama Canal Zone until 1978)&quot;))) %&gt;% 
   group_by(reporter_fullname_english, 
            product_shortname_english) %&gt;%
-  arrange(desc(import_value_usd)) %&gt;%
+  arrange(desc(top_import_trade_value_usd)) %&gt;%
   drop_na()
 
 tibble(import_countries_2018)
 ## # A tibble: 19 x 3
-##    reporter_fullname_english import_value_usd product_shortname_english
-##    &lt;fct&gt;                                &lt;dbl&gt; &lt;chr&gt;                    
-##  1 Mexico                        537843736831 Refined Petroleum        
-##  2 Brazil                        223647357730 Refined Petroleum        
-##  3 Chile                          83743442685 Cars                     
-##  4 Argentina                      74043010231 Cars                     
-##  5 Colombia                       59519214575 Telephones               
-##  6 Peru                           48041977814 Refined Petroleum        
-##  7 Panama                         41961011765 Passenger and Cargo Ships
-##  8 Ecuador                        28021776726 Refined Petroleum        
-##  9 Costa Rica                     19101489498 Refined Petroleum        
-## 10 Dominican Rep.                 17851484586 Refined Petroleum        
-## 11 Guatemala                      16257301458 Refined Petroleum        
-## 12 Paraguay                       16123799211 Telephones               
-## 13 Uruguay                        13719463335 Crude Petroleum          
-## 14 El Salvador                    13472233660 Refined Petroleum        
-## 15 Bolivia                        11588766426 Refined Petroleum        
-## 16 Venezuela                      11188570352 Refined Petroleum        
-## 17 Honduras                       10587997436 Refined Petroleum        
-## 18 Nicaragua                       8482815845 Refined Petroleum        
-## 19 Cuba                            6104401480 Poultry Meat</code></pre>
+##    reporter_fullname_english top_import_trade_value_usd product_shortname_engli…
+##    &lt;fct&gt;                                          &lt;dbl&gt; &lt;chr&gt;                   
+##  1 Mexico                                   31484260336 Refined Petroleum       
+##  2 Brazil                                   12823745669 Refined Petroleum       
+##  3 Panama                                    7844468833 Passenger and Cargo Shi…
+##  4 Chile                                     5154079629 Cars                    
+##  5 Argentina                                 5095514873 Cars                    
+##  6 Venezuela                                 4476825819 Refined Petroleum       
+##  7 Ecuador                                   3823181091 Refined Petroleum       
+##  8 Peru                                      3525056720 Refined Petroleum       
+##  9 Colombia                                  3441424020 Telephones              
+## 10 Uruguay                                   2286851365 Crude Petroleum         
+## 11 Paraguay                                  2007686823 Telephones              
+## 12 Guatemala                                 1989410718 Refined Petroleum       
+## 13 Costa Rica                                1737649360 Refined Petroleum       
+## 14 Dominican Rep.                            1586851316 Refined Petroleum       
+## 15 Bolivia                                   1250992513 Refined Petroleum       
+## 16 El Salvador                               1250024623 Refined Petroleum       
+## 17 Honduras                                  1221493817 Refined Petroleum       
+## 18 Nicaragua                                  500789204 Refined Petroleum       
+## 19 Cuba                                       253525018 Poultry Meat</code></pre>
 </div>
 <div id="graficando-2" class="section level3">
 <h3>Graficando</h3>
 <p>El tibble da un buena idea de qué países importaron más de los diferentes productos, pero en un grafico se ve mucho mejor:</p>
 <pre class="r"><code>ggplot(import_countries_2018, aes(
   x = reporter_fullname_english,
-  y = import_value_usd,
+  y = top_import_trade_value_usd,
   fill = product_shortname_english)) +
     geom_col() +
   labs(
@@ -246,7 +247,16 @@ tibble(import_countries_2018)
 </div>
 <div id="sum-up-2" class="section level3">
 <h3>Sum-up</h3>
-<p>El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado es el producto más importado en América Latina en 2018. Además, son los dos grandes comerciantes, México y Brasil, quierens importa más. No obstante, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.</p>
-<p>Otras observaciones interesantes: (1) Argentia y Chile son los principales importados de autos. (2) Colombia y Paraguay son los dos países que tiene los telefonos como el principal producto de importación. (3) Panama es el país que principalmente importa los barco que vimos en el analisis arriba - y eso casi tantos barcos como Perú importa petroleo refinado!</p>
+<p>El grafico muestra claramente, lo que encontramos en la segunda parte de este post: petroleo refinado fue el producto más importado en América Latina en 2018.</p>
+<p>Además, son los dos grandes comerciantes, México y Brasil, quierens importa más de petroleo refinado. Además, muchos países en América Central les sigue con petroleo refinado como su principal producto de importación.</p>
+<p>Otras observaciones interesantes:
+- Argentia y Chile son los principales importados de autos.
+- Colombia y Paraguay son los dos países que tiene los telefonos como el principal producto de importación.
+- Panama es el país que principalmente importa los barcos que vimos en el analisis arriba - y cuestan bastante!</p>
+<hr />
 </div>
+</div>
+<div id="cómo-seguir" class="section level2">
+<h2>¿Cómo seguir?</h2>
+<p>Para seguir leyendo, puedes volver a <a href="https://comercio-latam.netlify.app/">la página principal acá</a> y elegir el tema que más te guste o puedes ir al <a href="https://comercio-latam.netlify.app/post/export/">próximo post de analisis sobre las importaciones</a>.</p>
 </div>

@@ -16,6 +16,14 @@ El comercio exterior de América Latina empezó a expandirse fuertemente en los 
 
 En este proyecto analizar algunos de los flujos en el comercio exterior latinoamerica basado en el API de Open Trade Statistics.
 
+----
+
+#### Aclaraciones: 
+  - Por comercio exterior se entiende tan los flujos de importaciones como las exportaciones.
+  - Por América Latina se toma desde México hacia abajo. Existen muchas discusiones sobre qué incluir en la definición, pero acá incluye todos de México hasta el sur del continente (Chile y Argentina).
+
+----
+
 ## Objetivo del proyecto
 El objetivo del proyecto es analizar varios aspectos del comercio exterior de los países de América Latina para así entender mejor como comercializan; qué los países exportan, qué productos importan desde afuera, y quienes son los mayores comerciantes de la región.
 
@@ -24,7 +32,7 @@ El enfoque de los flujos del comercio exterior latinoamericano es especificalmen
 
 Entre las políticas resaltas como necesarias son reformas de educación y mejora de capacidades de los trabajadores (Doner & Schneider, 2016). La falta de una base importante de trabajadores con altas capacidades desaniman a los empresarios locales de invertir mejor la tecnología de su producción o invertir en sectores de alta tecnología. Eso a llevar a los grupos empresariales latinoamericanos de tender a specializarse en sectores de baja-tecnología donde principalmente se demanda trabajadores con bajas cualificaciones (skills). En cambio, eso deja los trabajadores latinoamericanos con pocas incentivas de invertir en education o entrenamiento, por qué no hay tanta demanda de los empresarios de empleados con altas capacidades. (Schneider, 2013). Schneider (2013) resalta que régimen de capacidades es el nexus central entre las empresas y los mercados laborales en América Latina, y también una de las areas principales de enfoque para mejorar la condiciones económicas y productivas de la región Schneider (2013).
 
-Para así empezar a empujar las empresas a invertir en sectores de mayores niveles de tecnología, ya que tendrían disponible una base más fuerte de trabajadores capacidados. Para poder competir en el mercado global con otro tipo de productos, que pagan mejores precios y así mejorar el salario de los trabajadores 
+Según los investigadores, una mejora en las cualificaciones de la base de mano de obra puede empujar las empresas locales a invertir en sectores de mayores niveles de tecnología. Para así poder competir en el mercado global con otro tipo de productos que los de baja tecnología como los productos recursos naturales y productos agropecarios. Productos de alta tecnología pagan mejores precios en el mercado international, y asimismo premite mejorar el salario de los trabajadores.
 
 Por lo tanto, no es sin importancia qué productos se exportan, ya que indica algo sobre los sectores que concernan más empleados y si son sectores de qué requieren altos niveles de tecnología o no. Asimismo, los productos que importan los países nos puedo indicar sobre las industrías que capaz no son tan fuertes en la región o en cada país.
 
@@ -65,7 +73,7 @@ Sin embargo, cuando finalmente logré generar el submodule correctamente, fue ba
 Segunda desafío fue conectar el repositor de GitHub a Netlify. Principalmente, mi obstaculo fue que Netlify seguía diciendo que no tenía la correcta versión de Hugo para conectar. Seguía rechazando la conexión hasta que logré encontrar el lugar corecto para poner mi versión de Hugo y de repente funcionó! :) 
 
 ## ¿Como seguir?
-Para seguir al analisis, puedes volver a [la página principal acá](https://comercio-latam.netlify.app/) y elegir el tema que más te guste o puedes ir al [primer analisis sobre la evolución histórica del comercio exterior acá.]https://comercio-latam.netlify.app/post/comercio-latam/ 
+Para seguir al analisis, puedes volver a [la página principal acá](https://comercio-latam.netlify.app/) y elegir el tema que más te guste o puedes ir al [primer analisis sobre la evolución histórica del comercio exterior acá](https://comercio-latam.netlify.app/post/comercio-latam/). 
 
 ----
 
