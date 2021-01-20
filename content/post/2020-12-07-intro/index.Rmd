@@ -72,7 +72,7 @@ Sin embargo, cuando finalmente logré generar el submodule correctamente, fue ba
 ### Connectando con Netlify
 Segunda desafío fue conectar el repositor de GitHub a Netlify. Principalmente, mi obstaculo fue que Netlify seguía diciendo que no tenía la correcta versión de Hugo para conectar. Seguía rechazando la conexión hasta que logré encontrar el lugar corecto para poner mi versión de Hugo y de repente funcionó! :) 
 
-## ¿Como seguir?
+## ¿Cómo seguir?
 Para seguir al analisis, puedes volver a [la página principal acá](https://comercio-latam.netlify.app/) y elegir el tema que más te guste o puedes ir al [primer analisis sobre la evolución histórica del comercio exterior acá](https://comercio-latam.netlify.app/post/comercio-latam/). 
 
 ----

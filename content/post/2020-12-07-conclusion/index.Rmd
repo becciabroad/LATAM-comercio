@@ -38,7 +38,7 @@ En final, sí, fue un proyecto muy ambicioso y gasté una cantidad increíble de
 
 Aunque queda unos pendientes que podía/quería mejorar en el proyecto, pero si no paro ahora (1) mi novio va a solicitar un "divorcio" por la cantidad de tiempo que uso frente a la computadora con Rstudio y (2) nunca voy a avanzar con la tesis :) 
 
-¡Así hasta ahí llego! ¡Espero que hayas disfrutado revisar mi proyecto, Tucu! 
-----
+¡Así hasta ahí llego! ¡Espero que hayas disfrutado revisar mi proyecto! 
+
 
 #### ¡Gracias! 
